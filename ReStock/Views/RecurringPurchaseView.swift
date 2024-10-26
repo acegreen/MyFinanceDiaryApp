@@ -74,7 +74,7 @@ struct RecurringPurchaseView: View {
                 .padding()
 
         }
-        .modelContainer(previewContainer)
+        .withPreviewEnvironment()
     } catch {
         return Text("Failed to create preview: \(error.localizedDescription)")
     }

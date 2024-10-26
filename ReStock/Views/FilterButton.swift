@@ -60,4 +60,5 @@ extension FilterButton.PurchaseFilter: Hashable {
 
 #Preview {
     FilterButton(title: "All", filter: .all, selectedFilter: .constant(.all))
+        .withPreviewEnvironment()
 }

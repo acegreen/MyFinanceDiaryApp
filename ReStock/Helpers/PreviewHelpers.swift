@@ -154,3 +154,20 @@ func addSampleData(modelContext: ModelContext) {
         print("Failed to save sample data: \(error)")
     }
 }
+
+// Add this new property at the top level of the file
+@MainActor
+let previewAppState: AppState = {
+    let appState = AppState()
+    // Initialize appState with any necessary mock data or settings
+    return appState
+}()
+
+// Add this extension at the bottom of the file
+extension View {
+    func withPreviewEnvironment() -> some View {
+        self
+            .modelContainer(previewContainer)
+            .environmentObject(previewAppState)
+    }
+}
