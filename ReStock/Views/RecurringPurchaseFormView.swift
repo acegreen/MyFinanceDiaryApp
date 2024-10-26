@@ -9,6 +9,7 @@ struct RecurringPurchaseFormView: View {
     @Environment(\.dismiss) private var dismiss
     
     var isNewPurchase: Bool
+    var onSave: (RecurringPurchase) -> Void
     
     var body: some View {
         NavigationView {
@@ -57,6 +58,7 @@ struct RecurringPurchaseFormView: View {
                         }
                         do {
                             try modelContext.save()
+                            onSave(recurringPurchase)
                             dismiss()
                         } catch {
                             print("Error saving recurring purchase: \(error)")
@@ -126,7 +128,7 @@ struct FrequencySliderView: View {
 #Preview("Add Purchase") {
     let newPurchase = RecurringPurchase(name: "", category: .groceries, frequency: .weekly, quantity: 1)
     return NavigationView {
-        RecurringPurchaseFormView(recurringPurchase: newPurchase, isNewPurchase: true)
+        RecurringPurchaseFormView(recurringPurchase: newPurchase, isNewPurchase: true, onSave: { _ in })
     }
     .withPreviewEnvironment()
 }
@@ -140,7 +142,7 @@ struct FrequencySliderView: View {
         container.mainContext.insert(samplePurchase)
         
         return NavigationView {
-            RecurringPurchaseFormView(recurringPurchase: samplePurchase, isNewPurchase: false)
+            RecurringPurchaseFormView(recurringPurchase: samplePurchase, isNewPurchase: false, onSave: { _ in })
         }
         .withPreviewEnvironment()
     } catch {

@@ -11,15 +11,25 @@ import Inject
 
 @main
 struct ReStockApp: App {
+    @ObserveInjection var inject    
     @StateObject private var appState = AppState()
-    @ObserveInjection var inject
-    
+    @StateObject private var authManager = AuthenticationService()
+
     var body: some Scene {
         WindowGroup {
-            MainView()
-                .environment(\.modelContext, appState.container.mainContext)
-                .environmentObject(appState)
-                .enableInjection()
+            // Wrap MainView in a conditional view based on authentication status
+            Group {
+                if authManager.isAuthenticated {
+                    MainView()
+                        .environment(\.modelContext, appState.container.mainContext)
+                        .environmentObject(appState)
+                        .environmentObject(authManager) // Pass authManager to child views
+                } else {
+                    LoginView()
+                        .environmentObject(authManager)
+                }
+            }
+            .enableInjection()
         }
     }
 }
