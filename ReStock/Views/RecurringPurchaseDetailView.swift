@@ -4,9 +4,14 @@ import Inject
 
 struct RecurringPurchaseDetailView: View {
     @ObserveInjection var inject
+    @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject var appState: AppState
     @Bindable var purchase: RecurringPurchase
-    @State private var showingEditSheet = false
-
+    @State private var isLoading = false
+    @State private var orderResult: OrderingService.Order?
+    @State private var errorMessage: String?
+    @State private var refreshTrigger = false
+    
     var body: some View {
         Form {
             Section(header: Text("Details")) {
@@ -19,34 +24,83 @@ struct RecurringPurchaseDetailView: View {
             }
 
             Section {
-                Button("Restock Now") {
-                    // Implement restock logic
+                Button(action: restockNow) {
+                    if isLoading {
+                        ProgressView()
+                    } else {
+                        Text("Restock Now")
+                    }
                 }
-                .frame(maxWidth: .infinity)
+                .disabled(isLoading)
+            }
+            
+            if let order = orderResult {
+                Section {
+                    Text("Order placed successfully")
+                    Text("Order ID: \(order.id)")
+                    // Add more order details as needed
+                }
+            }
+            
+            if let error = errorMessage {
+                Section {
+                    Text(error)
+                        .foregroundColor(.red)
+                }
             }
         }
-        .navigationTitle(purchase.name)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button("Edit") {
-                    showingEditSheet = true
-                }
-            }
-        }
-        .sheet(isPresented: $showingEditSheet) {
-            RecurringPurchaseFormView(recurringPurchase: purchase, isNewPurchase: false)
-        }
+        .navigationTitle("Purchase Details")
         .enableInjection()
+    }
+    
+    private func restockNow() {
+        isLoading = true
+        errorMessage = nil
+        
+        Task {
+            do {
+                let orderItem = OrderingService.OrderItem(
+                    id: UUID(),
+                    name: purchase.name,
+                    quantity: purchase.quantity,
+                    price: purchase.price
+                )
+
+                let order = try await appState.orderingService.placeOrder(
+                    items: [orderItem],
+                    provider: purchase.provider
+                )
+                
+                await MainActor.run {
+                    orderResult = order
+                    PurchaseScheduler.updateNextPurchaseDate(for: purchase)
+                    do {
+                        try modelContext.save()
+                        refreshTrigger.toggle()
+                    } catch {
+                        errorMessage = "Error saving changes: \(error.localizedDescription)"
+                    }
+                    isLoading = false
+                }
+            } catch {
+                await MainActor.run {
+                    errorMessage = "Error placing order: \(error.localizedDescription)"
+                    isLoading = false
+                }
+            }
+        }
     }
 }
 
 #Preview {
     do {
-        let preview = try previewContainer.mainContext.fetch(FetchDescriptor<RecurringPurchase>()).first!
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try ModelContainer(for: RecurringPurchase.self, configurations: config)
+        let example = RecurringPurchase(name: "Example", category: .groceries)
         return NavigationView {
-            RecurringPurchaseDetailView(purchase: preview)
+            RecurringPurchaseDetailView(purchase: example)
+                .withPreviewEnvironment()
         }
-        .modelContainer(previewContainer)
     } catch {
         return Text("Failed to create preview: \(error.localizedDescription)")
     }

@@ -31,7 +31,13 @@ struct RecurringPurchaseFormView: View {
                 if !isNewPurchase {
                     Section {
                         Button("Delete Purchase", role: .destructive) {
-                            // Implement delete functionality
+                            modelContext.delete(recurringPurchase)
+                            do {
+                                try modelContext.save()
+                                dismiss()
+                            } catch {
+                                print("Error deleting recurring purchase: \(error)")
+                            }
                         }
                     }
                 }
@@ -46,7 +52,15 @@ struct RecurringPurchaseFormView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button(isNewPurchase ? "Add" : "Save") {
-                        // Implement save functionality
+                        if isNewPurchase {
+                            modelContext.insert(recurringPurchase)
+                        }
+                        do {
+                            try modelContext.save()
+                            dismiss()
+                        } catch {
+                            print("Error saving recurring purchase: \(error)")
+                        }
                     }
                 }
             }
@@ -114,7 +128,7 @@ struct FrequencySliderView: View {
     return NavigationView {
         RecurringPurchaseFormView(recurringPurchase: newPurchase, isNewPurchase: true)
     }
-    .modelContainer(previewContainer)
+    .withPreviewEnvironment()
 }
 
 #Preview("Edit Purchase") {
@@ -128,7 +142,7 @@ struct FrequencySliderView: View {
         return NavigationView {
             RecurringPurchaseFormView(recurringPurchase: samplePurchase, isNewPurchase: false)
         }
-        .modelContainer(container)
+        .withPreviewEnvironment()
     } catch {
         return Text("Failed to create preview: \(error.localizedDescription)")
     }

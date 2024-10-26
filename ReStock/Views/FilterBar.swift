@@ -29,4 +29,5 @@ struct FilterBar: View {
 
 #Preview {
     FilterBar(selectedFilter: .constant(.all))
+        .withPreviewEnvironment()
 }

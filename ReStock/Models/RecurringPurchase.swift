@@ -66,36 +66,6 @@ final class RecurringPurchase {
         case priceDesc = "Price (High to Low)"
     }
 
-    var name: String
-    var categoryRawValue: String
-    var frequencyRawValue: String
-    var quantity: Int
-    var autoOrder: Bool
-    var notifyBeforeShipping: Bool
-    var notes: String
-    var nextPurchaseDate: Date?
-    var price: Decimal
-
-    init(name: String = "",
-         category: Category = .groceries,
-         frequency: Frequency = .weekly,
-         quantity: Int = 1,
-         autoOrder: Bool = false,
-         notifyBeforeShipping: Bool = false,
-         notes: String = "",
-         nextPurchaseDate: Date? = nil,
-         price: Decimal = 0.0) {
-        self.name = name
-        self.categoryRawValue = category.rawValue
-        self.frequencyRawValue = frequency.rawValue
-        self.quantity = quantity
-        self.autoOrder = autoOrder
-        self.notifyBeforeShipping = notifyBeforeShipping
-        self.notes = notes
-        self.nextPurchaseDate = nextPurchaseDate
-        self.price = price
-    }
-
     var category: Category {
         get { Category(rawValue: categoryRawValue) ?? .other }
         set { categoryRawValue = newValue.rawValue }
@@ -106,9 +76,47 @@ final class RecurringPurchase {
         set { frequencyRawValue = newValue.rawValue }
     }
 
+    var provider: OrderingService.Provider {
+        get { OrderingService.Provider(rawValue: providerRawValue) ?? .amazon }
+        set { providerRawValue = newValue.rawValue }
+    }
+
     // Computed property for total price
     var totalPrice: Decimal {
         return price * Decimal(quantity)
+    }
+
+    var name: String
+    var categoryRawValue: String
+    var frequencyRawValue: String
+    var quantity: Int
+    var autoOrder: Bool
+    var notifyBeforeShipping: Bool
+    var notes: String
+    var nextPurchaseDate: Date?
+    var price: Decimal
+    var providerRawValue: String
+
+    init(name: String = "",
+         category: Category = .groceries,
+         frequency: Frequency = .weekly,
+         quantity: Int = 1,
+         autoOrder: Bool = false,
+         notifyBeforeShipping: Bool = false,
+         notes: String = "",
+         nextPurchaseDate: Date? = nil,
+         price: Decimal = 0.0,
+         provider: OrderingService.Provider = .amazon) {
+        self.name = name
+        self.categoryRawValue = category.rawValue
+        self.frequencyRawValue = frequency.rawValue
+        self.quantity = quantity
+        self.autoOrder = autoOrder
+        self.notifyBeforeShipping = notifyBeforeShipping
+        self.notes = notes
+        self.nextPurchaseDate = nextPurchaseDate
+        self.price = price
+        self.providerRawValue = provider.rawValue
     }
 }
 

@@ -54,4 +54,5 @@ struct FilterSortView: View {
         selectedFrequency: .constant(.all),
         selectedSortOption: .constant(.nameAsc)
     )
+    .withPreviewEnvironment()
 }
