@@ -16,6 +16,20 @@ let previewContainer: ModelContainer = {
 }()
 
 @MainActor
+let previewAppState: AppState = {
+    let appState = AppState()
+    // Initialize appState with any necessary mock data or settings
+    return appState
+}()
+
+@MainActor
+let previewAuthService: AuthenticationService = {
+    let authService = AuthenticationService()
+    // Initialize appState with any necessary mock data or settings
+    return authService
+}()
+
+@MainActor
 func addSampleDataIfNeeded(to context: ModelContext) async {
     let fetchDescriptor = FetchDescriptor<RecurringPurchase>(predicate: nil, sortBy: [SortDescriptor(\.name)])
     
@@ -155,19 +169,12 @@ func addSampleData(modelContext: ModelContext) {
     }
 }
 
-// Add this new property at the top level of the file
-@MainActor
-let previewAppState: AppState = {
-    let appState = AppState()
-    // Initialize appState with any necessary mock data or settings
-    return appState
-}()
-
 // Add this extension at the bottom of the file
 extension View {
     func withPreviewEnvironment() -> some View {
         self
             .modelContainer(previewContainer)
             .environmentObject(previewAppState)
+            .environmentObject(previewAuthService)
     }
 }

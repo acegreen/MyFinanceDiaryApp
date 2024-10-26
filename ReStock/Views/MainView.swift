@@ -80,8 +80,10 @@ struct MainView: View {
     
     private var newPurchaseForm: some View {
         NavigationView {
-            RecurringPurchaseFormView(recurringPurchase: RecurringPurchase(), isNewPurchase: true)
-                .navigationTitle("New Purchase")
+            RecurringPurchaseFormView(recurringPurchase: RecurringPurchase(), isNewPurchase: true) { savedPurchase in
+                selectedPurchase = savedPurchase
+            }
+            .navigationTitle("New Purchase")
         }
     }
     
