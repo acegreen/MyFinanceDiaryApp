@@ -1,13 +1,13 @@
 //
-//  ReStockUITestsLaunchTests.swift
-//  ReStockUITests
+//  MyFinanceDiaryAppUITestsLaunchTests.swift
+//  MyFinanceDiaryAppUITests
 //
 //  Created by Ace Green on 2024-10-26.
 //
 
 import XCTest
 
-final class ReStockUITestsLaunchTests: XCTestCase {
+final class MyFinanceDiaryAppUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

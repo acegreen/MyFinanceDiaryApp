@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "23F78B972CCD4CE300202DF5"
-               BuildableName = "ReStock.app"
-               BlueprintName = "ReStock"
-               ReferencedContainer = "container:ReStock.xcodeproj">
+               BuildableName = "MyFinanceDiary.app"
+               BlueprintName = "MyFinanceDiary"
+               ReferencedContainer = "container:MyFinanceDiary.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -36,9 +36,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "23F78BAB2CCD4CE400202DF5"
-               BuildableName = "ReStockTests.xctest"
-               BlueprintName = "ReStockTests"
-               ReferencedContainer = "container:ReStock.xcodeproj">
+               BuildableName = "MyFinanceDiaryTests.xctest"
+               BlueprintName = "MyFinanceDiaryTests"
+               ReferencedContainer = "container:MyFinanceDiary.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -47,9 +47,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "23F78BB52CCD4CE400202DF5"
-               BuildableName = "ReStockUITests.xctest"
-               BlueprintName = "ReStockUITests"
-               ReferencedContainer = "container:ReStock.xcodeproj">
+               BuildableName = "MyFinanceDiaryUITests.xctest"
+               BlueprintName = "MyFinanceDiaryUITests"
+               ReferencedContainer = "container:MyFinanceDiary.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -69,9 +69,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "23F78B972CCD4CE300202DF5"
-            BuildableName = "ReStock.app"
-            BlueprintName = "ReStock"
-            ReferencedContainer = "container:ReStock.xcodeproj">
+            BuildableName = "MyFinanceDiary.app"
+            BlueprintName = "MyFinanceDiary"
+            ReferencedContainer = "container:MyFinanceDiary.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -86,9 +86,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "23F78B972CCD4CE300202DF5"
-            BuildableName = "ReStock.app"
-            BlueprintName = "ReStock"
-            ReferencedContainer = "container:ReStock.xcodeproj">
+            BuildableName = "MyFinanceDiary.app"
+            BlueprintName = "MyFinanceDiary"
+            ReferencedContainer = "container:MyFinanceDiary.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

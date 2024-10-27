@@ -11,7 +11,7 @@ class AppState: ObservableObject {
     
     init() {
         do {
-            let schema = Schema([RecurringPurchase.self])
+            let schema = Schema([Transaction.self])
             let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
             container = try ModelContainer(for: schema, configurations: [modelConfiguration])
             

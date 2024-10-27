@@ -1,13 +1,13 @@
 //
-//  ReStockUITests.swift
-//  ReStockUITests
+//  MyFinanceDiaryAppUITests.swift
+//  MyFinanceDiaryAppUITests
 //
 //  Created by Ace Green on 2024-10-25.
 //
 
 import XCTest
 
-final class ReStockUITests: XCTestCase {
+final class MyFinanceDiaryAppUITests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.

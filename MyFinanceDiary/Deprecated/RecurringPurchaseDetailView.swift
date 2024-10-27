@@ -24,11 +24,11 @@ struct RecurringPurchaseDetailView: View {
             }
 
             Section {
-                Button(action: restockNow) {
+                Button(action: MyFinanceDiaryAppNow) {
                     if isLoading {
                         ProgressView()
                     } else {
-                        Text("Restock Now")
+                        Text("MyFinanceDiaryApp Now")
                     }
                 }
                 .disabled(isLoading)
@@ -53,7 +53,7 @@ struct RecurringPurchaseDetailView: View {
         .enableInjection()
     }
     
-    private func restockNow() {
+    private func MyFinanceDiaryAppNow() {
         isLoading = true
         errorMessage = nil
         

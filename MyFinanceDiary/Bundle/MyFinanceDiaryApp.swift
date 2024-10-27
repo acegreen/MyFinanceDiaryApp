@@ -1,6 +1,6 @@
 //
-//  ReStockApp.swift
-//  ReStock
+//  MyFinanceDiaryApp.swift
+//  MyFinanceDiaryApp
 //
 //  Created by Ace Green on 2024-10-25.
 //
@@ -10,7 +10,7 @@ import SwiftData
 import Inject
 
 @main
-struct ReStockApp: App {
+struct MyFinanceDiaryApp: App {
     @ObserveInjection var inject    
     @StateObject private var appState = AppState()
     @StateObject private var authManager = AuthenticationService()
@@ -20,10 +20,10 @@ struct ReStockApp: App {
             // Wrap MainView in a conditional view based on authentication status
             Group {
                 if authManager.isAuthenticated {
-                    MainView()
+                    OverviewView()
                         .environment(\.modelContext, appState.container.mainContext)
                         .environmentObject(appState)
-                        .environmentObject(authManager) // Pass authManager to child views
+                        .environmentObject(authManager)
                 } else {
                     LoginView()
                         .environmentObject(authManager)
