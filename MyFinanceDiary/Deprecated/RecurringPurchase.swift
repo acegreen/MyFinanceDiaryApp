@@ -120,6 +120,30 @@ final class RecurringPurchase {
     }
 }
 
+extension RecurringPurchase.Frequency {
+    var calendarComponent: Calendar.Component {
+        switch self {
+        case .daily: return .day
+        case .weekly, .biweekly: return .weekOfYear
+        case .monthly, .quarterly: return .month
+        case .yearly: return .year
+        case .all: return .day // Default case, though it won't be used
+        }
+    }
+    
+    var value: Int {
+        switch self {
+        case .daily: return 1
+        case .weekly: return 1
+        case .biweekly: return 2
+        case .monthly: return 1
+        case .quarterly: return 3
+        case .yearly: return 1
+        case .all: return 0 // Default case, though it won't be used
+        }
+    }
+}
+
 extension RecurringPurchase: Equatable {
     static func == (lhs: RecurringPurchase, rhs: RecurringPurchase) -> Bool {
         lhs.id == rhs.id

@@ -41,7 +41,7 @@ struct MainView: View {
             // FilterBar(selectedFilter: $selectedFilter)
             purchasesList
         }
-        .navigationTitle("ReStock")
+        .navigationTitle("MyFinanceDiaryApp")
         .toolbar { toolbarContent }
         .sheet(isPresented: $showingNewPurchaseForm) {
             newPurchaseForm

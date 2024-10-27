@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		230ED3A62CCEA8E400E2142A /* Charts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 230ED3A52CCEA8E400E2142A /* Charts.framework */; };
 		23F78BF52CCD4E9800202DF5 /* Inject in Frameworks */ = {isa = PBXBuildFile; productRef = 23F78BF42CCD4E9800202DF5 /* Inject */; };
 /* End PBXBuildFile section */
 
@@ -28,38 +29,39 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		23F78B982CCD4CE300202DF5 /* ReStock.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReStock.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		23F78BAC2CCD4CE400202DF5 /* ReStockTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ReStockTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		23F78BB62CCD4CE400202DF5 /* ReStockUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ReStockUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		230ED3A52CCEA8E400E2142A /* Charts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Charts.framework; path = System/Library/Frameworks/Charts.framework; sourceTree = SDKROOT; };
+		23F78B982CCD4CE300202DF5 /* MyFinanceDiary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyFinanceDiary.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		23F78BAC2CCD4CE400202DF5 /* MyFinanceDiaryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyFinanceDiaryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		23F78BB62CCD4CE400202DF5 /* MyFinanceDiaryUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyFinanceDiaryUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		230ED35D2CCD573800E2142A /* Exceptions for "ReStock" folder in "ReStock" target */ = {
+		230ED35D2CCD573800E2142A /* Exceptions for "MyFinanceDiary" folder in "MyFinanceDiary" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Bundle/Info.plist,
 			);
-			target = 23F78B972CCD4CE300202DF5 /* ReStock */;
+			target = 23F78B972CCD4CE300202DF5 /* MyFinanceDiary */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		23F78B9A2CCD4CE300202DF5 /* ReStock */ = {
+		23F78B9A2CCD4CE300202DF5 /* MyFinanceDiary */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				230ED35D2CCD573800E2142A /* Exceptions for "ReStock" folder in "ReStock" target */,
+				230ED35D2CCD573800E2142A /* Exceptions for "MyFinanceDiary" folder in "MyFinanceDiary" target */,
 			);
-			path = ReStock;
+			path = MyFinanceDiary;
 			sourceTree = "<group>";
 		};
-		23F78BAF2CCD4CE400202DF5 /* ReStockTests */ = {
+		23F78BAF2CCD4CE400202DF5 /* MyFinanceDiaryTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = ReStockTests;
+			path = MyFinanceDiaryTests;
 			sourceTree = "<group>";
 		};
-		23F78BB92CCD4CE400202DF5 /* ReStockUITests */ = {
+		23F78BB92CCD4CE400202DF5 /* MyFinanceDiaryUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = ReStockUITests;
+			path = MyFinanceDiaryUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -70,6 +72,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				23F78BF52CCD4E9800202DF5 /* Inject in Frameworks */,
+				230ED3A62CCEA8E400E2142A /* Charts.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -90,12 +93,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		230ED3A42CCEA8E300E2142A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				230ED3A52CCEA8E400E2142A /* Charts.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		23F78B8F2CCD4CE300202DF5 = {
 			isa = PBXGroup;
 			children = (
-				23F78B9A2CCD4CE300202DF5 /* ReStock */,
-				23F78BAF2CCD4CE400202DF5 /* ReStockTests */,
-				23F78BB92CCD4CE400202DF5 /* ReStockUITests */,
+				23F78B9A2CCD4CE300202DF5 /* MyFinanceDiary */,
+				23F78BAF2CCD4CE400202DF5 /* MyFinanceDiaryTests */,
+				23F78BB92CCD4CE400202DF5 /* MyFinanceDiaryUITests */,
+				230ED3A42CCEA8E300E2142A /* Frameworks */,
 				23F78B992CCD4CE300202DF5 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -103,9 +115,9 @@
 		23F78B992CCD4CE300202DF5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				23F78B982CCD4CE300202DF5 /* ReStock.app */,
-				23F78BAC2CCD4CE400202DF5 /* ReStockTests.xctest */,
-				23F78BB62CCD4CE400202DF5 /* ReStockUITests.xctest */,
+				23F78B982CCD4CE300202DF5 /* MyFinanceDiary.app */,
+				23F78BAC2CCD4CE400202DF5 /* MyFinanceDiaryTests.xctest */,
+				23F78BB62CCD4CE400202DF5 /* MyFinanceDiaryUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -113,9 +125,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		23F78B972CCD4CE300202DF5 /* ReStock */ = {
+		23F78B972CCD4CE300202DF5 /* MyFinanceDiary */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 23F78BBF2CCD4CE400202DF5 /* Build configuration list for PBXNativeTarget "ReStock" */;
+			buildConfigurationList = 23F78BBF2CCD4CE400202DF5 /* Build configuration list for PBXNativeTarget "MyFinanceDiary" */;
 			buildPhases = (
 				23F78B942CCD4CE300202DF5 /* Sources */,
 				23F78B952CCD4CE300202DF5 /* Frameworks */,
@@ -126,19 +138,19 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				23F78B9A2CCD4CE300202DF5 /* ReStock */,
+				23F78B9A2CCD4CE300202DF5 /* MyFinanceDiary */,
 			);
-			name = ReStock;
+			name = MyFinanceDiary;
 			packageProductDependencies = (
 				23F78BF42CCD4E9800202DF5 /* Inject */,
 			);
 			productName = ReStock;
-			productReference = 23F78B982CCD4CE300202DF5 /* ReStock.app */;
+			productReference = 23F78B982CCD4CE300202DF5 /* MyFinanceDiary.app */;
 			productType = "com.apple.product-type.application";
 		};
-		23F78BAB2CCD4CE400202DF5 /* ReStockTests */ = {
+		23F78BAB2CCD4CE400202DF5 /* MyFinanceDiaryTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 23F78BC42CCD4CE400202DF5 /* Build configuration list for PBXNativeTarget "ReStockTests" */;
+			buildConfigurationList = 23F78BC42CCD4CE400202DF5 /* Build configuration list for PBXNativeTarget "MyFinanceDiaryTests" */;
 			buildPhases = (
 				23F78BA82CCD4CE400202DF5 /* Sources */,
 				23F78BA92CCD4CE400202DF5 /* Frameworks */,
@@ -150,18 +162,18 @@
 				23F78BAE2CCD4CE400202DF5 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				23F78BAF2CCD4CE400202DF5 /* ReStockTests */,
+				23F78BAF2CCD4CE400202DF5 /* MyFinanceDiaryTests */,
 			);
-			name = ReStockTests;
+			name = MyFinanceDiaryTests;
 			packageProductDependencies = (
 			);
 			productName = ReStockTests;
-			productReference = 23F78BAC2CCD4CE400202DF5 /* ReStockTests.xctest */;
+			productReference = 23F78BAC2CCD4CE400202DF5 /* MyFinanceDiaryTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		23F78BB52CCD4CE400202DF5 /* ReStockUITests */ = {
+		23F78BB52CCD4CE400202DF5 /* MyFinanceDiaryUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 23F78BC72CCD4CE400202DF5 /* Build configuration list for PBXNativeTarget "ReStockUITests" */;
+			buildConfigurationList = 23F78BC72CCD4CE400202DF5 /* Build configuration list for PBXNativeTarget "MyFinanceDiaryUITests" */;
 			buildPhases = (
 				23F78BB22CCD4CE400202DF5 /* Sources */,
 				23F78BB32CCD4CE400202DF5 /* Frameworks */,
@@ -173,13 +185,13 @@
 				23F78BB82CCD4CE400202DF5 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				23F78BB92CCD4CE400202DF5 /* ReStockUITests */,
+				23F78BB92CCD4CE400202DF5 /* MyFinanceDiaryUITests */,
 			);
-			name = ReStockUITests;
+			name = MyFinanceDiaryUITests;
 			packageProductDependencies = (
 			);
 			productName = ReStockUITests;
-			productReference = 23F78BB62CCD4CE400202DF5 /* ReStockUITests.xctest */;
+			productReference = 23F78BB62CCD4CE400202DF5 /* MyFinanceDiaryUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -205,7 +217,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 23F78B932CCD4CE300202DF5 /* Build configuration list for PBXProject "ReStock" */;
+			buildConfigurationList = 23F78B932CCD4CE300202DF5 /* Build configuration list for PBXProject "MyFinanceDiary" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -222,9 +234,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				23F78B972CCD4CE300202DF5 /* ReStock */,
-				23F78BAB2CCD4CE400202DF5 /* ReStockTests */,
-				23F78BB52CCD4CE400202DF5 /* ReStockUITests */,
+				23F78B972CCD4CE300202DF5 /* MyFinanceDiary */,
+				23F78BAB2CCD4CE400202DF5 /* MyFinanceDiaryTests */,
+				23F78BB52CCD4CE400202DF5 /* MyFinanceDiaryUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -280,12 +292,12 @@
 /* Begin PBXTargetDependency section */
 		23F78BAE2CCD4CE400202DF5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 23F78B972CCD4CE300202DF5 /* ReStock */;
+			target = 23F78B972CCD4CE300202DF5 /* MyFinanceDiary */;
 			targetProxy = 23F78BAD2CCD4CE400202DF5 /* PBXContainerItemProxy */;
 		};
 		23F78BB82CCD4CE400202DF5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 23F78B972CCD4CE300202DF5 /* ReStock */;
+			target = 23F78B972CCD4CE300202DF5 /* MyFinanceDiary */;
 			targetProxy = 23F78BB72CCD4CE400202DF5 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -296,14 +308,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = ReStock/Bundle/ReStock.entitlements;
+				CODE_SIGN_ENTITLEMENTS = MyFinanceDiary/Bundle/MyFinanceDiary.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"ReStock/Bundle/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"MyFinanceDiary/Bundle/Preview Content\"";
 				DEVELOPMENT_TEAM = 8T3W9YR268;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ReStock/Bundle/Info.plist;
+				INFOPLIST_FILE = MyFinanceDiary/Bundle/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -318,7 +330,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -327,14 +339,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = ReStock/Bundle/ReStock.entitlements;
+				CODE_SIGN_ENTITLEMENTS = MyFinanceDiary/Bundle/MyFinanceDiary.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"ReStock/Bundle/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"MyFinanceDiary/Bundle/Preview Content\"";
 				DEVELOPMENT_TEAM = 8T3W9YR268;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ReStock/Bundle/Info.plist;
+				INFOPLIST_FILE = MyFinanceDiary/Bundle/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -349,7 +361,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -414,7 +426,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				TVOS_DEPLOYMENT_TARGET = 15.6;
 				WATCHOS_DEPLOYMENT_TARGET = 8.7;
 				XROS_DEPLOYMENT_TARGET = 1.3;
@@ -474,7 +486,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				TVOS_DEPLOYMENT_TARGET = 15.6;
 				VALIDATE_PRODUCT = YES;
 				WATCHOS_DEPLOYMENT_TARGET = 8.7;
@@ -497,7 +509,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ReStock.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ReStock";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MyFinanceDiary.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MyFinanceDiary";
 			};
 			name = Debug;
 		};
@@ -516,7 +528,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ReStock.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ReStock";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MyFinanceDiary.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MyFinanceDiary";
 			};
 			name = Release;
 		};
@@ -557,7 +569,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		23F78B932CCD4CE300202DF5 /* Build configuration list for PBXProject "ReStock" */ = {
+		23F78B932CCD4CE300202DF5 /* Build configuration list for PBXProject "MyFinanceDiary" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				23F78BC22CCD4CE400202DF5 /* Debug */,
@@ -566,7 +578,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		23F78BBF2CCD4CE400202DF5 /* Build configuration list for PBXNativeTarget "ReStock" */ = {
+		23F78BBF2CCD4CE400202DF5 /* Build configuration list for PBXNativeTarget "MyFinanceDiary" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				23F78BC02CCD4CE400202DF5 /* Debug */,
@@ -575,7 +587,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		23F78BC42CCD4CE400202DF5 /* Build configuration list for PBXNativeTarget "ReStockTests" */ = {
+		23F78BC42CCD4CE400202DF5 /* Build configuration list for PBXNativeTarget "MyFinanceDiaryTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				23F78BC52CCD4CE400202DF5 /* Debug */,
@@ -584,7 +596,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		23F78BC72CCD4CE400202DF5 /* Build configuration list for PBXNativeTarget "ReStockUITests" */ = {
+		23F78BC72CCD4CE400202DF5 /* Build configuration list for PBXNativeTarget "MyFinanceDiaryUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				23F78BC82CCD4CE400202DF5 /* Debug */,
