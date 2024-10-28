@@ -18,6 +18,11 @@ struct ContentView: View {
                         .tabItem {
                             Label("Budget", systemImage: "switch.2")
                         }
+                    
+                    GoalsView()
+                        .tabItem {
+                            Label("Goals", systemImage: "trophy.fill")
+                        }
                 }
             } else {
                 LoginView()

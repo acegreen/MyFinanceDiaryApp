@@ -4,22 +4,24 @@ import Inject
 
 struct DashboardView: View {
     @ObserveInjection var inject
-    @StateObject private var viewModel = DashboardViewModel()
+    @StateObject var viewModel = DashboardViewModel()
     
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: 0) {
-                    HeaderView(viewModel: viewModel)
-                    AccountsSection(accounts: viewModel.accounts)
-                        .background(Color("AccentColor").opacity(0.05))
-                }
+        ViewBuilderWrapper {
+            DashboardHeaderView(viewModel: viewModel)
+        } main: {
+            AccountsSection(accounts: viewModel.accounts)
+                .background(Color("AccentColor").opacity(0.05))
+        } toolbarContent: {
+            Button(action: {}) {
+                Image(systemName: "bubble.and.pencil")
+                    .foregroundColor(.white)
             }
-            .background(Color(uiColor: .systemBackground))
-            .navigationBarTitleDisplayMode(.inline)
-            .ignoresSafeArea()
+            Button(action: {}) {
+                Image(systemName: "plus")
+                    .foregroundColor(.white)
+            }
         }
-        .enableInjection()
     }
 }
 
@@ -30,7 +32,6 @@ struct AccountsSection: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             AccountsList(accounts: accounts)
-                .padding(.top, 24)
         }
         .background(Color(uiColor: .systemBackground))
     }
@@ -53,6 +54,66 @@ struct AccountsList: View {
         .padding(.horizontal)
     }
 }
+
+struct DashboardHeaderView: View {
+    @ObservedObject var viewModel: DashboardViewModel
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            // Credit Score Section
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Credit score")
+                        .font(.headline)
+                        .foregroundColor(.white.opacity(0.9))
+                    Text("791")
+                        .font(.title2.bold())
+                        .foregroundColor(.white)
+                }
+                Spacer()
+            }
+
+            // Tab Selection
+            Picker("View Selection", selection: $viewModel.selectedSegment) {
+                ForEach(DashboardViewModel.ChartSegment.allCases, id: \.self) { tab in
+                    Text(tab.rawValue)
+                        .tag(tab)
+                }
+            }
+            .pickerStyle(.segmented)
+            .colorScheme(.dark) // Force dark mode for white text
+
+            // Amount Display
+            VStack(alignment: .leading, spacing: 8) {
+                Text(viewModel.currentAmount)
+                    .font(.system(size: 36, weight: .bold))
+                    .foregroundColor(.white)
+
+                HStack(spacing: 4) {
+                    Image(systemName: viewModel.changeIsPositive ? "arrow.up" : "arrow.down")
+                        .foregroundColor(viewModel.changeIsPositive ? .green : .red)
+                    Text(viewModel.changeDescription)
+                        .font(.subheadline)
+                        .foregroundColor(.white.opacity(0.9))
+                }
+            }
+            .padding(.top, 8)
+
+            // Chart
+            FinancialChartView(data: viewModel.chartData)
+        }
+        .padding(24)
+        .padding(.top, 48)
+        .background(
+            LinearGradient(
+                colors: [Color(hex: "1D7B6E"), Color(hex: "1A9882")],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        )
+    }
+}
+
 
 // FinancialItemView for each financial category
 struct AccountItemRow: View {

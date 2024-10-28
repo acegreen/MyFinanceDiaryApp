@@ -25,7 +25,6 @@ struct TransactionsView: View {
             }, message: {
                 Text(viewModel.error?.localizedDescription ?? "Unknown error")
             })
-            .enableInjection()
     }
 }
 

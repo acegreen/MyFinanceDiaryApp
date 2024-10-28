@@ -64,7 +64,6 @@ struct FinancialDataPoint: Identifiable {
 struct FinancialChartView_Previews: PreviewProvider {
     static var previews: some View {
         FinancialChartView(data: sampleData)
-            .frame(height: 200)
             .background(Color.green)
             .padding()
     }
