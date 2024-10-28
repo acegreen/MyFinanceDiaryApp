@@ -7,15 +7,17 @@ class AppState: ObservableObject {
     @ObserveInjection var inject
     
     let container: ModelContainer
-    let orderingService: OrderingService
-    
+    let authenticationService: AuthenticationService
+    let transactionService: TransactionsService
+
     init() {
         do {
             let schema = Schema([Transaction.self])
             let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
             container = try ModelContainer(for: schema, configurations: [modelConfiguration])
             
-            orderingService = OrderingService()
+            authenticationService = AuthenticationService()
+            transactionService = TransactionsService()
             
             // Add sample data if needed
             Task {

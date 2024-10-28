@@ -29,23 +29,6 @@ struct TransactionsView: View {
     }
 }
 
-// New component for the transaction row
-struct TransactionRow: View {
-    let transaction: Transaction
-    
-    var body: some View {
-        HStack {
-            VStack(alignment: .leading) {
-                Text(transaction.transactionDescription)
-                    .font(.system(size: 17))
-            }
-            Spacer()
-            Text(transaction.amount, format: .currency(code: "USD"))
-                .foregroundColor(transaction.type == .debit ? .red : .green)
-        }
-    }
-}
-
 // New component for the list
 struct TransactionsList: View {
     let groupedTransactions: [Date: [Transaction]]
@@ -59,6 +42,23 @@ struct TransactionsList: View {
                     }
                 }
             }
+        }
+    }
+}
+
+// New component for the transaction row
+struct TransactionRow: View {
+    let transaction: Transaction
+
+    var body: some View {
+        HStack {
+            VStack(alignment: .leading) {
+                Text(transaction.transactionDescription)
+                    .font(.system(size: 17))
+            }
+            Spacer()
+            Text(transaction.amount, format: .currency(code: "USD"))
+                .foregroundColor(transaction.type == .debit ? .red : .green)
         }
     }
 }

@@ -23,13 +23,6 @@ let previewAppState: AppState = {
 }()
 
 @MainActor
-let previewAuthService: AuthenticationService = {
-    let authService = AuthenticationService()
-    // Initialize appState with any necessary mock data or settings
-    return authService
-}()
-
-@MainActor
 let previewdashboardViewModel: DashboardViewModel = {
     let viewModel = DashboardViewModel()
     // Sample data is already set up in init()
@@ -108,7 +101,6 @@ extension View {
         self
             .modelContainer(previewContainer)
             .environmentObject(previewAppState)
-            .environmentObject(previewAuthService)
             .environmentObject(previewdashboardViewModel)
     }
 }

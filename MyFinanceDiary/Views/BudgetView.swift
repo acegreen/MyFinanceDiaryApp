@@ -16,13 +16,13 @@ struct BudgetView: View {
 
                     // Categories
                     VStack(alignment: .leading, spacing: 16) {
-                        ExpandableSection(
+                        BudgetExpandableSection(
                             title: "Income",
                             amount: budgetViewModel.formattedTotalIncome,
                             amountColor: .green,
                             categories: budgetViewModel.incomeCategories
                         )
-                        ExpandableSection(
+                        BudgetExpandableSection(
                             title: "Expenses",
                             amount: budgetViewModel.formattedTotalExpenses,
                             amountColor: .primary,
@@ -36,13 +36,9 @@ struct BudgetView: View {
             .ignoresSafeArea()
             .navigationTitle("\(budgetViewModel.currentMonth) budgets")
             .navigationBarItems(
-                leading: Button(action: {}) {
-                    Image(systemName: "chevron.left")
-                        .foregroundColor(.white)
-                },
                 trailing: HStack {
                     Button(action: {}) {
-                        Image(systemName: "arrow.clockwise")
+                        Image(systemName: "bubble.and.pencil")
                             .foregroundColor(.white)
                     }
                     Button(action: {}) {
@@ -73,8 +69,7 @@ struct BudgetHeaderView: View {
                 Text("Left")
                     .font(.subheadline)
                     .foregroundColor(.white)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
+                    .padding(8)
                     .background(Color.gray.opacity(0.3))
                     .border(.white)
                     .cornerRadius(4)
@@ -104,7 +99,7 @@ struct BudgetHeaderView: View {
 
         var body: some View {
             VStack(alignment: .leading, spacing: 8) {
-                ProgressBar(progress: spent / total, height: 8) // Specify larger height here
+                ProgressBar(progress: spent / total, height: 12)
                 Text("$\(Int(spent)) of $\(Int(total)) spent")
                     .font(.subheadline)
                     .foregroundColor(.white)
@@ -113,33 +108,7 @@ struct BudgetHeaderView: View {
     }
 }
 
-struct ProgressBar: View {
-    let progress: Double
-    let height: CGFloat // Add this property
-    
-    // Add initializer with default height
-    init(progress: Double, height: CGFloat = 4) {
-        self.progress = progress
-        self.height = height
-    }
-
-    var body: some View {
-        GeometryReader { geometry in
-            ZStack(alignment: .leading) {
-                Rectangle()
-                    .foregroundColor(.gray.opacity(0.3))
-
-                Rectangle()
-                    .frame(width: geometry.size.width * progress)
-                    .foregroundColor(.green)
-            }
-        }
-        .frame(height: height) // Use the height parameter
-        .cornerRadius(height / 2) // Make corner radius half of height for pill shape
-    }
-}
-
-struct ExpandableSection: View {
+struct BudgetExpandableSection: View {
     let title: String
     let amount: String
     let amountColor: Color
@@ -179,7 +148,7 @@ struct ExpandableSection: View {
             if isExpanded {
                 LazyVStack(spacing: 16) {
                     ForEach(categories) { category in
-                        CategoryRowView(category: category)
+                        BudgetCategoryRowView(category: category)
                     }
                 }
             }
@@ -187,7 +156,7 @@ struct ExpandableSection: View {
     }
 }
 
-struct CategoryRowView: View {
+struct BudgetCategoryRowView: View {
     let category: Budget.BudgetCategory
     @EnvironmentObject var budgetViewModel: BudgetViewModel
 

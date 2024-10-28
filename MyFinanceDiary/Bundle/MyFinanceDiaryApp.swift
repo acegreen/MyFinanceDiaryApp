@@ -16,33 +16,22 @@ struct MyFinanceDiaryApp: App {
     @StateObject private var authManager = AuthenticationService()
     @StateObject private var dashboardViewModel = DashboardViewModel()
     @StateObject private var budgetViewModel = BudgetViewModel()
+    
+    init() {
+        #if DEBUG
+        injectInit()
+        #endif
+    }
 
     var body: some Scene {
         WindowGroup {
-            Group {
-                if authManager.isAuthenticated {
-                    TabView {
-                        DashboardView()
-                            .tabItem {
-                                Label("Dashboard", systemImage: "chart.pie.fill")
-                            }
-                        
-                        BudgetView()
-                            .tabItem {
-                                Label("Budget", systemImage: "switch.2")
-                            }
-                    }
-                    .environment(\.modelContext, appState.container.mainContext)
-                    .environmentObject(appState)
-                    .environmentObject(authManager)
-                    .environmentObject(dashboardViewModel)
-                    .environmentObject(budgetViewModel)
-                } else {
-                    LoginView()
-                        .environmentObject(authManager)
-                }
-            }
-            .enableInjection()
+            ContentView()
+                .environment(\.modelContext, appState.container.mainContext)
+                .environmentObject(appState)
+                .environmentObject(authManager)
+                .environmentObject(dashboardViewModel)
+                .environmentObject(budgetViewModel)
+                .enableInjection()
         }
     }
 }
