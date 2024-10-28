@@ -44,7 +44,7 @@ struct AccountsList: View {
     var body: some View {
         VStack(spacing: 16) { // Increase spacing between items
             ForEach(accounts) { account in
-                FinancialItemView(
+                AccountItemRow(
                     type: account.type,
                     amount: viewModel.formatAmount(account.amount)
                 )
@@ -55,7 +55,7 @@ struct AccountsList: View {
 }
 
 // FinancialItemView for each financial category
-struct FinancialItemView: View {
+struct AccountItemRow: View {
     var type: Account.AccountType
     var amount: String
     
@@ -74,7 +74,7 @@ struct FinancialItemView: View {
             .padding(.vertical, 16) // Increase vertical padding
             .background(Color(uiColor: .systemBackground))
             .cornerRadius(12)
-            .shadow(color: Color.black.opacity(0.05), radius: 3, x: 0, y: 2)
+            .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
         }
     }
 }

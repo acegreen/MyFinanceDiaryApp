@@ -17,7 +17,7 @@ struct LoginView: View {
             .ignoresSafeArea()
             
             VStack(spacing: 20) {
-                Text("My Finance Diary")
+                Text("MyFinanceDiary")
                     .font(.system(size: 28, weight: .bold))
                     .foregroundColor(.white)
                     .padding(.bottom, 30)

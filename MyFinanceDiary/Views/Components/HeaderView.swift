@@ -42,7 +42,7 @@ struct HeaderView: View {
             // Amount Display
             VStack(alignment: .leading, spacing: 8) {
                 Text(viewModel.currentAmount)
-                    .font(.system(size: 34, weight: .bold))
+                    .font(.system(size: 36, weight: .bold))
                     .foregroundColor(.white)
                 
                 HStack(spacing: 4) {
@@ -68,44 +68,4 @@ struct HeaderView: View {
             )
         )
     }
-}
-
-// Separate Net Worth Info Component
-struct NetWorthInfoView: View {
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            TitleView()
-            AmountView()
-            ChangeView()
-        }
-    }
-
-    // Further broken down components
-    private struct TitleView: View {
-        var body: some View {
-            Text("Net Worth")
-                .font(.headline)
-                .foregroundColor(.white)
-        }
-    }
-
-    private struct AmountView: View {
-        var body: some View {
-            Text("$78,839")
-                .font(.system(size: 36, weight: .bold))
-                .foregroundColor(.white)
-        }
-    }
-
-    private struct ChangeView: View {
-        var body: some View {
-            HStack {
-                Text("+$200 this month")
-                    .font(.subheadline)
-                    .foregroundColor(.white.opacity(0.8))
-                Spacer()
-            }
-        }
-    }
-
 }
