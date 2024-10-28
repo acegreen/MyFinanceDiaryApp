@@ -2,7 +2,7 @@ import SwiftUI
 import Charts
 
 struct HeaderView: View {
-    @ObservedObject var viewModel: OverviewViewModel
+    @ObservedObject var viewModel: DashboardViewModel
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -28,7 +28,7 @@ struct HeaderView: View {
             // Tab Selection
             ScrollView(.horizontal, showsIndicators: false) {
                 Picker("View Selection", selection: $viewModel.selectedSegment) {
-                    ForEach(OverviewViewModel.ChartSegment.allCases, id: \.self) { tab in
+                    ForEach(DashboardViewModel.ChartSegment.allCases, id: \.self) { tab in
                         Text(tab.rawValue)
                             .tag(tab)
                     }
@@ -79,32 +79,33 @@ struct NetWorthInfoView: View {
             ChangeView()
         }
     }
-}
 
-// Further broken down components
-private struct TitleView: View {
-    var body: some View {
-        Text("Net Worth")
-            .font(.headline)
-            .foregroundColor(.white)
-    }
-}
-
-private struct AmountView: View {
-    var body: some View {
-        Text("$78,839")
-            .font(.system(size: 36, weight: .bold))
-            .foregroundColor(.white)
-    }
-}
-
-private struct ChangeView: View {
-    var body: some View {
-        HStack {
-            Text("+$200 this month")
-                .font(.subheadline)
-                .foregroundColor(.white.opacity(0.8))
-            Spacer()
+    // Further broken down components
+    private struct TitleView: View {
+        var body: some View {
+            Text("Net Worth")
+                .font(.headline)
+                .foregroundColor(.white)
         }
     }
+
+    private struct AmountView: View {
+        var body: some View {
+            Text("$78,839")
+                .font(.system(size: 36, weight: .bold))
+                .foregroundColor(.white)
+        }
+    }
+
+    private struct ChangeView: View {
+        var body: some View {
+            HStack {
+                Text("+$200 this month")
+                    .font(.subheadline)
+                    .foregroundColor(.white.opacity(0.8))
+                Spacer()
+            }
+        }
+    }
+
 }

@@ -14,7 +14,7 @@ struct MyFinanceDiaryApp: App {
     @ObserveInjection var inject    
     @StateObject private var appState = AppState()
     @StateObject private var authManager = AuthenticationService()
-    @StateObject private var overviewViewModel = OverviewViewModel()
+    @StateObject private var dashboardViewModel = DashboardViewModel()
     @StateObject private var budgetViewModel = BudgetViewModel()
 
     var body: some Scene {
@@ -22,20 +22,20 @@ struct MyFinanceDiaryApp: App {
             Group {
                 if authManager.isAuthenticated {
                     TabView {
-                        OverviewView()
+                        DashboardView()
                             .tabItem {
-                                Label("Overview", systemImage: "chart.pie.fill")
+                                Label("Dashboard", systemImage: "chart.pie.fill")
                             }
                         
                         BudgetView()
                             .tabItem {
-                                Label("Budget", systemImage: "dollarsign.circle.fill")
+                                Label("Budget", systemImage: "switch.2")
                             }
                     }
                     .environment(\.modelContext, appState.container.mainContext)
                     .environmentObject(appState)
                     .environmentObject(authManager)
-                    .environmentObject(overviewViewModel)
+                    .environmentObject(dashboardViewModel)
                     .environmentObject(budgetViewModel)
                 } else {
                     LoginView()

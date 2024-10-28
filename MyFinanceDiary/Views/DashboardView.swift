@@ -2,9 +2,9 @@ import SwiftUI
 import Charts
 import Inject
 
-struct OverviewView: View {
+struct DashboardView: View {
     @ObserveInjection var inject
-    @StateObject private var viewModel = OverviewViewModel()
+    @StateObject private var viewModel = DashboardViewModel()
     
     var body: some View {
         NavigationStack {
@@ -39,7 +39,7 @@ struct AccountsSection: View {
 // Separate Accounts List
 struct AccountsList: View {
     let accounts: [Account]
-    @EnvironmentObject private var viewModel: OverviewViewModel
+    @EnvironmentObject private var viewModel: DashboardViewModel
     
     var body: some View {
         VStack(spacing: 16) { // Increase spacing between items
@@ -80,6 +80,6 @@ struct FinancialItemView: View {
 }
 
 #Preview {
-    OverviewView()
+    DashboardView()
         .withPreviewEnvironment()
 }

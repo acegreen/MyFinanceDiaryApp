@@ -1,7 +1,7 @@
 import Foundation
 
 @MainActor
-class OverviewViewModel: ObservableObject {
+class DashboardViewModel: ObservableObject {
     @Published var accounts: [Account] = []
     @Published var selectedSegment: ChartSegment = .netWorth {
         didSet {

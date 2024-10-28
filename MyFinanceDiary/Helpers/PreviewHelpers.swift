@@ -30,8 +30,8 @@ let previewAuthService: AuthenticationService = {
 }()
 
 @MainActor
-let previewOverviewViewModel: OverviewViewModel = {
-    let viewModel = OverviewViewModel()
+let previewdashboardViewModel: DashboardViewModel = {
+    let viewModel = DashboardViewModel()
     // Sample data is already set up in init()
     return viewModel
 }()
@@ -109,6 +109,6 @@ extension View {
             .modelContainer(previewContainer)
             .environmentObject(previewAppState)
             .environmentObject(previewAuthService)
-            .environmentObject(previewOverviewViewModel)
+            .environmentObject(previewdashboardViewModel)
     }
 }
