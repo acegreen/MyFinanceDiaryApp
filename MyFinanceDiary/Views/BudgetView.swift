@@ -3,54 +3,41 @@ import Inject
 
 struct BudgetView: View {
     @ObserveInjection var inject
-    @EnvironmentObject var budgetViewModel: BudgetViewModel
-
+    @StateObject var budgetViewModel = BudgetViewModel()
+    
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
-                    VStack {
-                        // Header
-                        BudgetHeaderView(amount: budgetViewModel.formattedRemaining)
-                    }
-
-                    // Categories
-                    VStack(alignment: .leading, spacing: 16) {
-                        BudgetExpandableSection(
-                            title: "Income",
-                            amount: budgetViewModel.formattedTotalIncome,
-                            amountColor: .green,
-                            categories: budgetViewModel.incomeCategories
-                        )
-                        BudgetExpandableSection(
-                            title: "Expenses",
-                            amount: budgetViewModel.formattedTotalExpenses,
-                            amountColor: .primary,
-                            categories: budgetViewModel.expenseCategories,
-                            expandedByDefault: true
-                        )
-                    }
-                    .padding(.horizontal)
-                }
+        ViewBuilderWrapper {
+            // Header
+            BudgetHeaderView(amount: budgetViewModel.formattedRemaining)
+        } main: {
+            // Main content
+            VStack(alignment: .leading, spacing: 24) {
+                BudgetExpandableSection(
+                    title: "Income",
+                    amount: budgetViewModel.formattedTotalIncome,
+                    amountColor: .green,
+                    categories: budgetViewModel.incomeCategories
+                )
+                BudgetExpandableSection(
+                    title: "Expenses",
+                    amount: budgetViewModel.formattedTotalExpenses,
+                    amountColor: .primary,
+                    categories: budgetViewModel.expenseCategories,
+                    expandedByDefault: true
+                )
             }
-            .ignoresSafeArea()
-            .navigationTitle("\(budgetViewModel.currentMonth) budgets")
-            .navigationBarItems(
-                trailing: HStack {
-                    Button(action: {}) {
-                        Image(systemName: "bubble.and.pencil")
-                            .foregroundColor(.white)
-                    }
-                    Button(action: {}) {
-                        Image(systemName: "plus")
-                            .foregroundColor(.white)
-                    }
-                }
-            )
-            .navigationBarTitleDisplayMode(.inline)
+            .padding(.horizontal)
+        } toolbarContent: {
+            Button(action: {}) {
+                Image(systemName: "bubble.and.pencil")
+                    .foregroundColor(.white)
+            }
+            Button(action: {}) {
+                Image(systemName: "plus")
+                    .foregroundColor(.white)
+            }
         }
-        // .preferredColorScheme(.dark)
-        .enableInjection()
+        .navigationTitle("\(budgetViewModel.currentMonth) budgets")
     }
 }
 
@@ -83,7 +70,7 @@ struct BudgetHeaderView: View {
         }
         .padding(.top, 48)
         .padding(.horizontal)
-        .frame(height: 300)
+        .frame(minHeight: 300)
         .background(
             LinearGradient(
                 colors: [Color(hex: "1D7B6E"), Color(hex: "1A9882")],
