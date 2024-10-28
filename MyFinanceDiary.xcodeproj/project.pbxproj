@@ -17,14 +17,14 @@
 			containerPortal = 23F78B902CCD4CE300202DF5 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 23F78B972CCD4CE300202DF5;
-			remoteInfo = ReStock;
+			remoteInfo = MyFinanceDiary;
 		};
 		23F78BB72CCD4CE400202DF5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 23F78B902CCD4CE300202DF5 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 23F78B972CCD4CE300202DF5;
-			remoteInfo = ReStock;
+			remoteInfo = MyFinanceDiary;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -144,7 +144,7 @@
 			packageProductDependencies = (
 				23F78BF42CCD4E9800202DF5 /* Inject */,
 			);
-			productName = ReStock;
+			productName = MyFinanceDiary;
 			productReference = 23F78B982CCD4CE300202DF5 /* MyFinanceDiary.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -167,7 +167,7 @@
 			name = MyFinanceDiaryTests;
 			packageProductDependencies = (
 			);
-			productName = ReStockTests;
+			productName = MyFinanceDiaryTests;
 			productReference = 23F78BAC2CCD4CE400202DF5 /* MyFinanceDiaryTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
@@ -190,7 +190,7 @@
 			name = MyFinanceDiaryUITests;
 			packageProductDependencies = (
 			);
-			productName = ReStockUITests;
+			productName = MyFinanceDiaryUITests;
 			productReference = 23F78BB62CCD4CE400202DF5 /* MyFinanceDiaryUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
@@ -326,7 +326,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.greenace.ReStock;
+				PRODUCT_BUNDLE_IDENTIFIER = com.greenace.MyFinanceDiary;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -357,7 +357,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.greenace.ReStock;
+				PRODUCT_BUNDLE_IDENTIFIER = com.greenace.MyFinanceDiary;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -504,7 +504,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.greenace.ReStockTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.greenace.MyFinanceDiaryTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -523,7 +523,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.greenace.ReStockTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.greenace.MyFinanceDiaryTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -540,12 +540,12 @@
 				DEVELOPMENT_TEAM = 8T3W9YR268;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.greenace.ReStockUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.greenace.MyFinanceDiaryUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = ReStock;
+				TEST_TARGET_NAME = MyFinanceDiary;
 			};
 			name = Debug;
 		};
@@ -557,12 +557,12 @@
 				DEVELOPMENT_TEAM = 8T3W9YR268;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.greenace.ReStockUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.greenace.MyFinanceDiaryUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = ReStock;
+				TEST_TARGET_NAME = MyFinanceDiary;
 			};
 			name = Release;
 		};

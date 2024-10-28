@@ -13,6 +13,10 @@ class Transaction {
     var transactionDescription: String
     var amount: Double
     var type: TransactionType
+
+    var displayName: String {
+        return transactionDescription.capitalized
+    }
     
     init(date: Date = .now, transactionDescription: String = "", amount: Double = 0.0, type: TransactionType = .debit) {
         self.id = UUID()
