@@ -1,13 +1,12 @@
 import SwiftUI
 
+@MainActor
 class BudgetViewModel: ObservableObject {
-    @Published var currentMonth = "August"
+    @Published var currentMonth: String = "August"
     @Published var budgetSummary: Budget.BudgetSummary
-
     @Published var incomeCategories: [Budget.BudgetCategory] = [
         Budget.BudgetCategory(name: "Salary", spent: 3000, total: 3000, color: .green)
     ]
-    
     @Published var expenseCategories: [Budget.BudgetCategory] = [
         Budget.BudgetCategory(name: "Auto & transport", spent: 750, total: 1350, color: .green),
         Budget.BudgetCategory(name: "Auto insurance", spent: 400, total: 500, color: .orange),
@@ -16,28 +15,51 @@ class BudgetViewModel: ObservableObject {
     ]
     
     init() {
-        let totalIncome = 3000.0 // This should match your income categories total
+        // Initialize budgetSummary with all required parameters
         self.budgetSummary = Budget.BudgetSummary(
-            totalIncome: totalIncome,
-            totalBudget: 2550,
-            totalSpent: 738
+            totalIncome: 3000,  // From income categories
+            totalBudget: 2650,  // Sum of expense categories totals
+            totalSpent: 1500    // Sum of expense categories spent
         )
     }
     
-    var totalIncome: Double {
-        incomeCategories.reduce(0) { $0 + $1.spent }
+    var totalIncome: Int {
+        Int(incomeCategories.reduce(0) { $0 + Double($1.spent) })
+    }
+    
+    var totalExpenses: Int {
+        Int(expenseCategories.reduce(0) { $0 + Double($1.spent) })
     }
     
     var formattedTotalIncome: String {
-        String(format: "$%.0f", totalIncome)
+        "$\(Int(budgetSummary.totalIncome))"
     }
     
     var formattedRemaining: String {
         String(format: "$%.0f", budgetSummary.remaining)
     }
     
+    var formattedIncome: String {
+        formatAmount(totalIncome)
+    }
+    
+    var formattedExpenses: String {
+        "-\(formatAmount(totalExpenses))"
+    }
+    
+    var formattedTotalExpenses: String {
+        "-$\(Int(budgetSummary.totalSpent))"
+    }
+    
+    func formatAmount(_ amount: Int) -> String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.maximumFractionDigits = 0
+        return formatter.string(from: NSNumber(value: amount)) ?? "$0"
+    }
+    
     func getProgress(for category: Budget.BudgetCategory) -> Double {
-        category.spent / category.total
+        Double(category.spent) / Double(category.total)
     }
     
     func getRemainingAmount(for category: Budget.BudgetCategory) -> String {

@@ -18,13 +18,13 @@ struct BudgetView: View {
                     VStack(alignment: .leading, spacing: 16) {
                         ExpandableSection(
                             title: "Income",
-                            amount: "$3,000",
+                            amount: budgetViewModel.formattedTotalIncome,
                             amountColor: .green,
                             categories: budgetViewModel.incomeCategories
                         )
                         ExpandableSection(
                             title: "Expenses",
-                            amount: "-$\(Int(budgetViewModel.budgetSummary.totalSpent))",
+                            amount: budgetViewModel.formattedTotalExpenses,
                             amountColor: .primary,
                             categories: budgetViewModel.expenseCategories,
                             expandedByDefault: true
@@ -97,18 +97,18 @@ struct BudgetHeaderView: View {
             )
         )
     }
-}
 
-struct ProgressSection: View {
-    let spent: Double
-    let total: Double
+    struct ProgressSection: View {
+        let spent: Double
+        let total: Double
 
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            ProgressBar(progress: spent / total, height: 8) // Specify larger height here
-            Text("$\(Int(spent)) of $\(Int(total)) spent")
-                .font(.subheadline)
-                .foregroundColor(.white)
+        var body: some View {
+            VStack(alignment: .leading, spacing: 8) {
+                ProgressBar(progress: spent / total, height: 8) // Specify larger height here
+                Text("$\(Int(spent)) of $\(Int(total)) spent")
+                    .font(.subheadline)
+                    .foregroundColor(.white)
+            }
         }
     }
 }
