@@ -2,26 +2,7 @@ import SwiftUI
 import Charts
 
 struct HeaderView: View {
-
-    enum TabSelection: String, CaseIterable {
-        case spending = "Spending"
-        case netWorth = "Net worth"
-        case cash = "Cash"
-        case investments = "Investments"
-    }
-
-    let chartData: [NetWorthDataPoint]
-    
-    @State private var selectedTab: TabSelection = .netWorth
-
-    init(chartData: [NetWorthDataPoint]) {
-        self.chartData = chartData
-
-        // Customize UISegmentedControl appearance
-        UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor.white], for: .normal)
-        UISegmentedControl.appearance().setTitleTextAttributes([.foregroundColor: UIColor.white], for: .selected)
-        UISegmentedControl.appearance().selectedSegmentTintColor = UIColor.white.withAlphaComponent(0.2)
-    }
+    @ObservedObject var viewModel: OverviewViewModel
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -46,28 +27,28 @@ struct HeaderView: View {
             
             // Tab Selection
             ScrollView(.horizontal, showsIndicators: false) {
-                Picker("View Selection", selection: $selectedTab) {
-                    ForEach(TabSelection.allCases, id: \.self) { tab in
+                Picker("View Selection", selection: $viewModel.selectedSegment) {
+                    ForEach(OverviewViewModel.ChartSegment.allCases, id: \.self) { tab in
                         Text(tab.rawValue)
                             .tag(tab)
-                            .foregroundColor(.white.opacity(0.9))
                     }
                 }
                 .pickerStyle(.segmented)
+                .colorScheme(.dark) // Force dark mode for white text
             }
-            .padding(.horizontal, -20) // Counteracts the parent padding
+            .padding(.horizontal, -20)
             .padding(.horizontal, 20)
             
-            // Net Worth Display
+            // Amount Display
             VStack(alignment: .leading, spacing: 8) {
-                Text("$78,839")
+                Text(viewModel.currentAmount)
                     .font(.system(size: 34, weight: .bold))
                     .foregroundColor(.white)
                 
                 HStack(spacing: 4) {
-                    Image(systemName: "arrow.up")
-                        .foregroundColor(.green)
-                    Text("$200 this month")
+                    Image(systemName: viewModel.changeIsPositive ? "arrow.up" : "arrow.down")
+                        .foregroundColor(viewModel.changeIsPositive ? .green : .red)
+                    Text(viewModel.changeDescription)
                         .font(.subheadline)
                         .foregroundColor(.white.opacity(0.9))
                 }
@@ -75,7 +56,7 @@ struct HeaderView: View {
             .padding(.top, 8)
             
             // Chart
-            NetWorthChartView(data: chartData)
+            FinancialChartView(data: viewModel.chartData)
         }
         .padding(24)
         .padding(.top, 48)

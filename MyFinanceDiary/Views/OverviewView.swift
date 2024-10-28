@@ -10,11 +10,12 @@ struct OverviewView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 0) {
-                    HeaderView(chartData: viewModel.netWorthData)
+                    HeaderView(viewModel: viewModel)
                     AccountsSection(accounts: viewModel.accounts)
+                        .background(Color("AccentColor").opacity(0.05))
                 }
             }
-            .background(Color(.systemGray6))
+            .background(Color(uiColor: .systemBackground))
             .navigationBarTitleDisplayMode(.inline)
             .ignoresSafeArea()
         }
@@ -28,14 +29,10 @@ struct AccountsSection: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("Your Accounts")
-                .font(.headline)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal)
-                .padding(.top, 24)
-            
             AccountsList(accounts: accounts)
+                .padding(.top, 24)
         }
+        .background(Color(uiColor: .systemBackground))
     }
 }
 
@@ -45,7 +42,7 @@ struct AccountsList: View {
     @EnvironmentObject private var viewModel: OverviewViewModel
     
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 16) { // Increase spacing between items
             ForEach(accounts) { account in
                 FinancialItemView(
                     type: account.type,
@@ -54,7 +51,6 @@ struct AccountsList: View {
             }
         }
         .padding(.horizontal)
-        .padding(.top, 12)
     }
 }
 
@@ -75,8 +71,8 @@ struct FinancialItemView: View {
                     .foregroundColor(amount.contains("-") ? .red : .green)
             }
             .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-            .background(Color.white)
+            .padding(.vertical, 16) // Increase vertical padding
+            .background(Color(uiColor: .systemBackground))
             .cornerRadius(12)
             .shadow(color: Color.black.opacity(0.05), radius: 3, x: 0, y: 2)
         }

@@ -38,18 +38,22 @@ struct BudgetView: View {
             .navigationBarItems(
                 leading: Button(action: {}) {
                     Image(systemName: "chevron.left")
+                        .foregroundColor(.white)
                 },
                 trailing: HStack {
                     Button(action: {}) {
                         Image(systemName: "arrow.clockwise")
+                            .foregroundColor(.white)
                     }
                     Button(action: {}) {
                         Image(systemName: "plus")
+                            .foregroundColor(.white)
                     }
                 }
             )
             .navigationBarTitleDisplayMode(.inline)
         }
+        // .preferredColorScheme(.dark)
         .enableInjection()
     }
 }
@@ -84,7 +88,7 @@ struct BudgetHeaderView: View {
         }
         .padding(.top, 48)
         .padding(.horizontal)
-        .frame(height: 280)
+        .frame(height: 300)
         .background(
             LinearGradient(
                 colors: [Color(hex: "1D7B6E"), Color(hex: "1A9882")],
@@ -101,7 +105,7 @@ struct ProgressSection: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            ProgressBar(progress: spent / total)
+            ProgressBar(progress: spent / total, height: 8) // Specify larger height here
             Text("$\(Int(spent)) of $\(Int(total)) spent")
                 .font(.subheadline)
                 .foregroundColor(.white)
@@ -111,6 +115,13 @@ struct ProgressSection: View {
 
 struct ProgressBar: View {
     let progress: Double
+    let height: CGFloat // Add this property
+    
+    // Add initializer with default height
+    init(progress: Double, height: CGFloat = 4) {
+        self.progress = progress
+        self.height = height
+    }
 
     var body: some View {
         GeometryReader { geometry in
@@ -123,8 +134,8 @@ struct ProgressBar: View {
                     .foregroundColor(.green)
             }
         }
-        .frame(height: 4)
-        .cornerRadius(4)
+        .frame(height: height) // Use the height parameter
+        .cornerRadius(height / 2) // Make corner radius half of height for pill shape
     }
 }
 
