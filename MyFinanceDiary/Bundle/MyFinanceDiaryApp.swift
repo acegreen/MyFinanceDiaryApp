@@ -14,16 +14,29 @@ struct MyFinanceDiaryApp: App {
     @ObserveInjection var inject    
     @StateObject private var appState = AppState()
     @StateObject private var authManager = AuthenticationService()
+    @StateObject private var overviewViewModel = OverviewViewModel()
+    @StateObject private var budgetViewModel = BudgetViewModel()
 
     var body: some Scene {
         WindowGroup {
-            // Wrap MainView in a conditional view based on authentication status
             Group {
                 if authManager.isAuthenticated {
-                    OverviewView()
-                        .environment(\.modelContext, appState.container.mainContext)
-                        .environmentObject(appState)
-                        .environmentObject(authManager)
+                    TabView {
+                        OverviewView()
+                            .tabItem {
+                                Label("Overview", systemImage: "chart.pie.fill")
+                            }
+                        
+                        BudgetView()
+                            .tabItem {
+                                Label("Budget", systemImage: "dollarsign.circle.fill")
+                            }
+                    }
+                    .environment(\.modelContext, appState.container.mainContext)
+                    .environmentObject(appState)
+                    .environmentObject(authManager)
+                    .environmentObject(overviewViewModel)
+                    .environmentObject(budgetViewModel)
                 } else {
                     LoginView()
                         .environmentObject(authManager)

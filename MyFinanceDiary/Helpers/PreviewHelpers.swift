@@ -30,6 +30,13 @@ let previewAuthService: AuthenticationService = {
 }()
 
 @MainActor
+let previewOverviewViewModel: OverviewViewModel = {
+    let viewModel = OverviewViewModel()
+    // Sample data is already set up in init()
+    return viewModel
+}()
+
+@MainActor
 func addSampleDataIfNeeded(to context: ModelContext) async {
     let fetchDescriptor = FetchDescriptor<Transaction>(predicate: nil, sortBy: [SortDescriptor(\.date)])
     
@@ -102,5 +109,6 @@ extension View {
             .modelContainer(previewContainer)
             .environmentObject(previewAppState)
             .environmentObject(previewAuthService)
+            .environmentObject(previewOverviewViewModel)
     }
 }

@@ -4,12 +4,12 @@ import Inject
 struct TransactionsView: View {
     @ObserveInjection var inject
     @StateObject private var viewModel = TransactionsViewModel()
-    let accountType: String
+    let accountType: Account.AccountType
     
     var body: some View {
         TransactionsList(groupedTransactions: viewModel.groupedTransactions)
             .scrollContentBackground(.hidden)
-            .navigationTitle("\(accountType) Transactions")
+            .navigationTitle("\(accountType.displayName) Transactions")
             .task {
                 await viewModel.loadTransactions()
             }
@@ -65,7 +65,7 @@ struct TransactionsList: View {
 
 #Preview {
     NavigationStack {
-        TransactionsView(accountType: "Cash")
+        TransactionsView(accountType: .cash)
     }
     .withPreviewEnvironment()
 }

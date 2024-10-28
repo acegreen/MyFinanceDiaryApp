@@ -1,15 +1,15 @@
 import SwiftUI
 import Charts
 
-// Add this enum at the top level
-enum TabSelection: String, CaseIterable {
-    case spending = "Spending"
-    case netWorth = "Net worth"
-    case cash = "Cash"
-    case investments = "Investments"
-}
-
 struct HeaderView: View {
+
+    enum TabSelection: String, CaseIterable {
+        case spending = "Spending"
+        case netWorth = "Net worth"
+        case cash = "Cash"
+        case investments = "Investments"
+    }
+
     let chartData: [NetWorthDataPoint]
     
     @State private var selectedTab: TabSelection = .netWorth
