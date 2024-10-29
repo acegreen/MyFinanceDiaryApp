@@ -10,21 +10,15 @@ struct TransactionsView: View {
         TransactionsList(groupedTransactions: viewModel.groupedTransactions)
             .scrollContentBackground(.hidden)
             .navigationTitle("\(accountType.displayName) Transactions")
-            .task {
-                await viewModel.loadTransactions()
+            .onAppear {
+                viewModel.loadTransactions()
             }
             .overlay {
                 if viewModel.isLoading {
                     ProgressView()
                 }
             }
-            .alert("Error", isPresented: .constant(viewModel.error != nil), actions: {
-                Button("OK") {
-                    viewModel.dismissError()
-                }
-            }, message: {
-                Text(viewModel.error?.localizedDescription ?? "Unknown error")
-            })
+            .enableInjection()
     }
 }
 
