@@ -37,7 +37,7 @@ class AppState: ObservableObject {
         loginViewModel = LoginViewModel()
         dashboardViewModel = DashboardViewModel()
         budgetViewModel = BudgetViewModel()
-        creditScoreViewModel = CreditScoreViewModel(initialScore: 0)
+        creditScoreViewModel = CreditScoreViewModel()
         transactionsViewModel = TransactionsViewModel(
             transactionsService: transactionService,
             plaidService: plaidService,

@@ -9,7 +9,7 @@ class DashboardViewModel: ObservableObject {
         }
     }
     @Published var chartData: [FinancialDataPoint] = []
-    @Published var creditScore: Int = 791
+    @Published var creditScore: Int = 821
     
     enum ChartSegment: String, CaseIterable {
         case netWorth = "Net worth"
