@@ -46,7 +46,7 @@ struct TransactionsView: View {
     private func loadTransactions(for accountType: Account.AccountType) async {
         do {
             try await appState.transactionsViewModel.loadTransactions(for: accountType)
-        } catch PlaidError.noPlaidConnection {
+        } catch PlaidService.PlaidError.noPlaidConnection {
             await MainActor.run {
                 appState.plaidService.setupPlaidLink()
             }
@@ -77,50 +77,61 @@ struct TransactionsList: View {
 // New component for the transaction row
 struct TransactionRow: View {
     let transaction: Transaction
+    @EnvironmentObject var appState: AppState
 
     var body: some View {
-        HStack(spacing: 12) {
-            
-            if let iconUrl = transaction.categoryIconUrl {
-                AsyncImage(url: URL(string: iconUrl)) { phase in
-                    switch phase {
-                    case .empty:
-                        ProgressView()
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                    case .failure(let error):
-                        Image(systemName: "exclamationmark.triangle")
-                    @unknown default:
-                        EmptyView()
+        NavigationLink {
+            TransactionDetailsView(transactionId: transaction.transactionId)
+                .onAppear {
+                    appState.transactionDetailsViewModel.setTransaction(transaction)
+                }
+                .onDisappear {
+                    appState.transactionDetailsViewModel.clearTransaction()
+                }
+        } label: {
+            HStack(spacing: 12) {
+                
+                if let iconUrl = transaction.categoryIconUrl {
+                    AsyncImage(url: URL(string: iconUrl)) { phase in
+                        switch phase {
+                        case .empty:
+                            ProgressView()
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                        case .failure(let error):
+                            Image(systemName: "exclamationmark.triangle")
+                        @unknown default:
+                            EmptyView()
+                        }
+                    }
+                    .frame(width: 40, height: 40)
+                } else {
+                    Image(systemName: "dollarsign.circle")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .foregroundColor(.gray)
+                        .frame(width: 40, height: 40)
+                }
+                
+                VStack(alignment: .leading) {
+                    Text(transaction.name)
+                        .font(.system(size: 17))
+                    if let merchantName = transaction.merchantName {
+                        Text(merchantName)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
                     }
                 }
-                .frame(width: 40, height: 40)
-            } else {
-                Image(systemName: "dollarsign.circle")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .foregroundColor(.gray)
-                    .frame(width: 40, height: 40)
+                
+                Spacer()
+                
+                Text(transaction.amount, format: .currency(code: "USD"))
+                    .foregroundColor(transaction.amount < 0 ? .red : .green)
             }
-            
-            VStack(alignment: .leading) {
-                Text(transaction.name)
-                    .font(.system(size: 17))
-                if let merchantName = transaction.merchantName {
-                    Text(merchantName)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-            }
-            
-            Spacer()
-            
-            Text(transaction.amount, format: .currency(code: "USD"))
-                .foregroundColor(transaction.amount < 0 ? .red : .green)
+            .padding(.vertical, 4)
         }
-        .padding(.vertical, 4)
     }
 }
 
