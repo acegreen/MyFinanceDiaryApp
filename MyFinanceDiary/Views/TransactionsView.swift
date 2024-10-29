@@ -3,18 +3,18 @@ import Inject
 
 struct TransactionsView: View {
     @ObserveInjection var inject
-    @StateObject private var viewModel = TransactionsViewModel()
+    @EnvironmentObject var appState: AppState
     let accountType: Account.AccountType
     
     var body: some View {
-        TransactionsList(groupedTransactions: viewModel.groupedTransactions)
+        TransactionsList(groupedTransactions: appState.transactionsViewModel.groupedTransactions)
             .scrollContentBackground(.hidden)
             .navigationTitle("\(accountType.displayName) Transactions")
             .onAppear {
-                viewModel.loadTransactions()
+                appState.transactionsViewModel.loadTransactions()
             }
             .overlay {
-                if viewModel.isLoading {
+                if appState.transactionsViewModel.isLoading {
                     ProgressView()
                 }
             }
@@ -46,12 +46,17 @@ struct TransactionRow: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text(transaction.transactionDescription)
+                Text(transaction.name)
                     .font(.system(size: 17))
+                if let merchantName = transaction.merchantName {
+                    Text(merchantName)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
             }
             Spacer()
             Text(transaction.amount, format: .currency(code: "USD"))
-                .foregroundColor(transaction.type == .debit ? .red : .green)
+                .foregroundColor(transaction.amount < 0 ? .red : .green)
         }
     }
 }

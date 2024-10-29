@@ -13,10 +13,7 @@ import Inject
 struct MyFinanceDiaryApp: App {
     @ObserveInjection var inject    
     @StateObject private var appState = AppState()
-    @StateObject private var authManager = AuthenticationService()
-    @StateObject private var dashboardViewModel = DashboardViewModel()
-    @StateObject private var budgetViewModel = BudgetViewModel()
-    
+
     init() {
         #if DEBUG
         injectInit()
@@ -28,9 +25,6 @@ struct MyFinanceDiaryApp: App {
             ContentView()
                 .environment(\.modelContext, appState.container.mainContext)
                 .environmentObject(appState)
-                .environmentObject(authManager)
-                .environmentObject(dashboardViewModel)
-                .environmentObject(budgetViewModel)
                 .enableInjection()
         }
     }

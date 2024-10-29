@@ -118,7 +118,7 @@ struct DashboardHeaderView: View {
             )
         )
         .sheet(isPresented: $showingCreditScore) {
-            CreditScoreView(initialScore: viewModel.creditScore)
+            CreditScoreView()
         }
     }
 }
