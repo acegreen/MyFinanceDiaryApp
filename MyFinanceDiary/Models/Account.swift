@@ -6,6 +6,7 @@ struct Account: Identifiable {
         case cash = "Cash"
         case creditCards = "Credit Cards"
         case investments = "Investments"
+        case loans = "Loans"
         case property = "Property"
         case savings = "Savings"
         case retirement = "Retirement"
