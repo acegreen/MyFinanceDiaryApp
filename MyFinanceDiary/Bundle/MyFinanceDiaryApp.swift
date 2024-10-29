@@ -23,7 +23,7 @@ struct MyFinanceDiaryApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environment(\.modelContext, appState.container.mainContext)
+                .modelContainer(appState.container)
                 .environmentObject(appState)
                 .enableInjection()
         }

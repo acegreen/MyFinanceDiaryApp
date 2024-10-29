@@ -4,49 +4,62 @@ import Inject
 
 @MainActor
 class AppState: ObservableObject {
-    @ObserveInjection var inject
-    
+    // MARK: - Properties
     let container: ModelContainer
+    private let modelContext: ModelContext
     
-    // Services
+    // MARK: - Services
     let authenticationService: AuthenticationService
     let transactionService: TransactionsService
     let plaidService: PlaidService
     
-    // ViewModels
+    // MARK: - ViewModels
     @Published var dashboardViewModel: DashboardViewModel
     @Published var budgetViewModel: BudgetViewModel
     @Published var transactionsViewModel: TransactionsViewModel
     @Published var creditScoreViewModel: CreditScoreViewModel
-
+    @Published var loginViewModel: LoginViewModel
+    
+    @ObserveInjection var inject
+    
     init() {
+        (container, modelContext) = Self.setupPersistence()
+        
+        // Initialize services
+        authenticationService = AuthenticationService()
+        plaidService = PlaidService()
+        transactionService = TransactionsService(modelContext: modelContext)
+        
+        // Initialize ViewModels with dependencies
+        dashboardViewModel = DashboardViewModel()
+        budgetViewModel = BudgetViewModel()
+        transactionsViewModel = TransactionsViewModel(modelContext: modelContext)
+        creditScoreViewModel = CreditScoreViewModel(initialScore: 0)
+        loginViewModel = LoginViewModel()
+    }
+    
+    // Add a convenience method to inject all ViewModels into the environment
+    func injectViewModels<Content: View>(into view: Content) -> some View {
+        view
+            .environmentObject(dashboardViewModel)
+            .environmentObject(budgetViewModel)
+            .environmentObject(transactionsViewModel)
+            .environmentObject(creditScoreViewModel)
+            .environmentObject(loginViewModel)
+    }
+}
+
+// MARK: - Setup Methods
+private extension AppState {
+    static func setupPersistence() -> (ModelContainer, ModelContext) {
         do {
             let schema = Schema([Transaction.self])
             let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-            container = try ModelContainer(for: schema, configurations: [modelConfiguration])
-            
-            // Initialize services
-            authenticationService = AuthenticationService()
-            transactionService = TransactionsService(modelContext: container.mainContext)
-            plaidService = PlaidService()
-            
-            // Initialize ViewModels
-            dashboardViewModel = DashboardViewModel()
-            budgetViewModel = BudgetViewModel()
-            transactionsViewModel = TransactionsViewModel(modelContext: container.mainContext)
-            creditScoreViewModel = CreditScoreViewModel(initialScore: 0) // Set appropriate initial value
-            
-            // Add sample data if needed
-            Task {
-                await addSampleDataIfNeeded(to: container.mainContext)
-            }
+            let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
+            return (container, container.mainContext)
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
-    }
-    
-    func addSampleDataIfNeeded(to context: ModelContext) async {
-        // Implement your sample data logic here
     }
 }
 

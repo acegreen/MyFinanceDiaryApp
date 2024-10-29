@@ -4,13 +4,13 @@ import Inject
 
 struct DashboardView: View {
     @ObserveInjection var inject
-    @StateObject var viewModel = DashboardViewModel()
+    @EnvironmentObject var appState: AppState
     
     var body: some View {
         ViewBuilderWrapper {
-            DashboardHeaderView(viewModel: viewModel)
+            DashboardHeaderView(dashboardViewModel: appState.dashboardViewModel)
         } main: {
-            AccountsSection(accounts: viewModel.accounts)
+            AccountsSection(accounts: appState.dashboardViewModel.accounts, dashboardViewModel: appState.dashboardViewModel)
                 .background(Color("AccentColor").opacity(0.05))
         } toolbarContent: {
             Button(action: {}) {
@@ -28,10 +28,11 @@ struct DashboardView: View {
 // Separate Accounts Section
 struct AccountsSection: View {
     let accounts: [Account]
-    
+    @ObservedObject var dashboardViewModel: DashboardViewModel
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            AccountsList(accounts: accounts)
+            AccountsList(accounts: accounts, dashboardViewModel: dashboardViewModel)
         }
         .background(Color(uiColor: .systemBackground))
     }
@@ -40,14 +41,14 @@ struct AccountsSection: View {
 // Separate Accounts List
 struct AccountsList: View {
     let accounts: [Account]
-    @EnvironmentObject private var viewModel: DashboardViewModel
-    
+    @ObservedObject var dashboardViewModel: DashboardViewModel
+
     var body: some View {
-        VStack(spacing: 16) { // Increase spacing between items
+        VStack(spacing: 16) {
             ForEach(accounts) { account in
                 AccountItemRow(
                     type: account.type,
-                    amount: viewModel.formatAmount(account.amount)
+                    amount: dashboardViewModel.formatAmount(account.amount)
                 )
             }
         }
@@ -56,7 +57,7 @@ struct AccountsList: View {
 }
 
 struct DashboardHeaderView: View {
-    @ObservedObject var viewModel: DashboardViewModel
+    @ObservedObject var dashboardViewModel: DashboardViewModel
     @State private var showingCreditScore = false
 
     var body: some View {
@@ -70,7 +71,7 @@ struct DashboardHeaderView: View {
                         Text("Credit score")
                             .font(.headline)
                             .foregroundColor(.white.opacity(0.9))
-                        Text("\(viewModel.creditScore)")
+                        Text("\(dashboardViewModel.creditScore)")
                             .font(.title2.bold())
                             .foregroundColor(.white)
                     }
@@ -80,7 +81,7 @@ struct DashboardHeaderView: View {
             .buttonStyle(PlainButtonStyle()) // Prevents default button styling
 
             // Tab Selection
-            Picker("View Selection", selection: $viewModel.selectedSegment) {
+            Picker("View Selection", selection: $dashboardViewModel.selectedSegment) {
                 ForEach(DashboardViewModel.ChartSegment.allCases, id: \.self) { tab in
                     Text(tab.rawValue)
                         .tag(tab)
@@ -91,14 +92,14 @@ struct DashboardHeaderView: View {
 
             // Amount Display
             VStack(alignment: .leading, spacing: 8) {
-                Text(viewModel.currentAmount)
+                Text(dashboardViewModel.currentAmount)
                     .font(.system(size: 36, weight: .bold))
                     .foregroundColor(.white)
 
                 HStack(spacing: 4) {
-                    Image(systemName: viewModel.changeIsPositive ? "arrow.up" : "arrow.down")
-                        .foregroundColor(viewModel.changeIsPositive ? .green : .red)
-                    Text(viewModel.changeDescription)
+                    Image(systemName: dashboardViewModel.changeIsPositive ? "arrow.up" : "arrow.down")
+                        .foregroundColor(dashboardViewModel.changeIsPositive ? .green : .red)
+                    Text(dashboardViewModel.changeDescription)
                         .font(.subheadline)
                         .foregroundColor(.white.opacity(0.9))
                 }
@@ -106,7 +107,7 @@ struct DashboardHeaderView: View {
             .padding(.top, 8)
 
             // Chart
-            FinancialChartView(data: viewModel.chartData)
+            FinancialChartView(data: dashboardViewModel.chartData)
         }
         .padding(24)
         .padding(.top, 48)

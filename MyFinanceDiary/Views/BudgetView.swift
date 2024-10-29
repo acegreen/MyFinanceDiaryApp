@@ -3,26 +3,26 @@ import Inject
 
 struct BudgetView: View {
     @ObserveInjection var inject
-    @StateObject var budgetViewModel = BudgetViewModel()
+    @EnvironmentObject var appState: AppState
     
     var body: some View {
         ViewBuilderWrapper {
             // Header
-            BudgetHeaderView(amount: budgetViewModel.formattedRemaining)
+            BudgetHeaderView(amount: appState.budgetViewModel.formattedRemaining)
         } main: {
             // Main content
             VStack(alignment: .leading, spacing: 24) {
                 BudgetExpandableSection(
                     title: "Income",
-                    amount: budgetViewModel.formattedTotalIncome,
+                    amount: appState.budgetViewModel.formattedTotalIncome,
                     amountColor: .green,
-                    categories: budgetViewModel.incomeCategories
+                    categories: appState.budgetViewModel.incomeCategories
                 )
                 BudgetExpandableSection(
                     title: "Expenses",
-                    amount: budgetViewModel.formattedTotalExpenses,
+                    amount: appState.budgetViewModel.formattedTotalExpenses,
                     amountColor: .primary,
-                    categories: budgetViewModel.expenseCategories,
+                    categories: appState.budgetViewModel.expenseCategories,
                     expandedByDefault: true
                 )
             }
@@ -37,14 +37,14 @@ struct BudgetView: View {
                     .foregroundColor(.white)
             }
         }
-        .navigationTitle("\(budgetViewModel.currentMonth) budgets")
+        .navigationTitle("\(appState.budgetViewModel.currentMonth) budgets")
     }
 }
 
 // Supporting Views
 struct BudgetHeaderView: View {
     let amount: String
-    @EnvironmentObject var budgetViewModel: BudgetViewModel
+    @EnvironmentObject var appState: AppState
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -64,8 +64,8 @@ struct BudgetHeaderView: View {
 
             // Progress Bar
             ProgressSection(
-                spent: budgetViewModel.budgetSummary.totalSpent,
-                total: budgetViewModel.budgetSummary.totalBudget
+                spent: appState.budgetViewModel.budgetSummary.totalSpent,
+                total: appState.budgetViewModel.budgetSummary.totalBudget
             )
         }
         .padding(.top, 48)
@@ -145,7 +145,7 @@ struct BudgetExpandableSection: View {
 
 struct BudgetCategoryRowView: View {
     let category: Budget.BudgetCategory
-    @EnvironmentObject var budgetViewModel: BudgetViewModel
+    @EnvironmentObject var appState: AppState
 
     var body: some View {
         VStack(spacing: 8) {
@@ -153,7 +153,7 @@ struct BudgetCategoryRowView: View {
                 Text(category.name)
                     .font(.subheadline)
                 Spacer()
-                Text(budgetViewModel.getRemainingAmount(for: category))
+                Text(appState.budgetViewModel.getRemainingAmount(for: category))
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                 Button(action: {}) {
@@ -162,7 +162,7 @@ struct BudgetCategoryRowView: View {
                 }
             }
 
-            ProgressBar(progress: budgetViewModel.getProgress(for: category))
+            ProgressBar(progress: appState.budgetViewModel.getProgress(for: category))
 
             HStack {
                 Text("$\(Int(category.spent))")
