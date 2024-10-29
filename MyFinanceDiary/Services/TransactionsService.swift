@@ -16,41 +16,28 @@ class TransactionsService: TransactionsServiceProtocol {
     }
     
     func fetchTransactions() async throws -> [Transaction] {
-        guard let accessToken = plaidService.getStoredAccessToken() else {
-            throw PlaidError.noPlaidConnection
+        print("📥 Starting transaction fetch")
+        
+        let endDate = Date()
+        let startDate = Calendar.current.date(byAdding: .month, value: -1, to: endDate) ?? endDate
+        
+        let transactions = try await plaidService.fetchTransactions(startDate: startDate, endDate: endDate)
+        print("✅ Fetched \(transactions.count) transactions")
+        
+        // Only save to SwiftData if not in preview
+        #if DEBUG
+        if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" {
+            // Save to SwiftData
+            for transaction in transactions {
+                modelContext.insert(transaction)
+            }
+            
+            try modelContext.save()
+            print("💾 Saved transactions to SwiftData")
         }
+        #endif
         
-        // Create date formatter
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        
-        // For testing, return mock data
-        let mockPlaidTransactions = [
-            Transaction(
-                amount: -12.99,  // negative for debit transactions
-                date: dateFormatter.date(from: "2024-03-20") ?? Date(),
-                name: "Starbucks Coffee",
-                merchantName: "Starbucks",
-                pending: false,
-                transactionId: "tx_1"
-            ),
-            Transaction(
-                amount: -45.50,  // negative for debit transactions
-                date: dateFormatter.date(from: "2024-03-19") ?? Date(),
-                name: "Amazon.com",
-                merchantName: "Amazon",
-                pending: false,
-                transactionId: "tx_2"
-            )
-        ]
-        
-        // Save to SwiftData
-        for transaction in mockPlaidTransactions {
-            modelContext.insert(transaction)
-        }
-        
-        try modelContext.save()
-        return mockPlaidTransactions
+        return transactions
     }
 }
 

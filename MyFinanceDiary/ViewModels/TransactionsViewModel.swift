@@ -4,54 +4,42 @@ import Combine
 
 @MainActor
 class TransactionsViewModel: ObservableObject {
-    @Published private(set) var groupedTransactions: [Date: [Transaction]] = [:]
-    @Published private(set) var isLoading = false
+    @Published var groupedTransactions: [Date: [Transaction]] = [:]
+    @Published var isLoading = false
     @Published var error: Error?
     
     private let transactionsService: TransactionsServiceProtocol
     private let plaidService: PlaidService
-    private var plaidSetupCancellable: AnyCancellable?
     
     init(transactionsService: TransactionsServiceProtocol? = nil,
          plaidService: PlaidService = PlaidService(),
          modelContext: ModelContext) {
-        self.transactionsService = transactionsService ?? TransactionsService(modelContext: modelContext)
+        self.transactionsService = transactionsService ?? TransactionsService(plaidService: plaidService, modelContext: modelContext)
         self.plaidService = plaidService
         
-        // Watch for Plaid setup completion
-        plaidSetupCancellable = plaidService.$didCompletePlaidSetup
-            .filter { $0 }
-            .sink { [weak self] _ in
-                print("Plaid setup completed, retrying transaction fetch")
-                self?.retryLoadTransactions()
-            }
-    }
-    
-    func loadTransactions() {
+        // Load transactions immediately upon initialization with default type
         Task {
-            isLoading = true
-            defer { isLoading = false }
-            
-            do {
-                let transactions = try await transactionsService.fetchTransactions()
-                groupTransactions(transactions)
-            } catch PlaidError.noPlaidConnection {
-                print("No Plaid connection, initiating setup")
-                plaidService.setupPlaidLink()
-            } catch {
-                self.error = error
-            }
+            try? await loadTransactions(for: .cash)
         }
     }
     
-    private func retryLoadTransactions() {
+    @objc private func handlePlaidConnection() {
         Task {
-            do {
-                let transactions = try await transactionsService.fetchTransactions()
-                groupTransactions(transactions)
-            } catch {
-                self.error = error
-            }
+            try? await loadTransactions(for: .cash)
+        }
+    }
+    
+    func loadTransactions(for accountType: Account.AccountType) async throws {
+        isLoading = true
+        defer { isLoading = false }
+        
+        do {
+            let allTransactions = try await transactionsService.fetchTransactions()
+            
+            groupTransactions(allTransactions)
+        } catch {
+            self.error = error
+            throw error
         }
     }
     
@@ -65,5 +53,11 @@ class TransactionsViewModel: ObservableObject {
     
     func dismissError() {
         error = nil
+    }
+    
+    func getFilteredTransactions(for accountType: Account.AccountType) -> [Date: [Transaction]] {
+        groupedTransactions.mapValues { transactions in
+            transactions.filter { $0.accountType == accountType }
+        }.filter { !$0.value.isEmpty }
     }
 }

@@ -10,8 +10,8 @@ class AppState: ObservableObject {
     
     // MARK: - Services
     let authenticationService: AuthenticationService
-    let transactionService: TransactionsService
     let plaidService: PlaidService
+    let transactionService: TransactionsService
     
     // MARK: - ViewModels
     @Published var dashboardViewModel: DashboardViewModel
@@ -19,6 +19,8 @@ class AppState: ObservableObject {
     @Published var transactionsViewModel: TransactionsViewModel
     @Published var creditScoreViewModel: CreditScoreViewModel
     @Published var loginViewModel: LoginViewModel
+    
+    @Published var showPlaidLink = false
     
     @ObserveInjection var inject
     
@@ -28,12 +30,16 @@ class AppState: ObservableObject {
         // Initialize services
         authenticationService = AuthenticationService()
         plaidService = PlaidService()
-        transactionService = TransactionsService(modelContext: modelContext)
+        transactionService = TransactionsService(plaidService: plaidService, modelContext: modelContext)
         
         // Initialize ViewModels with dependencies
         dashboardViewModel = DashboardViewModel()
         budgetViewModel = BudgetViewModel()
-        transactionsViewModel = TransactionsViewModel(modelContext: modelContext)
+        transactionsViewModel = TransactionsViewModel(
+            transactionsService: transactionService,
+            plaidService: plaidService,
+            modelContext: modelContext
+        )
         creditScoreViewModel = CreditScoreViewModel(initialScore: 0)
         loginViewModel = LoginViewModel()
     }

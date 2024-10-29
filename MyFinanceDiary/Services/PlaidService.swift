@@ -16,28 +16,87 @@ class PlaidService: ObservableObject {
     @Published var linkToken: String?
     @Published var isLoading = false
     @Published var error: Error?
+    @Published private(set) var isPresenting = false
     
     private let accessTokenKey = "plaidAccessToken"
     private let clientId = "67203df777ab97001a6a60b3"
     private let secret = "27190c4828dc5ab7e6b91607da8998"
     var handler: Handler?
-    
-    // Add method to get stored access token
-    func getStoredAccessToken() -> String? {
-        return KeychainWrapper.standard.string(forKey: accessTokenKey)
+
+    var hasValidPlaidConnection: Bool {
+        // Check if we have a valid access token in the keychain
+        if let accessToken = getStoredAccessToken() {
+            return !accessToken.isEmpty
+        }
+        return false
     }
     
-    // Add method to fetch transactions (mock for now)
+    func getStoredAccessToken() -> String? {
+        let token = KeychainWrapper.standard.string(forKey: accessTokenKey)
+        if let token = token {
+            // Validate that it's not a public token
+            guard !token.starts(with: "public-") else {
+                print("⚠️ Found public token instead of access token, removing...")
+                KeychainWrapper.standard.removeObject(forKey: accessTokenKey)
+                return nil
+            }
+            return token
+        }
+        return nil
+    }
+    
     func fetchTransactions(startDate: Date, endDate: Date) async throws -> [Transaction] {
-        guard let _ = getStoredAccessToken() else {
+        guard let accessToken = getStoredAccessToken() else {
+            print("❌ No Plaid access token found")
             throw PlaidError.noPlaidConnection
         }
         
-        // For testing, return mock data
-        return [] // Replace with actual implementation later
+        // Format dates for Plaid API
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        let url = URL(string: "https://sandbox.plaid.com/transactions/get")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body: [String: Any] = [
+            "client_id": clientId,
+            "secret": secret,
+            "access_token": accessToken,
+            "start_date": dateFormatter.string(from: startDate),
+            "end_date": dateFormatter.string(from: endDate)
+        ]
+        
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        
+        print("📡 Fetching from Plaid API...")
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        if let httpResponse = response as? HTTPURLResponse {
+            print("📡 API Status: \(httpResponse.statusCode)")
+            
+            #if DEBUG
+            if httpResponse.statusCode != 200 {
+                if let responseString = String(data: data, encoding: .utf8) {
+                    print("⚠️ API Error Response: \(responseString)")
+                }
+            }
+            #endif
+        }
+        
+        let plaidResponse = try JSONDecoder().decode(PlaidTransactionsResponse.self, from: data)
+        return plaidResponse.transactions
     }
     
+    private lazy var dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter
+    }()
+    
     func setupPlaidLink() {
+        isLoading = true  // Set loading state when starting
         Task {
             do {
                 print("Setting up Plaid Link")
@@ -46,16 +105,19 @@ class PlaidService: ObservableObject {
                     createHandler(token: token)
                 }
                 
-                guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                      let rootViewController = windowScene.windows.first?.rootViewController else {
-                    throw PlaidError.presentationError
-                }
-                
-                await MainActor.run {
-                    presentPlaidLink(from: rootViewController)
+                try await MainActor.run {
+                    guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                          let rootVC = scene.windows.first?.rootViewController else {
+                        throw PlaidError.presentationError
+                    }
+                    presentPlaidLink(from: rootVC)
                 }
             } catch {
                 print("Plaid setup error: \(error)")
+                await MainActor.run {
+                    self.error = error
+                    self.isLoading = false  // Reset loading state on error
+                }
             }
         }
     }
@@ -81,7 +143,7 @@ class PlaidService: ObservableObject {
         request.httpBody = try JSONSerialization.data(withJSONObject: body)
         
         let (data, _) = try await URLSession.shared.data(for: request)
-        let response = try JSONDecoder().decode(LinkTokenResponse.self, from: data)
+        let response = try JSONDecoder().decode(PlaidService.LinkTokenResponse.self, from: data)
         return response.linkToken
     }
     
@@ -90,35 +152,73 @@ class PlaidService: ObservableObject {
         let linkConfiguration = LinkTokenConfiguration(
             token: token
         ) { [weak self] success in
-            print("Plaid Link success!")
-            print("Public token received: \(success.publicToken)")
+            print("🔗 PLAID LINK SUCCESS")
+            guard let self = self else { return }
             
-            // Store the public token
-            KeychainWrapper.standard.set(success.publicToken, forKey: self?.accessTokenKey ?? "")
-            
-            // Notify that setup is complete
             Task { @MainActor in
-                self?.didCompletePlaidSetup = true
+                do {
+                    print("🔄 Starting token exchange")
+                    // Exchange the public token for an access token
+                    let accessToken = try await self.exchangePublicToken(success.publicToken)
+                    print("✅ Token exchange complete")
+                    
+                    // Store the access token in Keychain
+                    KeychainWrapper.standard.set(accessToken, forKey: self.accessTokenKey)
+                    print("✅ Access token stored in Keychain")
+                    
+                    self.didCompletePlaidSetup = true
+                    self.isPresenting = false
+                    self.isLoading = false  // Reset loading state on success
+                } catch {
+                    print("❌ Error in Plaid setup: \(error)")
+                    self.error = error
+                    self.isLoading = false  // Reset loading state on error
+                }
             }
         }
         
         let result = Plaid.create(linkConfiguration)
         switch result {
         case .success(let handler):
-            print("Handler created successfully")
+            print("✅ Handler created successfully")
             self.handler = handler
         case .failure(let error):
-            print("Error creating handler: \(error)")
+            print("❌ Error creating handler: \(error)")
+            self.error = error
         }
+    }
+    
+    private func exchangePublicToken(_ publicToken: String) async throws -> String {
+        let url = URL(string: "https://sandbox.plaid.com/item/public_token/exchange")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body: [String: Any] = [
+            "client_id": clientId,
+            "secret": secret,
+            "public_token": publicToken
+        ]
+        
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        
+        let (data, _) = try await URLSession.shared.data(for: request)
+        let response = try JSONDecoder().decode(ExchangeTokenResponse.self, from: data)
+        
+        // Store the access token
+        KeychainWrapper.standard.set(response.accessToken, forKey: accessTokenKey)
+        print("✅ Access token stored successfully")
+        return response.accessToken
     }
     
     func presentPlaidLink(from viewController: UIViewController) {
         print("Attempting to present Plaid Link")
-        guard let handler = handler else {
-            print("No handler available")
+        guard let handler = handler, !isPresenting else {
+            print("Cannot present: \(handler == nil ? "no handler" : "already presenting")")
             return
         }
         
+        isPresenting = true
         let method = PresentationMethod.viewController(viewController)
         
         DispatchQueue.main.async {
@@ -128,11 +228,67 @@ class PlaidService: ObservableObject {
     }
 }
 
-struct LinkTokenResponse: Codable {
-    let linkToken: String
-    
-    enum CodingKeys: String, CodingKey {
-        case linkToken = "link_token"
+extension PlaidService {
+
+    struct LinkTokenResponse: Codable {
+        let linkToken: String
+
+        enum CodingKeys: String, CodingKey {
+            case linkToken = "link_token"
+        }
+    }
+
+    private struct ExchangeTokenResponse: Codable {
+        let accessToken: String
+        let itemId: String
+        
+        enum CodingKeys: String, CodingKey {
+            case accessToken = "access_token"
+            case itemId = "item_id"
+        }
+    }
+    private struct PlaidTransactionsResponse: Codable {
+        let accounts: [PlaidAccount]
+        let transactions: [Transaction]
+        
+        enum CodingKeys: String, CodingKey {
+            case accounts
+            case transactions
+        }
+    }
+
+    private struct PlaidAccount: Codable {
+        let accountId: String
+        let balances: PlaidBalances
+        let mask: String?
+        let name: String
+        let officialName: String?
+        let type: String
+        let subtype: String?
+        
+        private enum CodingKeys: String, CodingKey {
+            case accountId = "account_id"
+            case balances
+            case mask
+            case name
+            case officialName = "official_name"
+            case type
+            case subtype
+        }
+    }
+
+    private struct PlaidBalances: Codable {
+        let available: Double?
+        let current: Double
+        let limit: Double?
+        let isoCurrencyCode: String?
+        
+        private enum CodingKeys: String, CodingKey {
+            case available
+            case current
+            case limit
+            case isoCurrencyCode = "iso_currency_code"
+        }
     }
 }
 

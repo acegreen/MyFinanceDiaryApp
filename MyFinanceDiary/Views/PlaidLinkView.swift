@@ -11,16 +11,14 @@ struct PlaidLinkView: View {
             VStack {
                 if appState.plaidService.isLoading {
                     ProgressView()
-                } else if let _ = appState.plaidService.handler {
+                } else if let _ = appState.plaidService.handler, !appState.plaidService.isPresenting {
                     Color.clear
                         .onAppear {
                             print("Ready to present Plaid Link")
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                appState.plaidService.presentPlaidLink(from: UIApplication.shared.rootViewController())
-                            }
+                            appState.plaidService.presentPlaidLink(from: UIApplication.shared.rootViewController())
                         }
-                } else if appState.plaidService.error != nil {
-                    Text("Unable to load Plaid Link")
+                } else if let error = appState.plaidService.error {
+                    Text("Unable to load Plaid Link: \(error.localizedDescription)")
                         .foregroundColor(.red)
                 }
             }
@@ -34,7 +32,7 @@ struct PlaidLinkView: View {
             }
         }
         .onAppear {
-            print("PlaidLinkView appeared")
+            guard !appState.plaidService.isPresenting else { return }
             appState.plaidService.setupPlaidLink()
         }
         .enableInjection()
