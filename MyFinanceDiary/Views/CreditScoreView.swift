@@ -68,7 +68,7 @@ struct CreditScoreHeaderView: View {
 }
 
 struct CreditScoreMainView: View {
-    let metrics: [CreditMetric]
+    let metrics: [CreditScoreViewModel.CreditMetric]
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -155,7 +155,7 @@ struct CreditScoreSlider: View {
             
             // Score labels
             HStack {
-                Text("400")
+                Text("\(minScore)")
                 Spacer()
                 Text("500")
                 Spacer()
@@ -163,7 +163,7 @@ struct CreditScoreSlider: View {
                 Spacer()
                 Text("700")
                 Spacer()
-                Text("850")
+                Text("\(maxScore)")
             }
             .font(.subheadline)
             .foregroundColor(.white)

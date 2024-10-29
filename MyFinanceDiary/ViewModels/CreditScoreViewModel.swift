@@ -7,14 +7,15 @@ class CreditScoreViewModel: ObservableObject {
     @Published var scoreChange: Int = 0
     @Published var metrics: [CreditMetric] = []
     
-    init(initialScore: Int) {
+    init(initialScore: Int = 0) {
         self.creditScore = initialScore
         fetchCreditScore()
     }
     
     func fetchCreditScore() {
-        lastUpdated = "7/20/20"
-        scoreChange = 8
+        creditScore = 821
+        lastUpdated = "7/20/24"
+        scoreChange = 10
         
         metrics = [
             CreditMetric(
@@ -42,10 +43,12 @@ class CreditScoreViewModel: ObservableObject {
     }
 }
 
-struct CreditMetric {
-    let title: String
-    let value: String
-    let status: String
-    let statusColor: Color
-    let detail: String?
-} 
+extension CreditScoreViewModel {
+    struct CreditMetric {
+        let title: String
+        let value: String
+        let status: String
+        let statusColor: Color
+        let detail: String?
+    }
+}
