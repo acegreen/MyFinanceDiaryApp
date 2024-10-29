@@ -70,7 +70,7 @@ struct BudgetHeaderView: View {
         }
         .padding(.top, 48)
         .padding(.horizontal)
-        .frame(minHeight: 300)
+        .frame(maxWidth: .infinity, minHeight: 300)
         .background(
             LinearGradient(
                 colors: [Color(hex: "1D7B6E"), Color(hex: "1A9882")],

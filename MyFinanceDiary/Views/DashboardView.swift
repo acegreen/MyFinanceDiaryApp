@@ -57,21 +57,27 @@ struct AccountsList: View {
 
 struct DashboardHeaderView: View {
     @ObservedObject var viewModel: DashboardViewModel
+    @State private var showingCreditScore = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             // Credit Score Section
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Credit score")
-                        .font(.headline)
-                        .foregroundColor(.white.opacity(0.9))
-                    Text("791")
-                        .font(.title2.bold())
-                        .foregroundColor(.white)
+            Button(action: {
+                showingCreditScore = true
+            }) {
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Credit score")
+                            .font(.headline)
+                            .foregroundColor(.white.opacity(0.9))
+                        Text("\(viewModel.creditScore)")
+                            .font(.title2.bold())
+                            .foregroundColor(.white)
+                    }
+                    Spacer()
                 }
-                Spacer()
             }
+            .buttonStyle(PlainButtonStyle()) // Prevents default button styling
 
             // Tab Selection
             Picker("View Selection", selection: $viewModel.selectedSegment) {
@@ -111,6 +117,9 @@ struct DashboardHeaderView: View {
                 endPoint: .bottomTrailing
             )
         )
+        .sheet(isPresented: $showingCreditScore) {
+            CreditScoreView(initialScore: viewModel.creditScore)
+        }
     }
 }
 

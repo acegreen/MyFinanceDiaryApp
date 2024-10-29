@@ -62,32 +62,29 @@ private struct GoalsHeaderView: View {
 // MARK: - Cards Component
 private struct GoalsCardsView: View {
     var body: some View {
-
-            
-                // Goals Cards
-                VStack(spacing: 16) {
-                    // Down Payment Goal Card
-                    GoalCard(
-                        title: "Save for a down payment 🏠",
-                        subtitle: "You're set to save $4,300 a month",
-                        progress: 0.23,
-                        currentValue: "$1,000",
-                        targetValue: "of $4,300",
-                        totalProgress: "Total savings: $1,000 of $60,000"
+        // Goals Cards
+        VStack(spacing: 16) {
+            // Down Payment Goal Card
+            GoalCard(
+                title: "Save for a down payment 🏠",
+                subtitle: "You're set to save $4,300 a month",
+                progress: 0.23,
+                currentValue: "$1,000",
+                targetValue: "of $4,300",
+                totalProgress: "Total savings: $1,000 of $60,000"
                     )
                     
-                    // Credit Score Goal Card
-                    GoalCard(
-                        title: "Boost my credit score",
-                        subtitle: "You're set to improve your score",
-                        progress: 0.85,
-                        currentValue: "733",
-                        targetValue: "750",
-                        totalProgress: "Your credit score goal: 750"
-                    )
-                }
+            // Credit Score Goal Card
+            GoalCard(
+                title: "Boost my credit score",
+                subtitle: "You're set to improve your score",
+                progress: 0.85,
+                currentValue: "733",
+                targetValue: "750",
+                totalProgress: "Your credit score goal: 750"
+            )
+        }
         .padding()
-        .background(Color.green.opacity(0.1))
     }
 }
 
@@ -129,7 +126,7 @@ struct GoalCard: View {
         .padding()
         .background(Color.white)
         .cornerRadius(12)
-        .shadow(color: .black.opacity(0.05), radius: 5, x: 0, y: 2)
+        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
     }
 }
 
