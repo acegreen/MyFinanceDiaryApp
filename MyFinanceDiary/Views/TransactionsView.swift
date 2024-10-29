@@ -12,7 +12,13 @@ struct TransactionsView: View {
             filteredTransactions: appState.transactionsViewModel.getFilteredTransactions(for: accountType)
         )
             .scrollContentBackground(.hidden)
-            .navigationTitle("\(accountType.displayName) Transactions")
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    BackButton()
+                }
+            }
+            .toolbarRole(.editor)
             .task {
                 if !appState.plaidService.hasValidPlaidConnection {
                     await MainActor.run {

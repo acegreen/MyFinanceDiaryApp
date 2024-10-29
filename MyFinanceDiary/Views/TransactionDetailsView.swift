@@ -68,7 +68,17 @@ struct TransactionDetailsView: View {
                 }
             }
         }
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                BackButton()
+            }
+            ToolbarItem(placement: .principal) {
+                EmptyView()
+            }
+        }
+        .toolbarRole(.editor)
+        .toolbarBackground(.hidden, for: .navigationBar)
         .background(Color(uiColor: .systemGroupedBackground))
         .enableInjection()
         .task {
