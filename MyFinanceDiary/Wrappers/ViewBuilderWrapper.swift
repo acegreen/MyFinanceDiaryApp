@@ -9,10 +9,12 @@ struct ViewBuilderWrapper<Header: View, Main: View>: View {
     private let spacing: CGFloat
     private let backgroundColor: Color
     private let toolbarItems: () -> AnyView
+    private let ignoreSafeArea: Bool
     
     init(
         spacing: CGFloat = 24,
         backgroundColor: Color = .clear,
+        ignoreSafeArea: Bool = true,
         @ViewBuilder header: () -> Header,
         @ViewBuilder main: () -> Main,
         @ViewBuilder toolbarContent: @escaping () -> some View
@@ -22,6 +24,7 @@ struct ViewBuilderWrapper<Header: View, Main: View>: View {
         self.spacing = spacing
         self.backgroundColor = backgroundColor
         self.toolbarItems = { AnyView(toolbarContent()) }
+        self.ignoreSafeArea = ignoreSafeArea
     }
     
     var body: some View {
@@ -33,7 +36,7 @@ struct ViewBuilderWrapper<Header: View, Main: View>: View {
                 }
                 .background(backgroundColor)
             }
-            .ignoresSafeArea(edges: .top) // Only ignore top safe area
+            .ignoresSafeArea(edges: ignoreSafeArea ? .top : [])
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItemGroup(placement: .navigationBarTrailing) {

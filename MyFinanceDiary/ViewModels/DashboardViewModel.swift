@@ -9,6 +9,7 @@ class DashboardViewModel: ObservableObject {
         }
     }
     @Published var chartData: [FinancialDataPoint] = []
+    @Published var creditScore: Int = 791
     
     enum ChartSegment: String, CaseIterable {
         case netWorth = "Net worth"
@@ -62,7 +63,6 @@ class DashboardViewModel: ObservableObject {
                 chartData = createTrendData(startAmount: investmentAccount.amount * 0.95, endAmount: investmentAccount.amount)
             }
         }
-        
         objectWillChange.send()
     }
     
@@ -133,5 +133,10 @@ class DashboardViewModel: ObservableObject {
         formatter.numberStyle = .currency
         formatter.maximumFractionDigits = 0
         return formatter.string(from: NSNumber(value: amount)) ?? "$0"
+    }
+    
+    func updateCreditScore(_ newScore: Int) {
+        creditScore = newScore
+        objectWillChange.send()
     }
 }
