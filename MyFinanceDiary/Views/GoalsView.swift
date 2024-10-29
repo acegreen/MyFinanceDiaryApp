@@ -3,6 +3,7 @@ import Inject
 
 struct GoalsView: View {
     @ObserveInjection var inject
+    @EnvironmentObject var appState: AppState
     
     var body: some View {
         ViewBuilderWrapper {
