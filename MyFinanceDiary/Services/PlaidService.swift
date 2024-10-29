@@ -73,6 +73,15 @@ class PlaidService: ObservableObject {
         print("📡 Fetching from Plaid API...")
         let (data, response) = try await URLSession.shared.data(for: request)
         
+        #if DEBUG
+        // Save response to JSON file
+        if let responseString = String(data: data, encoding: .utf8) {
+            Task {
+                await APIResponseLogger.shared.saveResponse(responseString, prefix: "plaid_transactions")
+            }
+        }
+        #endif
+        
         if let httpResponse = response as? HTTPURLResponse {
             print("📡 API Status: \(httpResponse.statusCode)")
             
