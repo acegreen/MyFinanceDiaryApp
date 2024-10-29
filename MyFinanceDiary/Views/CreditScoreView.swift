@@ -3,21 +3,17 @@ import Inject
 
 struct CreditScoreView: View {
     @ObserveInjection var inject
-    @StateObject private var viewModel: CreditScoreViewModel
-    
-    init(initialScore: Int) {
-        _viewModel = StateObject(wrappedValue: CreditScoreViewModel(initialScore: initialScore))
-    }
+    @EnvironmentObject var appState: AppState
     
     var body: some View {
         ViewBuilderWrapper {
             CreditScoreHeaderView(
-                creditScore: viewModel.creditScore,
-                lastUpdated: viewModel.lastUpdated,
-                scoreChange: viewModel.scoreChange
+                creditScore: appState.creditScoreViewModel.creditScore,
+                lastUpdated: appState.creditScoreViewModel.lastUpdated,
+                scoreChange: appState.creditScoreViewModel.scoreChange
             )
         } main: {
-            CreditScoreMainView(metrics: viewModel.metrics)
+            CreditScoreMainView(metrics: appState.creditScoreViewModel.metrics)
         } toolbarContent: {
             Button(action: {}) {
                 Image(systemName: "bubble.and.pencil")
@@ -219,5 +215,5 @@ struct CreditMetricRowUpdated: View {
 }
 
 #Preview {
-    CreditScoreView(initialScore: 0)
+    CreditScoreView()
 } 

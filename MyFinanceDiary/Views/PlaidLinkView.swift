@@ -3,23 +3,23 @@ import Inject
 
 struct PlaidLinkView: View {
     @ObserveInjection var inject
-    @StateObject private var plaidService = PlaidService()
+    @EnvironmentObject var appState: AppState
     @Binding var isPresented: Bool
 
     var body: some View {
         NavigationView {
             VStack {
-                if plaidService.isLoading {
+                if appState.plaidService.isLoading {
                     ProgressView()
-                } else if let _ = plaidService.handler {
+                } else if let _ = appState.plaidService.handler {
                     Color.clear
                         .onAppear {
                             print("Ready to present Plaid Link")
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                plaidService.presentPlaidLink(from: UIApplication.shared.rootViewController())
+                                appState.plaidService.presentPlaidLink(from: UIApplication.shared.rootViewController())
                             }
                         }
-                } else if plaidService.error != nil {
+                } else if appState.plaidService.error != nil {
                     Text("Unable to load Plaid Link")
                         .foregroundColor(.red)
                 }
@@ -35,7 +35,7 @@ struct PlaidLinkView: View {
         }
         .onAppear {
             print("PlaidLinkView appeared")
-            plaidService.setupPlaidLink()
+            appState.plaidService.setupPlaidLink()
         }
         .enableInjection()
     }

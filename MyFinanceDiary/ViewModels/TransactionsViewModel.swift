@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 import Combine
 
 @MainActor
@@ -11,9 +12,10 @@ class TransactionsViewModel: ObservableObject {
     private let plaidService: PlaidService
     private var plaidSetupCancellable: AnyCancellable?
     
-    init(transactionsService: TransactionsServiceProtocol = TransactionsService(),
-         plaidService: PlaidService = PlaidService()) {
-        self.transactionsService = transactionsService
+    init(transactionsService: TransactionsServiceProtocol? = nil,
+         plaidService: PlaidService = PlaidService(),
+         modelContext: ModelContext) {
+        self.transactionsService = transactionsService ?? TransactionsService(modelContext: modelContext)
         self.plaidService = plaidService
         
         // Watch for Plaid setup completion

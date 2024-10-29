@@ -47,40 +47,46 @@ func addSampleDataIfNeeded(to context: ModelContext) async {
 func addSampleData(modelContext: ModelContext) {
     let sampleTransactions = [
         Transaction(
+            amount: -156.78,
             date: Date().addingTimeInterval(-7 * 24 * 60 * 60),
-            transactionDescription: "Grocery Shopping",
-            amount: 156.78,
-            type: .debit
+            name: "Grocery Shopping",
+            pending: false,
+            transactionId: "sample_1"
         ),
         Transaction(
-            date: Date().addingTimeInterval(-5 * 24 * 60 * 60),
-            transactionDescription: "Salary Deposit",
             amount: 3500.00,
-            type: .credit
+            date: Date().addingTimeInterval(-5 * 24 * 60 * 60),
+            name: "Salary Deposit",
+            pending: false,
+            transactionId: "sample_2"
         ),
         Transaction(
+            amount: -85.50,
             date: Date().addingTimeInterval(-3 * 24 * 60 * 60),
-            transactionDescription: "Restaurant Bill",
-            amount: 85.50,
-            type: .debit
+            name: "Restaurant Bill",
+            pending: false,
+            transactionId: "sample_3"
         ),
         Transaction(
+            amount: -45.67,
             date: Date().addingTimeInterval(-2 * 24 * 60 * 60),
-            transactionDescription: "Gas Station",
-            amount: 45.67,
-            type: .debit
+            name: "Gas Station",
+            pending: false,
+            transactionId: "sample_4"
         ),
         Transaction(
+            amount: -129.99,
             date: Date().addingTimeInterval(-1 * 24 * 60 * 60),
-            transactionDescription: "Online Shopping",
-            amount: 129.99,
-            type: .debit
+            name: "Online Shopping",
+            pending: false,
+            transactionId: "sample_5"
         ),
         Transaction(
-            date: Date(),
-            transactionDescription: "Freelance Payment",
             amount: 750.00,
-            type: .credit
+            date: Date(),
+            name: "Freelance Payment",
+            pending: false,
+            transactionId: "sample_6"
         )
     ]
     
