@@ -14,11 +14,12 @@ class AppState: ObservableObject {
     let transactionService: TransactionsService
     
     // MARK: - ViewModels
+    @Published var loginViewModel: LoginViewModel
     @Published var dashboardViewModel: DashboardViewModel
     @Published var budgetViewModel: BudgetViewModel
-    @Published var transactionsViewModel: TransactionsViewModel
     @Published var creditScoreViewModel: CreditScoreViewModel
-    @Published var loginViewModel: LoginViewModel
+    @Published var transactionsViewModel: TransactionsViewModel
+    @Published var transactionDetailsViewModel: TransactionDetailsViewModel
     
     @Published var showPlaidLink = false
     
@@ -33,25 +34,27 @@ class AppState: ObservableObject {
         transactionService = TransactionsService(plaidService: plaidService, modelContext: modelContext)
         
         // Initialize ViewModels with dependencies
+        loginViewModel = LoginViewModel()
         dashboardViewModel = DashboardViewModel()
         budgetViewModel = BudgetViewModel()
+        creditScoreViewModel = CreditScoreViewModel(initialScore: 0)
         transactionsViewModel = TransactionsViewModel(
             transactionsService: transactionService,
             plaidService: plaidService,
             modelContext: modelContext
         )
-        creditScoreViewModel = CreditScoreViewModel(initialScore: 0)
-        loginViewModel = LoginViewModel()
+        transactionDetailsViewModel = TransactionDetailsViewModel()
     }
     
     // Add a convenience method to inject all ViewModels into the environment
     func injectViewModels<Content: View>(into view: Content) -> some View {
         view
+            .environmentObject(loginViewModel)
             .environmentObject(dashboardViewModel)
             .environmentObject(budgetViewModel)
-            .environmentObject(transactionsViewModel)
             .environmentObject(creditScoreViewModel)
-            .environmentObject(loginViewModel)
+            .environmentObject(transactionsViewModel)
+            .environmentObject(transactionDetailsViewModel)
     }
 }
 

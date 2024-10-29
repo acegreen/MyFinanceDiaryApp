@@ -2,15 +2,6 @@ import SwiftUI
 import LinkKit
 import SwiftKeychainWrapper
 
-enum PlaidError: Error {
-    case invalidURL
-    case networkError(String)
-    case noPlaidConnection
-    case serverError(Int)
-    case decodingError
-    case presentationError
-}
-
 class PlaidService: ObservableObject {
     @Published var didCompletePlaidSetup = false
     @Published var linkToken: String?
@@ -55,7 +46,7 @@ class PlaidService: ObservableObject {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         
-        let url = URL(string: "https://sandbox.plaid.com/transactions/get")!
+        let url = URL(string: "https://\(PlaidEnvironment.current).plaid.com/transactions/get")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -239,6 +230,10 @@ class PlaidService: ObservableObject {
 
 extension PlaidService {
 
+    enum PlaidEnvironment {
+        static var current: String = "sandbox"  // or whatever default you want
+    }
+
     struct LinkTokenResponse: Codable {
         let linkToken: String
 
@@ -298,6 +293,15 @@ extension PlaidService {
             case limit
             case isoCurrencyCode = "iso_currency_code"
         }
+    }
+
+    enum PlaidError: Error {
+        case invalidURL
+        case networkError(String)
+        case noPlaidConnection
+        case serverError(Int)
+        case decodingError
+        case presentationError
     }
 }
 

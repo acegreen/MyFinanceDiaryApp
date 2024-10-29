@@ -11,6 +11,9 @@ final class Transaction: Codable {
     var transactionId: String
     var category: TransactionCategory?
     @Attribute var categoryIconUrl: String?
+    let accountName: String?
+    var location: Location?
+    let paymentChannel: String?
 
     var displayName: String {
         merchantName ?? name
@@ -18,21 +21,6 @@ final class Transaction: Codable {
 
     var transactionType: TransactionType {
         TransactionType(amount: amount)
-    }
-
-    struct PersonalFinanceCategory: Codable {
-        let primary: String
-        let detailed: String
-        let confidence_level: String
-    }
-
-    enum TransactionType: String, Codable {
-        case credit
-        case debit
-
-        init(amount: Double) {
-            self = amount >= 0 ? .credit : .debit
-        }
     }
 
     init(amount: Double, date: Date, name: String, merchantName: String? = nil, pending: Bool, transactionId: String, categoryIconUrl: String? = nil) {
@@ -56,6 +44,7 @@ final class Transaction: Codable {
         case category
         case categoryIconUrl = "personal_finance_category_icon_url"
         case personalFinanceCategory = "personal_finance_category"
+        case location
     }
 
     required init(from decoder: Decoder) throws {
@@ -85,6 +74,8 @@ final class Transaction: Codable {
             plaidCategories: categories,
             personalFinanceCategory: personalFinanceCategory
         )
+
+        self.location = try container.decodeIfPresent(Location.self, forKey: .location) ?? Location()
     }
 
     func encode(to encoder: Encoder) throws {
@@ -129,6 +120,14 @@ final class Transaction: Codable {
 }
 
 extension Transaction {
+    enum TransactionType: String, Codable {
+        case credit
+        case debit
+
+        init(amount: Double) {
+            self = amount >= 0 ? .credit : .debit
+        }
+    }
     enum TransactionCategory: String, Codable {
         case cash = "Cash"
         case creditCard = "Credit Card"
@@ -184,5 +183,45 @@ extension Transaction {
 
             return .other
         }
+    }
+
+    struct PersonalFinanceCategory: Codable {
+        let primary: String
+        let detailed: String
+        let confidence_level: String
+    }
+
+    struct Location: Codable {
+        var address: String?
+        var city: String?
+        var country: String?
+        var lat: Double?
+        var lon: Double?
+        var postalCode: String?
+        var region: String?
+        var storeNumber: String?
+        
+        enum CodingKeys: String, CodingKey {
+            case address
+            case city
+            case country
+            case lat
+            case lon
+            case postalCode = "postal_code"
+            case region
+            case storeNumber = "store_number"
+        }
+    }
+}
+
+extension Transaction.Location {
+    var coordinates: (latitude: Double, longitude: Double)? {
+        #if DEBUG
+        // Always return mock coordinates in debug
+        return (45.5017, -73.5673)
+        #else
+        guard let lat = lat, let lon = lon else { return nil }
+        return (lat, lon)
+        #endif
     }
 }
