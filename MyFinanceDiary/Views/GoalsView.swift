@@ -7,11 +7,9 @@ struct GoalsView: View {
     
     var body: some View {
         ViewBuilderWrapper {
-            // Header
             GoalsHeaderView()
         } main: {
-            // Goals Cards
-            GoalsCardsView()
+            GoalsMainView()
         } toolbarContent: {
             Button(action: {}) {
                 Image(systemName: "bubble.and.pencil")
@@ -32,36 +30,30 @@ private struct GoalsHeaderView: View {
         VStack(spacing: 8) {
             Circle()
                 .fill(Color.white)
-                .frame(width: 60, height: 60)
+                .frame(width: 80, height: 80)
                 .overlay(
                     Image(systemName: "trophy.fill")
                         .font(.system(size: 30))
-                        .foregroundColor(.green)
+                        .foregroundColor(.darkGreen)
                 )
             
             Text("Your goals")
-                .font(.title2)
+                .font(.title)
                 .fontWeight(.bold)
                 .foregroundColor(.white)
             
             Text("Stay on top of your financial")
-                .font(.subheadline)
+                .font(.headline)
                 .foregroundColor(.white)
         }
+        .padding(.top, 48)
         .frame(maxWidth: .infinity, minHeight: 300)
-        .padding()
-        .background(
-            LinearGradient(
-                colors: [Color(hex: "1D7B6E"), Color(hex: "1A9882")],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        )
+        .greenGradientBackground()
     }
 }
 
 // MARK: - Cards Component
-private struct GoalsCardsView: View {
+private struct GoalsMainView: View {
     var body: some View {
         // Goals Cards
         VStack(spacing: 16) {
@@ -86,48 +78,6 @@ private struct GoalsCardsView: View {
             )
         }
         .padding()
-    }
-}
-
-struct GoalCard: View {
-    let title: String
-    let subtitle: String
-    let progress: Double
-    let currentValue: String
-    let targetValue: String
-    let totalProgress: String
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(title)
-                .font(.headline)
-            
-            Text(subtitle)
-                .font(.subheadline)
-                .foregroundColor(.green)
-            
-            ProgressView(value: progress)
-                .tint(.green)
-            
-            HStack {
-                Text(currentValue)
-                    .fontWeight(.semibold)
-                
-                Spacer()
-                
-                Text(targetValue)
-                    .foregroundColor(.secondary)
-            }
-            .font(.subheadline)
-            
-            Text(totalProgress)
-                .font(.footnote)
-                .foregroundColor(.secondary)
-        }
-        .padding()
-        .background(Color.white)
-        .cornerRadius(12)
-        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
     }
 }
 

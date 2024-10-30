@@ -1,7 +1,7 @@
 import SwiftUI
 import Inject
 
-struct ContentView: View {
+struct MainView: View {
     @ObserveInjection var inject
     @EnvironmentObject private var appState: AppState
     
@@ -38,5 +38,6 @@ struct MainTabView: View {
                     Label("Goals", systemImage: "trophy.fill")
                 }
         }
+        .tint(.darkGreen)
     }
 }

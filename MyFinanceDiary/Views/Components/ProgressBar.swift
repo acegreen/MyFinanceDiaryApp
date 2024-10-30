@@ -3,10 +3,12 @@ import SwiftUI
 struct ProgressBar: View {
     let progress: Double
     let height: CGFloat
+    let color: Color
     
-    init(progress: Double, height: CGFloat = 6) {
+    init(progress: Double, height: CGFloat = 6, color: Color = .primaryGreen) {
         self.progress = progress
         self.height = height
+        self.color = color
     }
 
     var body: some View {
@@ -17,7 +19,7 @@ struct ProgressBar: View {
 
                 Rectangle()
                     .frame(width: geometry.size.width * progress)
-                    .foregroundColor(.green)
+                    .foregroundColor(color)
             }
         }
         .frame(height: height)

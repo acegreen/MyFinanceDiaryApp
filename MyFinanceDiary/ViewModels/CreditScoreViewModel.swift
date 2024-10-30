@@ -2,13 +2,17 @@ import Foundation
 import SwiftUI
 
 class CreditScoreViewModel: ObservableObject {
-    @Published var creditScore: Int
+    @Published var creditScore: Int = 0
     @Published var lastUpdated: String = ""
     @Published var scoreChange: Int = 0
     @Published var metrics: [CreditMetric] = []
+
+    var changeDescription: String {
+        // TODO: Calculate actual changes based on historical data
+        return "+\(scoreChange) pts on \(lastUpdated)"
+    }
     
-    init(initialScore: Int = 0) {
-        self.creditScore = initialScore
+    init() {
         fetchCreditScore()
     }
     
@@ -22,21 +26,21 @@ class CreditScoreViewModel: ObservableObject {
                 title: "On-time payments",
                 value: "95%",
                 status: "Good",
-                statusColor: .green,
+                statusColor: .primaryGreen,
                 detail: "1 missed"
             ),
             CreditMetric(
                 title: "Credit utilization",
                 value: "45%",
                 status: "Not bad",
-                statusColor: .orange,
+                statusColor: .vibrantOrange,
                 detail: "▼ 15%"
             ),
             CreditMetric(
                 title: "Age of credit",
                 value: "8 yrs",
                 status: "Good",
-                statusColor: .green,
+                statusColor: .primaryGreen,
                 detail: nil
             )
         ]

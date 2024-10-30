@@ -113,7 +113,7 @@ struct TransactionDetailsView: View {
             Spacer()
             if let transaction = loadedTransaction {
                 Text(transaction.pending ? "Pending" : "Completed")
-                    .foregroundColor(transaction.pending ? .orange : .green)
+                    .foregroundColor(transaction.pending ? .vibrantOrange : .primaryGreen)
             }
         }
     }

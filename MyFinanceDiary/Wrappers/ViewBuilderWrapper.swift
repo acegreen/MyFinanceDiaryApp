@@ -1,29 +1,30 @@
 import SwiftUI
 import Inject
 
-struct ViewBuilderWrapper<Header: View, Main: View>: View {
+struct ViewBuilderWrapper<Header: View, Main: View, ToolbarContent: View>: View {
     @ObserveInjection var inject
     
-    private let header: Header
-    private let main: Main
+    private let header: (() -> Header)
+    private let main: (() -> Main)
     private let spacing: CGFloat
     private let backgroundColor: Color
-    private let toolbarItems: () -> AnyView
+    private let toolbarContent: (() -> ToolbarContent)?
     private let ignoreSafeArea: Bool
     
+    // All components
     init(
         spacing: CGFloat = 24,
         backgroundColor: Color = .clear,
         ignoreSafeArea: Bool = true,
-        @ViewBuilder header: () -> Header,
-        @ViewBuilder main: () -> Main,
-        @ViewBuilder toolbarContent: @escaping () -> some View
+        @ViewBuilder header: @escaping () -> Header,
+        @ViewBuilder main: @escaping () -> Main,
+        @ViewBuilder toolbarContent: @escaping () -> ToolbarContent
     ) {
-        self.header = header()
-        self.main = main()
+        self.header = header
+        self.main = main
+        self.toolbarContent = toolbarContent
         self.spacing = spacing
         self.backgroundColor = backgroundColor
-        self.toolbarItems = { AnyView(toolbarContent()) }
         self.ignoreSafeArea = ignoreSafeArea
     }
     
@@ -31,19 +32,30 @@ struct ViewBuilderWrapper<Header: View, Main: View>: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: spacing) {
-                    header
-                    main
+                    header()
+                    main()
                 }
                 .background(backgroundColor)
             }
             .ignoresSafeArea(edges: ignoreSafeArea ? .top : [])
-            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    toolbarItems()
+                if let toolbarContent {
+                    ToolbarItemGroup(placement: .navigationBarTrailing) {
+                        toolbarContent()
+                    }
                 }
             }
         }
         .enableInjection()
+    }
+}
+
+#Preview {
+    Group {
+        ViewBuilderWrapper(
+            header: { Text("Header") },
+            main: { Text("Main") },
+            toolbarContent: { Button("Action") {} }
+        )
     }
 }
