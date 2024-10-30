@@ -63,20 +63,16 @@ struct TransactionDetailsView: View {
         VStack(spacing: 16) {
             HStack {
                 Text("Status")
+                    .font(.headline)
                 Spacer()
                 if let transaction = loadedTransaction {
                     Text(transaction.pending ? "Pending" : "Completed")
                         .foregroundColor(transaction.pending ? .vibrantOrange : .primaryGreen)
                 }
             }
-            if let accountName = transaction.accountName {
-                divider
-                HStack {
-                    Text("Account")
-                    Spacer()
-                    Text(accountName)
-                        .foregroundColor(.secondary)
-                }
+            if let paymentChannel = transaction.paymentChannel {
+                Text(paymentChannel)
+                    .foregroundColor(.secondary)
             }
         }
         .padding()

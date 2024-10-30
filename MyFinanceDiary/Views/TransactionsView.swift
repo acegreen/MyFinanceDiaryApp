@@ -142,7 +142,7 @@ struct TransactionRow: View {
 
 #Preview {
     NavigationStack {
-        TransactionsView(accountType: .cash)
+        TransactionsView(accountType: .depository)
     }
     .withPreviewEnvironment()
 }

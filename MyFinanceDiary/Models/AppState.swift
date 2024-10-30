@@ -62,7 +62,7 @@ class AppState: ObservableObject {
 private extension AppState {
     static func setupPersistence() -> (ModelContainer, ModelContext) {
         do {
-            let schema = Schema([Transaction.self])
+            let schema = Schema([Account.self, Transaction.self])
             let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
             let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
             return (container, container.mainContext)

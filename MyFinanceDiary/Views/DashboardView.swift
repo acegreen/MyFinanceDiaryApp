@@ -107,7 +107,7 @@ struct DashboardAccountsList: View {
             ForEach(accounts) { account in
                 DashboardAccountItemRow(
                     type: account.type,
-                    amount: dashboardViewModel.formatAmount(account.amount)
+                    amount: dashboardViewModel.formatAmount(account.balances.current)
                 )
             }
         }
@@ -123,7 +123,7 @@ struct DashboardAccountItemRow: View {
     var body: some View {
         NavigationLink(destination: TransactionsView(accountType: type)) {
             HStack {
-                Text(type.rawValue)
+                Text(type.displayName)
                     .font(.system(size: 18, weight: .bold))
                     .foregroundColor(.primary)
                 Spacer()

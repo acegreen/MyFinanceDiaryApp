@@ -11,9 +11,10 @@ final class Transaction: Codable {
     var transactionId: String
     var category: TransactionCategory?
     @Attribute var categoryIconUrl: String?
-    let accountName: String?
+    var accountId: String?
     var location: Location?
-    let paymentChannel: String?
+    var paymentChannel: String?
+    var paymentMeta: PaymentMeta?
 
     var displayName: String {
         merchantName ?? name
@@ -45,6 +46,7 @@ final class Transaction: Codable {
         case categoryIconUrl = "personal_finance_category_icon_url"
         case personalFinanceCategory = "personal_finance_category"
         case location
+        case paymentMeta = "payment_meta"
     }
 
     required init(from decoder: Decoder) throws {
@@ -76,6 +78,7 @@ final class Transaction: Codable {
         )
 
         self.location = try container.decodeIfPresent(Location.self, forKey: .location) ?? Location()
+        self.paymentMeta = try container.decodeIfPresent(PaymentMeta.self, forKey: .paymentMeta)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -93,28 +96,29 @@ final class Transaction: Codable {
         try container.encode(pending, forKey: .pending)
         try container.encode(transactionId, forKey: .transactionId)
         try container.encodeIfPresent(categoryIconUrl, forKey: .categoryIconUrl)
+        try container.encodeIfPresent(paymentMeta, forKey: .paymentMeta)
     }
 
     // Helper to map category to account type
     var accountType: Account.AccountType {
         switch self.category {
         case .creditCard:
-            return .creditCards
+            return .credit
         case .loan:
-            return .loans
+            return .loan
         case .investment:
-            return .investments
-        case .transfer:
+            return .investment
+        case .cash, .transfer:
             // For transfers, we should look at the destination
             // If it's a transfer to an investment account, it should be .investments
             // If it's a transfer to a loan/credit card, it should be .loans/.creditCards
-            return .cash  // Maybe this default needs to change
+            return .depository  // Maybe this default needs to change
         case .payment:
             // Similar to transfers, payments might need more context
             // A credit card payment should probably be .creditCards
-            return .creditCards  // Changed from .cash
-        case .cash, .other, .none:
-            return .cash
+            return .credit  // Changed from .cash
+        case .other, .none:
+            return .other
         }
     }
 }
@@ -128,7 +132,7 @@ extension Transaction {
             self = amount >= 0 ? .credit : .debit
         }
     }
-    enum TransactionCategory: String, Codable {
+    enum TransactionCategory: String, Codable, CaseIterable {
         case cash = "Cash"
         case creditCard = "Credit Card"
         case loan = "Loan"
@@ -210,6 +214,28 @@ extension Transaction {
             case postalCode = "postal_code"
             case region
             case storeNumber = "store_number"
+        }
+    }
+
+    struct PaymentMeta: Codable {
+        var byOrderOf: String?
+        var payee: String?
+        var payer: String?
+        var paymentMethod: String?
+        var paymentProcessor: String?
+        var ppdId: String?
+        var reason: String?
+        var referenceNumber: String?
+        
+        enum CodingKeys: String, CodingKey {
+            case byOrderOf = "by_order_of"
+            case payee
+            case payer
+            case paymentMethod = "payment_method"
+            case paymentProcessor = "payment_processor"
+            case ppdId = "ppd_id"
+            case reason
+            case referenceNumber = "reference_number"
         }
     }
 }

@@ -42,10 +42,6 @@ class PlaidService: ObservableObject {
             throw PlaidError.noPlaidConnection
         }
         
-        // Format dates for Plaid API
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        
         let url = URL(string: "https://\(PlaidEnvironment.current).plaid.com/transactions/get")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -251,47 +247,14 @@ extension PlaidService {
             case itemId = "item_id"
         }
     }
+    
     private struct PlaidTransactionsResponse: Codable {
-        let accounts: [PlaidAccount]
+        let accounts: [Account]
         let transactions: [Transaction]
         
         enum CodingKeys: String, CodingKey {
             case accounts
             case transactions
-        }
-    }
-
-    private struct PlaidAccount: Codable {
-        let accountId: String
-        let balances: PlaidBalances
-        let mask: String?
-        let name: String
-        let officialName: String?
-        let type: String
-        let subtype: String?
-        
-        private enum CodingKeys: String, CodingKey {
-            case accountId = "account_id"
-            case balances
-            case mask
-            case name
-            case officialName = "official_name"
-            case type
-            case subtype
-        }
-    }
-
-    private struct PlaidBalances: Codable {
-        let available: Double?
-        let current: Double
-        let limit: Double?
-        let isoCurrencyCode: String?
-        
-        private enum CodingKeys: String, CodingKey {
-            case available
-            case current
-            case limit
-            case isoCurrencyCode = "iso_currency_code"
         }
     }
 
