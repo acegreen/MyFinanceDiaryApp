@@ -28,8 +28,8 @@ struct TransactionsView: View {
                     await loadTransactions(for: accountType)
                 }
             }
-            .onChange(of: scenePhase) { oldPhase, newPhase in
-                if newPhase == .active {
+            .onChange(of: appState.plaidService.hasValidPlaidConnection) { oldValue, newValue in
+                if newValue {
                     Task {
                         await loadTransactions(for: accountType)
                     }
@@ -123,18 +123,17 @@ struct TransactionRow: View {
                 
                 VStack(alignment: .leading) {
                     Text(transaction.name)
-                        .font(.system(size: 17))
+                        .font(.system(size: 18))
                     if let merchantName = transaction.merchantName {
                         Text(merchantName)
-                            .font(.subheadline)
+                            .font(.subheadline.bold())
                             .foregroundColor(.secondary)
                     }
                 }
                 
                 Spacer()
                 
-                Text(transaction.amount, format: .currency(code: "USD"))
-                    .foregroundColor(transaction.amount < 0 ? .alertRed : .primaryGreen)
+                Text(transaction.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))                    .foregroundColor(transaction.amount < 0 ? .alertRed : .primaryGreen)
             }
             .padding(.vertical, 4)
         }

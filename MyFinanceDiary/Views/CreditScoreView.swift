@@ -15,15 +15,6 @@ struct CreditScoreView: View {
             )
         } main: {
             CreditScoreMainView(metrics: appState.creditScoreViewModel.metrics)
-        } toolbarContent: {
-            Button(action: {}) {
-                Image(systemName: "bubble.and.pencil")
-                    .foregroundColor(.white)
-            }
-            Button(action: {}) {
-                Image(systemName: "plus")
-                    .foregroundColor(.white)
-            }
         }
     }
 }

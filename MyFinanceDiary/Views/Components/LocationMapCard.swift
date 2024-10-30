@@ -6,6 +6,8 @@ struct LocationMapCard: View {
     @ObserveInjection var inject
     let title: String
     let coordinates: (latitude: Double, longitude: Double)
+    let shouldAllowUserInteraction: Bool = false
+
     
     var body: some View {
         VStack(spacing: 0) {
@@ -18,7 +20,7 @@ struct LocationMapCard: View {
                     latitudeDelta: 0.01,
                     longitudeDelta: 0.01
                 )
-            )))) {
+            ))), interactionModes: shouldAllowUserInteraction ? .all : []) {
                 Marker(title,
                       coordinate: CLLocationCoordinate2D(
                         latitude: coordinates.latitude,
@@ -38,7 +40,6 @@ struct LocationMapCard: View {
             .background(Color(uiColor: .secondarySystemGroupedBackground))
         }
         .cornerRadius(10)
-        .padding(.horizontal)
         .enableInjection()
     }
 }

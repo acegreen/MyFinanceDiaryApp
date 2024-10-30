@@ -36,20 +36,17 @@ struct DashboardHeaderView: View {
             Button(action: {
                 showingCreditScore = true
             }) {
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Credit score")
-                            .font(.headline)
-                            .foregroundColor(.white.opacity(0.9))
-                        Text("\(dashboardViewModel.creditScore)")
-                            .font(.title2.bold())
-                            .foregroundColor(.white)
-                    }
-                    Spacer()
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("Credit score")
+                        .font(.headline)
+                        .foregroundColor(.white.opacity(0.9))
+                    Text("\(dashboardViewModel.creditScore)")
+                        .font(.title2.bold())
+                        .foregroundColor(.white)
                 }
             }
             .padding(.horizontal)
-            .buttonStyle(PlainButtonStyle()) // Prevents default button styling
+            .buttonStyle(PlainButtonStyle())
 
             // Tab Selection
             Picker("View Selection", selection: $dashboardViewModel.selectedSegment) {
@@ -65,7 +62,7 @@ struct DashboardHeaderView: View {
             // Amount Display
             VStack(alignment: .leading, spacing: 8) {
                 Text(dashboardViewModel.currentAmount)
-                    .font(.system(size: 36, weight: .bold))
+                    .font(.system(size: 48, weight: .bold))
                     .foregroundColor(.white)
 
                 ChangeIndicatorView(
@@ -127,11 +124,11 @@ struct DashboardAccountItemRow: View {
         NavigationLink(destination: TransactionsView(accountType: type)) {
             HStack {
                 Text(type.rawValue)
-                    .font(.system(size: 16))
+                    .font(.system(size: 18, weight: .bold))
                     .foregroundColor(.primary)
                 Spacer()
                 Text(amount)
-                    .font(.system(size: 17, weight: .medium))
+                    .font(.system(size: 20, weight: .heavy))
                     .foregroundColor(amount.contains("-") ? .alertRed : .primaryGreen)
             }
             .padding(.horizontal, 16)
