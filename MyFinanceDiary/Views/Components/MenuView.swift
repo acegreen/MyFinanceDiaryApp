@@ -29,9 +29,8 @@ struct MenuView: View {
             MenuRow(title: "Share MyFinanceDiary App",
                     subtitle: "Send a link to your friends",
                     icon: "square.and.arrow.up.fill",
-                    iconColor: .primaryGreen)
+                    iconColor: .darkGreen)
         }
-        .ignoresSafeArea()
         .enableInjection()
     }
 }
@@ -60,7 +59,6 @@ struct MenuRow: View {
             Image(systemName: icon)
                 .foregroundColor(iconColor)
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 16)
+        .padding(16)
     }
 } 

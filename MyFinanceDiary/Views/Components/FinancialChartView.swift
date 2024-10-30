@@ -1,3 +1,4 @@
+import Foundation
 import SwiftUI
 import Charts
 import Inject
@@ -54,7 +55,6 @@ struct FinancialChartView: View {
                 )
             }
             
-            // Single line mark
             ForEach(extendedData) { point in
                 LineMark(
                     x: .value("Date", point.date),
@@ -65,35 +65,17 @@ struct FinancialChartView: View {
                 .interpolationMethod(.monotone)
             }
             
-            // Dotted line for the extension
-            if let lastPoint = data.last, let extraPoint = extendedData.last {
-                LineMark(
-                    x: .value("Date", lastPoint.date),
-                    y: .value("Amount", lastPoint.amount)
-                )
-                .foregroundStyle(.white)
-                .lineStyle(StrokeStyle(dash: [5]))
-                
-                LineMark(
-                    x: .value("Date", extraPoint.date),
-                    y: .value("Amount", extraPoint.amount)
-                )
-                .foregroundStyle(.white)
-                .lineStyle(StrokeStyle(dash: [5]))
-            }
-            
-            // Only last point with Today label
-            if let lastPoint = data.last {
+            if let todayPoint = data.first(where: { Calendar.current.isDateInToday($0.date) }) {
                 PointMark(
-                    x: .value("Date", lastPoint.date),
-                    y: .value("Amount", lastPoint.amount)
+                    x: .value("Date", todayPoint.date),
+                    y: .value("Amount", todayPoint.amount)
                 )
                 .foregroundStyle(.white)
-                .symbolSize(500)
+                .symbolSize(300)
                 .annotation(position: .top) {
                     Text("Today")
                         .foregroundColor(.white)
-                        .font(.subheadline)
+                        .font(.subheadline.bold())
                         .padding(.vertical, 4)
                         .padding(.horizontal, 8)
                 }
@@ -102,10 +84,11 @@ struct FinancialChartView: View {
         .frame(height: 200)
         .chartYScale(domain: (minAmount - yAxisPadding)...(maxAmount + yAxisPadding))
         .chartXAxis {
-            AxisMarks(preset: .automatic, values: data.map { $0.date }) { value in
+            AxisMarks(preset: .inset, values: data.map { $0.date }) { value in
                 if let date = value.as(Date.self) {
                     AxisValueLabel {
                         Text(date.formatted(.dateTime.month().day()))
+                            .font(.subheadline)
                             .foregroundColor(.white)
                     }
                 }
@@ -129,8 +112,7 @@ extension FinancialChartView {
 struct FinancialChartView_Previews: PreviewProvider {
     static var previews: some View {
         FinancialChartView(data: sampleData)
-            .background(Color.primaryGreen)
-            .padding()
+            .greenGradientBackground()
     }
     
     static var sampleData: [FinancialChartView.FinancialDataPoint] = [

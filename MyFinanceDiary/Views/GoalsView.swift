@@ -35,7 +35,7 @@ private struct GoalsHeaderView: View {
                 .frame(width: 80, height: 80)
                 .overlay(
                     Image(systemName: "trophy.fill")
-                        .font(.system(size: 30))
+                        .font(.system(size: 32))
                         .foregroundColor(.darkGreen)
                 )
             

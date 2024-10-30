@@ -37,6 +37,11 @@ struct MainTabView: View {
                 .tabItem {
                     Label("Goals", systemImage: "trophy.fill")
                 }
+                
+            MeView()
+                .tabItem {
+                    Label("Me", systemImage: "person.fill")
+                }
         }
         .tint(.darkGreen)
     }

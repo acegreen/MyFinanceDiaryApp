@@ -18,7 +18,7 @@ struct ViewBuilderWrapper<Header: View, Main: View, ToolbarContent: View>: View 
         ignoreSafeArea: Bool = true,
         @ViewBuilder header: @escaping () -> Header,
         @ViewBuilder main: @escaping () -> Main,
-        @ViewBuilder toolbarContent: @escaping () -> ToolbarContent
+        @ViewBuilder toolbarContent: @escaping () -> ToolbarContent = { EmptyView() }
     ) {
         self.header = header
         self.main = main

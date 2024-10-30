@@ -35,7 +35,7 @@ struct BudgetHeaderView: View {
     @EnvironmentObject var appState: AppState
 
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .center) {
                 Text(amount)
                     .font(.system(size: 48, weight: .bold))
@@ -46,11 +46,10 @@ struct BudgetHeaderView: View {
                     .foregroundColor(.white)
                     .padding(8)
                     .overlay(
-                        RoundedRectangle(cornerRadius: 8)
+                        RoundedRectangle(cornerRadius: 12)
                             .stroke(.white, lineWidth: 2)
                     )
             }
-
             // Progress Bar
             ProgressSection(
                 spent: appState.budgetViewModel.budgetSummary.totalSpent,
@@ -69,7 +68,7 @@ struct BudgetHeaderView: View {
 
         var body: some View {
             VStack(alignment: .leading, spacing: 8) {
-                ProgressBar(progress: spent / total, height: 12)
+                ProgressBar(progress: spent / total, height: 16)
                 HStack(spacing: 4) {
                     Text("$\(Int(spent))")
                         .font(.headline.bold())
@@ -103,7 +102,7 @@ struct BudgetMainView: View {
                 expandedByDefault: true
             )
         }
-        .padding(.horizontal)
+        .padding(.horizontal, 12)
         .enableInjection()
     }
 }
@@ -135,6 +134,7 @@ struct BudgetExpandableSection: View {
                 HStack {
                     Text(title)
                         .font(.headline)
+                        .foregroundColor(.primary)
                     Spacer()
                     Text(amount)
                         .font(.headline)
