@@ -1,8 +1,25 @@
 import SwiftUI
 
 extension Color {
-    static let greenAce = Color(red: 25/255, green: 100/255, blue: 50/255)
+    static let primaryGreen = Color(hex: "#00C241") // Correct primary green
+    static let darkGreen = Color(hex: "#009900")
+    static let lightGreen = Color(hex: "#66B24A") // Further adjusted light green
+    static let neutralGray = Color(hex: "#F2F2F2")
+    static let darkGray = Color(hex: "#333333")
+    static let accentBlue = Color(hex: "#1DA1F2")
+    static let softYellow = Color(hex: "#FFD700")
+    static let alertRed = Color(hex: "#FF3B30")
+    static let vibrantOrange = Color(hex: "#FF6F30") // Vibrant orange
 
+    // Gradient from base color to a lighter shade
+    static let greenGradient = LinearGradient(
+        gradient: Gradient(colors: [darkGreen, lightGreen]),
+        startPoint: .top,
+        endPoint: .bottom
+    )
+}
+
+extension Color {
     init(hex: String) {
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
         var int: UInt64 = 0

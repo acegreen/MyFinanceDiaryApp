@@ -8,7 +8,7 @@ struct BackButton: View {
             dismiss()
         }) {
             Image(systemName: "chevron.left")
-                .foregroundColor(.blue)
+                .foregroundColor(.darkGreen)
                 .imageScale(.large)
         }
     }

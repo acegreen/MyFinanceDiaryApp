@@ -8,7 +8,7 @@ class DashboardViewModel: ObservableObject {
             updateChartData() // Automatically update when segment changes
         }
     }
-    @Published var chartData: [FinancialDataPoint] = []
+    @Published var chartData: [FinancialChartView.FinancialDataPoint] = []
     @Published var creditScore: Int = 821
     
     enum ChartSegment: String, CaseIterable {
@@ -67,15 +67,15 @@ class DashboardViewModel: ObservableObject {
     }
     
     // TODO: Replace with actual historical data fetch
-    private func createTrendData(startAmount: Double, endAmount: Double) -> [FinancialDataPoint] {
+    private func createTrendData(startAmount: Double, endAmount: Double) -> [FinancialChartView.FinancialDataPoint] {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
         
-        return (0...3).map { weekOffset -> FinancialDataPoint in
+        return (0...3).map { weekOffset -> FinancialChartView.FinancialDataPoint in
             let date = calendar.date(byAdding: .weekOfMonth, value: -weekOffset, to: today)!
             let progress = Double(3 - weekOffset) / 3.0
             let amount = startAmount + (endAmount - startAmount) * progress
-            return FinancialDataPoint(date: date, amount: amount)
+            return .init(date: date, amount: amount)
         }
         .reversed()
     }

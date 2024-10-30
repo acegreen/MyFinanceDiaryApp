@@ -5,13 +5,13 @@ class BudgetViewModel: ObservableObject {
     @Published var currentMonth: String = "August"
     @Published var budgetSummary: Budget.BudgetSummary
     @Published var incomeCategories: [Budget.BudgetCategory] = [
-        Budget.BudgetCategory(name: "Salary", spent: 3000, total: 3000, color: .green)
+        Budget.BudgetCategory(name: "Salary", spent: 3000, total: 3000, color: .primaryGreen)
     ]
     @Published var expenseCategories: [Budget.BudgetCategory] = [
-        Budget.BudgetCategory(name: "Auto & transport", spent: 750, total: 1350, color: .green),
-        Budget.BudgetCategory(name: "Auto insurance", spent: 400, total: 500, color: .orange),
-        Budget.BudgetCategory(name: "Auto payment", spent: 300, total: 600, color: .green),
-        Budget.BudgetCategory(name: "Gas & fuel", spent: 50, total: 250, color: .green)
+        Budget.BudgetCategory(name: "Auto & transport", spent: 750, total: 1350, color: .primaryGreen),
+        Budget.BudgetCategory(name: "Auto insurance", spent: 400, total: 500, color: .vibrantOrange),
+        Budget.BudgetCategory(name: "Auto payment", spent: 300, total: 600, color: .primaryGreen),
+        Budget.BudgetCategory(name: "Gas & fuel", spent: 50, total: 250, color: .primaryGreen)
     ]
     
     init() {

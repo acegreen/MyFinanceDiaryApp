@@ -126,7 +126,7 @@ struct TransactionRow: View {
                         .font(.system(size: 17))
                     if let merchantName = transaction.merchantName {
                         Text(merchantName)
-                            .font(.caption)
+                            .font(.subheadline)
                             .foregroundColor(.secondary)
                     }
                 }
@@ -134,7 +134,7 @@ struct TransactionRow: View {
                 Spacer()
                 
                 Text(transaction.amount, format: .currency(code: "USD"))
-                    .foregroundColor(transaction.amount < 0 ? .red : .green)
+                    .foregroundColor(transaction.amount < 0 ? .alertRed : .primaryGreen)
             }
             .padding(.vertical, 4)
         }

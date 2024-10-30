@@ -10,7 +10,8 @@ struct CreditScoreView: View {
             CreditScoreHeaderView(
                 creditScore: appState.creditScoreViewModel.creditScore,
                 lastUpdated: appState.creditScoreViewModel.lastUpdated,
-                scoreChange: appState.creditScoreViewModel.scoreChange
+                scoreChange: appState.creditScoreViewModel.scoreChange,
+                changeDescription: appState.creditScoreViewModel.changeDescription
             )
         } main: {
             CreditScoreMainView(metrics: appState.creditScoreViewModel.metrics)
@@ -31,7 +32,8 @@ struct CreditScoreHeaderView: View {
     let creditScore: Int
     let lastUpdated: String
     let scoreChange: Int
-    
+    let changeDescription: String
+
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
             // Credit Score Section
@@ -44,26 +46,17 @@ struct CreditScoreHeaderView: View {
                     .font(.system(size: 48, weight: .bold))
                     .foregroundColor(.white)
                 
-                HStack(spacing: 4) {
-                    Image(systemName: "arrow.up.circle.fill")
-                            .foregroundColor(.green)
-                        Text("+\(scoreChange) pts on \(lastUpdated)")
-                            .font(.subheadline)
-                            .foregroundColor(.white)
-                    }
+                ChangeIndicatorView(
+                    isPositive: scoreChange > 0,
+                    description: changeDescription
+                )
 
                     CreditScoreSlider(creditScore: creditScore)
                 }
         }
         .padding()
         .frame(maxWidth: .infinity, minHeight: 300)
-        .background(
-            LinearGradient(
-                colors: [Color(hex: "1D7B6E"), Color(hex: "1A9882")],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        )
+        .greenGradientBackground()
     }
 }
 
@@ -77,7 +70,7 @@ struct CreditScoreMainView: View {
             
             VStack(spacing: 24) {
                 ForEach(metrics, id: \.title) { metric in
-                    CreditMetricRowUpdated(
+                    CreditMetricRow(
                         title: metric.title,
                         value: metric.value,
                         status: metric.status,
@@ -91,98 +84,7 @@ struct CreditScoreMainView: View {
     }
 }
 
-struct CreditScoreSlider: View {
-    let creditScore: Int
-    
-    // Constants for score range
-    private let minScore = 300
-    private let maxScore = 850
-    
-    var scoreStatus: String {
-        switch creditScore {
-        case minScore...579: return "Poor"
-        case 580...669: return "Fair"
-        case 670...739: return "Good"
-        case 740...799: return "Very Good"
-        default: return "Excellent"
-        }
-    }
-    
-    var statusColor: Color {
-        switch creditScore {
-        case minScore...579: return .red
-        case 580...669: return .orange
-        case 670...739: return .green
-        case 740...799: return .green
-        default: return .green
-        }
-    }
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            // Status indicator
-            GeometryReader { geometry in
-                let offset = calculateScoreOffset(in: geometry.size.width)
-                
-                HStack {
-                    Spacer()
-                    VStack(spacing: 2) {
-                        Text(scoreStatus)
-                            .font(.subheadline)
-                            .foregroundColor(statusColor)
-                        Image(systemName: "triangle.fill")
-                            .font(.system(size: 12))
-                            .foregroundColor(statusColor)
-                            .rotationEffect(.degrees(180))
-                    }
-                    Spacer()
-                }
-                .offset(x: offset)
-            }
-            .frame(height: 30)
-            
-            // Gradient slider
-            GeometryReader { geometry in
-                LinearGradient(
-                    colors: [.red, .orange, .yellow, .green],
-                    startPoint: .leading,
-                    endPoint: .trailing
-                )
-                .frame(height: 12)
-                .cornerRadius(6)
-            }
-            .frame(height: 12)
-            
-            // Score labels
-            HStack {
-                Text("\(minScore)")
-                Spacer()
-                Text("500")
-                Spacer()
-                Text("600")
-                Spacer()
-                Text("700")
-                Spacer()
-                Text("\(maxScore)")
-            }
-            .font(.subheadline)
-            .foregroundColor(.white)
-        }
-    }
-    
-    private func calculateScoreOffset(in width: CGFloat) -> CGFloat {
-        // Calculate percentage position (0 to 1)
-        let percentage = CGFloat(creditScore - minScore) / CGFloat(maxScore - minScore)
-        
-        // Calculate absolute position
-        let position = width * percentage
-        
-        // Adjust for the HStack's Spacer() which centers the indicator
-        return position - (width / 2)
-    }
-}
-
-struct CreditMetricRowUpdated: View {
+struct CreditMetricRow: View {
     let title: String
     let value: String
     let status: String

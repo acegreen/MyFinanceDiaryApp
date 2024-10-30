@@ -10,8 +10,7 @@ struct DashboardView: View {
         ViewBuilderWrapper {
             DashboardHeaderView(dashboardViewModel: appState.dashboardViewModel)
         } main: {
-            AccountsSection(accounts: appState.dashboardViewModel.accounts, dashboardViewModel: appState.dashboardViewModel)
-                .background(Color("AccentColor").opacity(0.05))
+            DashboardMainView(accounts: appState.dashboardViewModel.accounts, dashboardViewModel: appState.dashboardViewModel)
         } toolbarContent: {
             Button(action: {}) {
                 Image(systemName: "bubble.and.pencil")
@@ -22,37 +21,6 @@ struct DashboardView: View {
                     .foregroundColor(.white)
             }
         }
-    }
-}
-
-// Separate Accounts Section
-struct AccountsSection: View {
-    let accounts: [Account]
-    @ObservedObject var dashboardViewModel: DashboardViewModel
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            AccountsList(accounts: accounts, dashboardViewModel: dashboardViewModel)
-        }
-        .background(Color(uiColor: .systemBackground))
-    }
-}
-
-// Separate Accounts List
-struct AccountsList: View {
-    let accounts: [Account]
-    @ObservedObject var dashboardViewModel: DashboardViewModel
-
-    var body: some View {
-        VStack(spacing: 16) {
-            ForEach(accounts) { account in
-                AccountItemRow(
-                    type: account.type,
-                    amount: dashboardViewModel.formatAmount(account.amount)
-                )
-            }
-        }
-        .padding(.horizontal)
     }
 }
 
@@ -78,6 +46,7 @@ struct DashboardHeaderView: View {
                     Spacer()
                 }
             }
+            .padding(.horizontal)
             .buttonStyle(PlainButtonStyle()) // Prevents default button styling
 
             // Tab Selection
@@ -87,6 +56,7 @@ struct DashboardHeaderView: View {
                         .tag(tab)
                 }
             }
+            .padding(.horizontal)
             .pickerStyle(.segmented)
             .colorScheme(.dark) // Force dark mode for white text
 
@@ -96,37 +66,58 @@ struct DashboardHeaderView: View {
                     .font(.system(size: 36, weight: .bold))
                     .foregroundColor(.white)
 
-                HStack(spacing: 4) {
-                    Image(systemName: dashboardViewModel.changeIsPositive ? "arrow.up" : "arrow.down")
-                        .foregroundColor(dashboardViewModel.changeIsPositive ? .green : .red)
-                    Text(dashboardViewModel.changeDescription)
-                        .font(.subheadline)
-                        .foregroundColor(.white.opacity(0.9))
-                }
+                ChangeIndicatorView(
+                    isPositive: dashboardViewModel.changeIsPositive,
+                    description: dashboardViewModel.changeDescription
+                )
             }
-            .padding(.top, 8)
+            .padding(.horizontal)
 
             // Chart
             FinancialChartView(data: dashboardViewModel.chartData)
         }
-        .padding(24)
         .padding(.top, 48)
-        .background(
-            LinearGradient(
-                colors: [Color(hex: "1D7B6E"), Color(hex: "1A9882")],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        )
+        .padding(.bottom, 24)
+        .greenGradientBackground()
         .sheet(isPresented: $showingCreditScore) {
             CreditScoreView()
         }
     }
 }
 
+// Separate Accounts Section
+struct DashboardMainView: View {
+    let accounts: [Account]
+    @ObservedObject var dashboardViewModel: DashboardViewModel
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            DashboardAccountsList(accounts: accounts, dashboardViewModel: dashboardViewModel)
+        }
+        .background(Color(uiColor: .systemBackground))
+    }
+}
+
+// Separate Accounts List
+struct DashboardAccountsList: View {
+    let accounts: [Account]
+    @ObservedObject var dashboardViewModel: DashboardViewModel
+
+    var body: some View {
+        VStack(spacing: 16) {
+            ForEach(accounts) { account in
+                DashboardAccountItemRow(
+                    type: account.type,
+                    amount: dashboardViewModel.formatAmount(account.amount)
+                )
+            }
+        }
+        .padding(.horizontal)
+    }
+}
 
 // FinancialItemView for each financial category
-struct AccountItemRow: View {
+struct DashboardAccountItemRow: View {
     var type: Account.AccountType
     var amount: String
     
@@ -134,12 +125,12 @@ struct AccountItemRow: View {
         NavigationLink(destination: TransactionsView(accountType: type)) {
             HStack {
                 Text(type.rawValue)
-                    .font(.system(size: 17))
+                    .font(.system(size: 16))
                     .foregroundColor(.primary)
                 Spacer()
                 Text(amount)
                     .font(.system(size: 17, weight: .medium))
-                    .foregroundColor(amount.contains("-") ? .red : .green)
+                    .foregroundColor(amount.contains("-") ? .alertRed : .primaryGreen)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 16) // Increase vertical padding
