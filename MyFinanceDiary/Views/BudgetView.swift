@@ -5,19 +5,22 @@ struct BudgetView: View {
     @ObserveInjection var inject
     @EnvironmentObject var appState: AppState
     
+    @State private var showMenu: Bool = false
+
     var body: some View {
         ViewBuilderWrapper {
             BudgetHeaderView(amount: appState.budgetViewModel.formattedRemaining)
         } main: {
             BudgetMainView()
         } toolbarContent: {
-            Button(action: {}) {
-                Image(systemName: "bubble.and.pencil")
-                    .foregroundColor(.white)
+            Button {
+                showMenu.toggle()
+            } label: {
+                Image(systemName: "line.3.horizontal")
+                .foregroundColor(.white)
             }
-            Button(action: {}) {
-                Image(systemName: "plus")
-                    .foregroundColor(.white)
+            .popoverSheet(isPresented: $showMenu) {
+                MenuView()
             }
         }
         .navigationTitle("\(appState.budgetViewModel.currentMonth) budgets")
