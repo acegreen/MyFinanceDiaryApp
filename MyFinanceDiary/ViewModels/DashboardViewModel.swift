@@ -25,10 +25,10 @@ class DashboardViewModel: ObservableObject {
     
     private func setupSampleData() {
         accounts = [
-            Account(type: .cash, amount: 5732),
-            Account(type: .creditCards, amount: -4388),
-            Account(type: .investments, amount: 82386),
-            Account(type: .property, amount: 302225)
+            Account(accountId: "1", balances: Balances(current: 5732.0), name: "Checking", type: .depository),
+            Account(accountId: "2", balances: Balances(current: -4388.0), name: "Credit Card", type: .credit),
+            Account(accountId: "3", balances: Balances(current: 82386.0), name: "Investment", type: .investment),
+            Account(accountId: "4", balances: Balances(current: 302225.0), name: "Property", type: .other)
         ]
     }
     
@@ -38,35 +38,26 @@ class DashboardViewModel: ObservableObject {
         
         switch selectedSegment {
         case .netWorth:
-            // TODO: Fetch actual net worth history from CoreData/database
-            // Should include: total of all accounts at weekly intervals
-            let totalNetWorth = accounts.reduce(0.0) { $0 + $1.amount }
+            let totalNetWorth = accounts.reduce(0.0) { $0 + $1.balances.current }
             chartData = createTrendData(startAmount: totalNetWorth * 0.97, endAmount: totalNetWorth)
             
         case .spending:
-            // TODO: Fetch actual spending history from transactions
-            // Should include: sum of all expenses grouped by week
             let currentSpending = 2500.0
             chartData = createTrendData(startAmount: currentSpending * 1.2, endAmount: currentSpending)
             
         case .cash:
-            // TODO: Fetch actual cash account balance history
-            // Should include: cash account balance at weekly intervals
-            if let cashAccount = accounts.first(where: { $0.type == .cash }) {
-                chartData = createTrendData(startAmount: cashAccount.amount * 1.1, endAmount: cashAccount.amount)
+            if let cashAccount = accounts.first(where: { $0.type == .depository }) {
+                chartData = createTrendData(startAmount: cashAccount.balances.current * 1.1, endAmount: cashAccount.balances.current)
             }
             
         case .investments:
-            // TODO: Fetch actual investment account balance history
-            // Should include: investment account balance at weekly intervals
-            if let investmentAccount = accounts.first(where: { $0.type == .investments }) {
-                chartData = createTrendData(startAmount: investmentAccount.amount * 0.95, endAmount: investmentAccount.amount)
+            if let investmentAccount = accounts.first(where: { $0.type == .investment }) {
+                chartData = createTrendData(startAmount: investmentAccount.balances.current * 0.95, endAmount: investmentAccount.balances.current)
             }
         }
         objectWillChange.send()
     }
     
-    // TODO: Replace with actual historical data fetch
     private func createTrendData(startAmount: Double, endAmount: Double) -> [FinancialChartView.FinancialDataPoint] {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
@@ -86,24 +77,22 @@ class DashboardViewModel: ObservableObject {
     }
     
     var currentAmount: String {
-        // TODO: Replace with actual data
         switch selectedSegment {
         case .netWorth:
-            let total = accounts.reduce(0.0) { $0 + $1.amount }
+            let total = accounts.reduce(0.0) { $0 + $1.balances.current }
             return formatAmount(total)
         case .spending:
             return formatAmount(2500) // TODO: Get actual monthly spending
         case .cash:
-            let cashAmount = accounts.first(where: { $0.type == .cash })?.amount ?? 0
+            let cashAmount = accounts.first(where: { $0.type == .depository })?.balances.current ?? 0
             return formatAmount(cashAmount)
         case .investments:
-            let investmentAmount = accounts.first(where: { $0.type == .investments })?.amount ?? 0
+            let investmentAmount = accounts.first(where: { $0.type == .investment })?.balances.current ?? 0
             return formatAmount(investmentAmount)
         }
     }
     
     var changeDescription: String {
-        // TODO: Calculate actual changes based on historical data
         switch selectedSegment {
         case .netWorth:
             return "$200 this month"
@@ -117,7 +106,6 @@ class DashboardViewModel: ObservableObject {
     }
     
     var changeIsPositive: Bool {
-        // TODO: Calculate based on actual historical data
         switch selectedSegment {
         case .netWorth, .investments:
             return true

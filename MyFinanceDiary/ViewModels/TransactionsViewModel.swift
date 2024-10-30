@@ -19,13 +19,13 @@ class TransactionsViewModel: ObservableObject {
         
         // Load transactions immediately upon initialization with default type
         Task {
-            try? await loadTransactions(for: .cash)
+            try? await loadTransactions(for: .depository)
         }
     }
     
     @objc private func handlePlaidConnection() {
         Task {
-            try? await loadTransactions(for: .cash)
+            try? await loadTransactions(for: .depository)
         }
     }
     
