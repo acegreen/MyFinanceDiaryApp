@@ -122,4 +122,7 @@ struct MenuListRow: View {
     }
 } 
 
-
+#Preview {
+    MeView()
+        .withPreviewEnvironment()
+}

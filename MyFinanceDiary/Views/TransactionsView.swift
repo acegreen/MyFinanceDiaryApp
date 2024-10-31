@@ -17,6 +17,9 @@ struct TransactionsView: View {
             ToolbarItem(placement: .navigationBarLeading) {
                 BackButton()
             }
+            ToolbarItem(placement: .principal) {
+                EmptyView()
+            }
         }
         .toolbarRole(.editor)
         .task {
@@ -142,8 +145,6 @@ struct TransactionRow: View {
 }
 
 #Preview {
-    NavigationStack {
-        TransactionsView(accountType: .depository)
-    }
-    .withPreviewEnvironment()
+    TransactionsView(accountType: .depository)
+        .withPreviewEnvironment()
 }

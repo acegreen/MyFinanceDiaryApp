@@ -4,6 +4,7 @@ import Inject
 
 @MainActor
 class AppState: ObservableObject {
+
     // MARK: - Properties
     let container: ModelContainer
     let modelContext: ModelContext

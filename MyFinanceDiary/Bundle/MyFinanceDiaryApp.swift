@@ -10,8 +10,8 @@ import Inject
 
 @main
 struct MyFinanceDiaryApp: App {
-    @StateObject private var appState = AppState()
     @ObserveInjection var inject
+    @StateObject private var appState = AppState()
     
     var body: some Scene {
         WindowGroup {
