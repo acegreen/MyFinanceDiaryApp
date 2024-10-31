@@ -104,6 +104,7 @@ struct TransactionDetailsView: View {
         let coordinates = (latitude: 45.5017, longitude: -73.5673)
         return LocationMapCard(
             title: transaction.merchantName ?? transaction.name,
+            iconUrl: transaction.displayIconUrl,
             coordinates: coordinates
         )
         #else
