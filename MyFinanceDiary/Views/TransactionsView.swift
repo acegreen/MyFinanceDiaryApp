@@ -6,49 +6,49 @@ struct TransactionsView: View {
     @EnvironmentObject var appState: AppState
     let accountType: Account.AccountType
     @Environment(\.scenePhase) private var scenePhase
-    
+
     var body: some View {
         TransactionsList(
             filteredTransactions: appState.transactionsViewModel.getFilteredTransactions(for: accountType)
         )
-            .scrollContentBackground(.hidden)
-            .navigationBarBackButtonHidden(true)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    BackButton()
-                }
+        .scrollContentBackground(.hidden)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                BackButton()
             }
-            .toolbarRole(.editor)
-            .task {
-                if !appState.plaidService.hasValidPlaidConnection {
-                    await MainActor.run {
-                        appState.plaidService.setupPlaidLink()
-                    }
-                } else {
+        }
+        .toolbarRole(.editor)
+        .task {
+            if !appState.plaidService.hasValidPlaidConnection {
+                await MainActor.run {
+                    appState.plaidService.setupPlaidLink()
+                }
+            } else {
+                await loadTransactions(for: accountType)
+            }
+        }
+        .onChange(of: appState.plaidService.hasValidPlaidConnection) { oldValue, newValue in
+            if newValue {
+                Task {
                     await loadTransactions(for: accountType)
                 }
             }
-            .onChange(of: appState.plaidService.hasValidPlaidConnection) { oldValue, newValue in
-                if newValue {
-                    Task {
-                        await loadTransactions(for: accountType)
-                    }
-                }
+        }
+        .refreshable {
+            await loadTransactions(for: accountType)
+        }
+        .overlay {
+            if appState.transactionsViewModel.isLoading {
+                ProgressView()
+                    .scaleEffect(1.5)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(.ultraThinMaterial)
             }
-            .refreshable {
-                await loadTransactions(for: accountType)
-            }
-            .overlay {
-                if appState.transactionsViewModel.isLoading {
-                    ProgressView()
-                        .scaleEffect(1.5)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(.ultraThinMaterial)
-                }
-            }
-            .enableInjection()
+        }
+        .enableInjection()
     }
-    
+
     private func loadTransactions(for accountType: Account.AccountType) async {
         do {
             try await appState.transactionsViewModel.loadTransactions(for: accountType)
@@ -65,7 +65,7 @@ struct TransactionsView: View {
 // New component for the list
 struct TransactionsList: View {
     let filteredTransactions: [Date: [Transaction]]
-    
+
     var body: some View {
         List {
             ForEach(filteredTransactions.keys.sorted(by: >), id: \.self) { date in
@@ -123,7 +123,7 @@ struct TransactionRow: View {
                         .foregroundColor(.gray)
                         .frame(width: 40, height: 40)
                 }
-                
+
                 VStack(alignment: .leading) {
                     Text(transaction.name)
                         .font(.system(size: 18))
@@ -133,9 +133,9 @@ struct TransactionRow: View {
                             .foregroundColor(.secondary)
                     }
                 }
-                
+
                 Spacer()
-                
+
                 Text(transaction.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))                    .foregroundColor(transaction.amount < 0 ? .alertRed : .primaryGreen)
             }
             .padding(.vertical, 4)

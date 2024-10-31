@@ -102,7 +102,7 @@ struct BudgetMainView: View {
                 expandedByDefault: true
             )
         }
-        .padding(.horizontal, 12)
+        .padding()
         .enableInjection()
     }
 }

@@ -82,8 +82,8 @@ struct TransactionDetailsView: View {
 
     private func additionalDetailsView(_ transaction: Transaction) -> some View {
         VStack(spacing: 16) {
-            if let category = transaction.category {
-                detailRow(title: "Category", value: category.rawValue)
+            if let categories = transaction.categories {
+                detailRow(title: "Category", value: categories.map { $0.rawValue }.joined(separator: ", "))
                 divider
             }
 

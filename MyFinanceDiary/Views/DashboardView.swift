@@ -111,7 +111,7 @@ struct DashboardAccountsList: View {
                 )
             }
         }
-        .padding(.horizontal)
+        .padding()
     }
 }
 
@@ -132,7 +132,7 @@ struct DashboardAccountItemRow: View {
                     .foregroundColor(amount.contains("-") ? .alertRed : .primaryGreen)
             }
             .padding(.horizontal, 16)
-            .padding(.vertical, 16) // Increase vertical padding
+            .padding(.vertical, 16)
             .background(Color(uiColor: .systemBackground))
             .cornerRadius(12)
             .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
