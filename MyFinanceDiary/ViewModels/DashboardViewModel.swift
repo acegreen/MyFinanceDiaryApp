@@ -5,7 +5,7 @@ class DashboardViewModel: ObservableObject {
     @Published var accounts: [Account] = []
     @Published var selectedSegment: ChartSegment = .netWorth {
         didSet {
-            updateChartData() // Automatically update when segment changes
+            updateChart()
         }
     }
     @Published var chartData: [FinancialChartView.FinancialDataPoint] = []
@@ -19,11 +19,11 @@ class DashboardViewModel: ObservableObject {
     }
     
     init() {
-        setupSampleData()
-        updateChartData()
+        setupAccounts()
+        updateChart()
     }
     
-    private func setupSampleData() {
+    private func setupAccounts() {
         accounts = [
             Account(accountId: "1", balances: Balances(current: 5732.0), name: "Checking", type: .depository),
             Account(accountId: "2", balances: Balances(current: -4388.0), name: "Credit Card", type: .credit),
@@ -32,10 +32,7 @@ class DashboardViewModel: ObservableObject {
         ]
     }
     
-    func updateChartData() {
-        let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
-        
+    func updateChart() {
         switch selectedSegment {
         case .netWorth:
             let totalNetWorth = accounts.reduce(0.0) { $0 + $1.balances.current }
@@ -73,7 +70,7 @@ class DashboardViewModel: ObservableObject {
     
     func selectSegment(_ segment: ChartSegment) {
         selectedSegment = segment
-        updateChartData()
+        updateChart()
     }
     
     var currentAmount: String {

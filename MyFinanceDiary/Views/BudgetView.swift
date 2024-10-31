@@ -103,7 +103,6 @@ struct BudgetMainView: View {
             )
         }
         .padding()
-        .enableInjection()
     }
 }
 

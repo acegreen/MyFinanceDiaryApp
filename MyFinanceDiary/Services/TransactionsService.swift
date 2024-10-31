@@ -10,7 +10,7 @@ class TransactionsService: TransactionsServiceProtocol {
     private let plaidService: PlaidService
     private let modelContext: ModelContext
     
-    init(plaidService: PlaidService = PlaidService(), modelContext: ModelContext) {
+    init(plaidService: PlaidService, modelContext: ModelContext) {
         self.plaidService = plaidService
         self.modelContext = modelContext
     }
@@ -24,18 +24,12 @@ class TransactionsService: TransactionsServiceProtocol {
         let transactions = try await plaidService.fetchTransactions(startDate: startDate, endDate: endDate)
         print("✅ Fetched \(transactions.count) transactions")
         
-        // Only save to SwiftData if not in preview
-        #if DEBUG
-        if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != "1" {
-            // Save to SwiftData
-            for transaction in transactions {
-                modelContext.insert(transaction)
-            }
-            
-            try modelContext.save()
-            print("💾 Saved transactions to SwiftData")
+        for transaction in transactions {
+            modelContext.insert(transaction)
         }
-        #endif
+            
+        try modelContext.save()
+        print("💾 Saved transactions to SwiftData")
         
         return transactions
     }

@@ -35,10 +35,10 @@ struct TransactionDetailsView: View {
         }
         .toolbarRole(.editor)
         .toolbarBackground(.hidden, for: .navigationBar)
-        .enableInjection()
         .task {
             loadedTransaction = appState.transactionDetailsViewModel.getTransaction(id: transactionId)
         }
+        .enableInjection()
     }
     
     private func headerView(_ transaction: Transaction) -> some View {

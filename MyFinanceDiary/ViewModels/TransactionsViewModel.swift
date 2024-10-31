@@ -9,14 +9,10 @@ class TransactionsViewModel: ObservableObject {
     @Published var error: Error?
     
     private let transactionsService: TransactionsServiceProtocol
-    private let plaidService: PlaidService
     
-    init(transactionsService: TransactionsServiceProtocol? = nil,
-         plaidService: PlaidService = PlaidService(),
-         modelContext: ModelContext) {
-        self.transactionsService = transactionsService ?? TransactionsService(plaidService: plaidService, modelContext: modelContext)
-        self.plaidService = plaidService
-        
+    init(transactionsService: TransactionsService, modelContext: ModelContext) {
+        self.transactionsService = transactionsService
+
         // Load transactions immediately upon initialization with default type
         Task {
             try? await loadTransactions(for: .depository)
@@ -43,7 +39,7 @@ class TransactionsViewModel: ObservableObject {
         }
     }
     
-    private func groupTransactions(_ transactions: [Transaction]) {
+    func groupTransactions(_ transactions: [Transaction]) {
         let calendar = Calendar.current
         let grouped = Dictionary(grouping: transactions) { transaction in
             calendar.startOfDay(for: transaction.date)
@@ -51,13 +47,13 @@ class TransactionsViewModel: ObservableObject {
         groupedTransactions = grouped
     }
     
-    func dismissError() {
-        error = nil
-    }
-    
     func getFilteredTransactions(for accountType: Account.AccountType) -> [Date: [Transaction]] {
         groupedTransactions.mapValues { transactions in
             transactions.filter { $0.accountType == accountType }
         }.filter { !$0.value.isEmpty }
+    }
+
+    func dismissError() {
+        error = nil
     }
 }
