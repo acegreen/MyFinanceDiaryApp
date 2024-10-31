@@ -10,7 +10,7 @@ struct Balances: Codable {
         case available
         case current
         case limit
-        case isoCurrencyCode = "iso_currency_code"
+        case isoCurrencyCode
     }
 
     init(current: Double = 0, available: Double? = nil, limit: Double? = nil, isoCurrencyCode: String? = nil) {

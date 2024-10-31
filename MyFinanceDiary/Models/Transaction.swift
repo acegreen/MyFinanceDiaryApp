@@ -3,223 +3,218 @@ import SwiftData
 
 @Model
 final class Transaction: Codable {
+    // Required properties
+    var accountId: String
     var amount: Double
+    var category: [TransactionCategory]
     var date: Date
+    var isoCurrencyCode: String
     var name: String
-    var merchantName: String?
+    var paymentChannel: PaymentChannel
     var pending: Bool
-    var transactionId: String
-    var categories: [TransactionCategory]?
-    var personalFinanceCategory: PersonalFinanceCategory?
-    @Attribute var logoUrl: String?
-    @Attribute var categoryIconUrl: String?
-    var accountId: String?
-    var location: Location?
-    var paymentChannel: String?
-    var paymentMeta: PaymentMeta?
+    @Attribute(.unique) var transactionId: String
+    var transactionType: TransactionType
+    @Relationship(inverse: \Provider.transactions) var provider: Provider?
+
+    // Optional properties
+    var accountOwner: String?
+    var authorizedDate: Date?
+    var authorizedDatetime: Date?
+    var categoryId: String?
+    var checkNumber: String?
     var counterparties: [Counterparty]?
+    var datetime: Date?
+    var location: Location?
+    var logoUrl: String?
+    var merchantEntityId: String?
+    var merchantName: String?
+    var paymentMeta: PaymentMeta?
+    var pendingTransactionId: String?
+    var personalFinanceCategory: PersonalFinanceCategory?
+    var personalFinanceCategoryIconUrl: String?
+    var transactionCode: String?
+    var unofficialCurrencyCode: String?
+    var website: String?
 
     var displayName: String {
         merchantName ?? name
     }
 
     var displayIconUrl: String? {
-        logoUrl ?? categoryIconUrl
+        logoUrl ?? personalFinanceCategoryIconUrl
     }
 
-    init(amount: Double, date: Date, name: String, merchantName: String? = nil, pending: Bool, transactionId: String, logoUrl: String? = nil, categoryIconUrl: String? = nil) {
+    // Required initializer for @Model
+    init(accountId: String,
+         amount: Double,
+         category: [TransactionCategory],
+         date: Date,
+         isoCurrencyCode: String,
+         name: String,
+         paymentChannel: PaymentChannel,
+         pending: Bool,
+         transactionId: String,
+         transactionType: TransactionType) {
+        self.accountId = accountId
         self.amount = amount
+        self.category = category
         self.date = date
+        self.isoCurrencyCode = isoCurrencyCode
         self.name = name
-        self.merchantName = merchantName
+        self.paymentChannel = paymentChannel
         self.pending = pending
         self.transactionId = transactionId
-        self.logoUrl = logoUrl
-        self.categoryIconUrl = categoryIconUrl
+        self.transactionType = transactionType
     }
 
-    // Codable conformance
-    enum CodingKeys: String, CodingKey {
+    private enum CodingKeys: String, CodingKey {
+        case accountId
         case amount
-        case date
-        case name
-        case merchantName = "merchant_name"
-        case pending
-        case transactionId = "transaction_id"
         case category
-        case personalFinanceCategory = "personal_finance_category"
-        case logoUrl = "logo_url"
-        case categoryIconUrl = "personal_finance_category_icon_url"
-        case location
-        case paymentMeta = "payment_meta"
+        case date
+        case isoCurrencyCode
+        case name
+        case paymentChannel
+        case pending
+        case transactionId
+        case transactionType
+        case accountOwner
+        case authorizedDate
+        case authorizedDatetime
+        case categoryId
+        case checkNumber
         case counterparties
+        case datetime
+        case location
+        case logoUrl
+        case merchantEntityId
+        case merchantName
+        case paymentMeta
+        case pendingTransactionId
+        case personalFinanceCategory
+        case personalFinanceCategoryIconUrl
+        case transactionCode
+        case unofficialCurrencyCode
+        case website
     }
 
-    // Helper to map category to account type
-    var accountType: Account.AccountType {
-        return .depository
-    }
-
-    // Add this required initializer for Decodable conformance
-    required init(from decoder: Decoder) throws {
+    init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        amount = try container.decode(Double.self, forKey: .amount)
-        let dateString = try container.decode(String.self, forKey: .date)
-        if let parsedDate = DateFormatter.plaidDate.date(from: dateString) {
-            date = parsedDate
-        } else {
-            throw DecodingError.dataCorruptedError(forKey: .date, in: container, debugDescription: "Date string does not match expected format")
-        }
-        name = try container.decode(String.self, forKey: .name)
-        merchantName = try container.decodeIfPresent(String.self, forKey: .merchantName)
-        pending = try container.decode(Bool.self, forKey: .pending)
-        transactionId = try container.decode(String.self, forKey: .transactionId)
-        categories = try container.decodeIfPresent([TransactionCategory].self, forKey: .category)
-        personalFinanceCategory = try container.decodeIfPresent(PersonalFinanceCategory.self, forKey: .personalFinanceCategory)
-        logoUrl = try container.decodeIfPresent(String.self, forKey: .logoUrl)
-        categoryIconUrl = try container.decodeIfPresent(String.self, forKey: .categoryIconUrl)
-        location = try container.decodeIfPresent(Location.self, forKey: .location)
-        paymentMeta = try container.decodeIfPresent(PaymentMeta.self, forKey: .paymentMeta)
+        // Decode required properties with fallbacks
+        accountId = try container.decodeIfPresent(String.self, forKey: .accountId) ?? ""
+        amount = try container.decodeIfPresent(Double.self, forKey: .amount) ?? 0.0
+        category = try container.decodeIfPresent([TransactionCategory].self, forKey: .category) ?? [.unknown]
+        date = try container.decodeIfPresent(Date.self, forKey: .date) ?? Date()
+        isoCurrencyCode = try container.decodeIfPresent(String.self, forKey: .isoCurrencyCode) ?? "USD"
+        name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
+        paymentChannel = try container.decodeIfPresent(PaymentChannel.self, forKey: .paymentChannel) ?? .unknown
+        pending = try container.decodeIfPresent(Bool.self, forKey: .pending) ?? false
+        transactionId = try container.decodeIfPresent(String.self, forKey: .transactionId) ?? UUID().uuidString
+        transactionType = try container.decodeIfPresent(TransactionType.self, forKey: .transactionType) ?? .unknown
+        
+        // Decode optional properties
+        accountOwner = try container.decodeIfPresent(String.self, forKey: .accountOwner)
+        authorizedDate = try container.decodeIfPresent(Date.self, forKey: .authorizedDate)
+        authorizedDatetime = try container.decodeIfPresent(Date.self, forKey: .authorizedDatetime)
+        categoryId = try container.decodeIfPresent(String.self, forKey: .categoryId)
+        checkNumber = try container.decodeIfPresent(String.self, forKey: .checkNumber)
         counterparties = try container.decodeIfPresent([Counterparty].self, forKey: .counterparties)
+        datetime = try container.decodeIfPresent(Date.self, forKey: .datetime)
+        location = try container.decodeIfPresent(Location.self, forKey: .location)
+        logoUrl = try container.decodeIfPresent(String.self, forKey: .logoUrl)
+        merchantEntityId = try container.decodeIfPresent(String.self, forKey: .merchantEntityId)
+        merchantName = try container.decodeIfPresent(String.self, forKey: .merchantName)
+        paymentMeta = try container.decodeIfPresent(PaymentMeta.self, forKey: .paymentMeta)
+        pendingTransactionId = try container.decodeIfPresent(String.self, forKey: .pendingTransactionId)
+        personalFinanceCategory = try container.decodeIfPresent(PersonalFinanceCategory.self, forKey: .personalFinanceCategory)
+        personalFinanceCategoryIconUrl = try container.decodeIfPresent(String.self, forKey: .personalFinanceCategoryIconUrl)
+        transactionCode = try container.decodeIfPresent(String.self, forKey: .transactionCode)
+        unofficialCurrencyCode = try container.decodeIfPresent(String.self, forKey: .unofficialCurrencyCode)
+        website = try container.decodeIfPresent(String.self, forKey: .website)
     }
-    
-    // Add encode method for Encodable conformance
+
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        
+
+        // Encode required properties
+        try container.encode(accountId, forKey: .accountId)
         try container.encode(amount, forKey: .amount)
-        try container.encode(DateFormatter.plaidDate.string(from: date), forKey: .date)
+        try container.encode(category, forKey: .category)
+        try container.encode(date, forKey: .date)
+        try container.encode(isoCurrencyCode, forKey: .isoCurrencyCode)
         try container.encode(name, forKey: .name)
-        try container.encodeIfPresent(merchantName, forKey: .merchantName)
+        try container.encode(paymentChannel, forKey: .paymentChannel)
         try container.encode(pending, forKey: .pending)
         try container.encode(transactionId, forKey: .transactionId)
-        try container.encodeIfPresent(categories, forKey: .category)
-        try container.encodeIfPresent(personalFinanceCategory, forKey: .personalFinanceCategory)
-        try container.encodeIfPresent(logoUrl, forKey: .logoUrl)
-        try container.encodeIfPresent(categoryIconUrl, forKey: .categoryIconUrl)
-        try container.encodeIfPresent(location, forKey: .location)
-        try container.encodeIfPresent(paymentMeta, forKey: .paymentMeta)
+        try container.encode(transactionType, forKey: .transactionType)
+
+        // Encode optional properties
+        try container.encodeIfPresent(accountOwner, forKey: .accountOwner)
+        try container.encodeIfPresent(authorizedDate, forKey: .authorizedDate)
+        try container.encodeIfPresent(authorizedDatetime, forKey: .authorizedDatetime)
+        try container.encodeIfPresent(categoryId, forKey: .categoryId)
+        try container.encodeIfPresent(checkNumber, forKey: .checkNumber)
         try container.encodeIfPresent(counterparties, forKey: .counterparties)
+        try container.encodeIfPresent(datetime, forKey: .datetime)
+        try container.encodeIfPresent(location, forKey: .location)
+        try container.encodeIfPresent(logoUrl, forKey: .logoUrl)
+        try container.encodeIfPresent(merchantEntityId, forKey: .merchantEntityId)
+        try container.encodeIfPresent(merchantName, forKey: .merchantName)
+        try container.encodeIfPresent(paymentMeta, forKey: .paymentMeta)
+        try container.encodeIfPresent(pendingTransactionId, forKey: .pendingTransactionId)
+        try container.encodeIfPresent(personalFinanceCategory, forKey: .personalFinanceCategory)
+        try container.encodeIfPresent(personalFinanceCategoryIconUrl, forKey: .personalFinanceCategoryIconUrl)
+        try container.encodeIfPresent(transactionCode, forKey: .transactionCode)
+        try container.encodeIfPresent(unofficialCurrencyCode, forKey: .unofficialCurrencyCode)
+        try container.encodeIfPresent(website, forKey: .website)
     }
-}
 
-extension Transaction {
-    enum TransactionCategory: String, Codable, CaseIterable, Identifiable {
-        case foodAndDrink = "Food and Drink"
-        case restaurants = "Restaurants"
-        case transfer = "Transfer"
-        case payment = "Payment"
-        case shopping = "Shopping"
-        case recreation = "Recreation"
-        case travel = "Travel"
-        case healthcare = "Healthcare"
-        case service = "Service"
-        case tax = "Tax"
-        case general = "General"
-        case transportation = "Transportation"
-        case rent = "Rent"
-        case utilities = "Utilities"
-        case entertainment = "Entertainment"
-        case other = "Other"
+    // Convenience initializer for mocking/testing
+    convenience init(accountId: String,
+                    amount: Double,
+                    category: [TransactionCategory],
+                    date: Date,
+                    isoCurrencyCode: String,
+                    name: String,
+                    paymentChannel: PaymentChannel,
+                    pending: Bool,
+                    transactionId: String,
+                    transactionType: TransactionType,
+                    accountOwner: String? = nil,
+                    authorizedDate: Date? = nil,
+                    authorizedDatetime: Date? = nil,
+                    categoryId: String? = nil,
+                    checkNumber: String? = nil,
+                    counterparties: [Counterparty]? = nil,
+                    datetime: Date? = nil,
+                    location: Location? = nil,
+                    logoUrl: String? = nil,
+                    merchantEntityId: String? = nil,
+                    merchantName: String? = nil) {
         
-        var id: String { rawValue }
+        self.init(accountId: accountId,
+                  amount: amount,
+                  category: category,
+                  date: date,
+                  isoCurrencyCode: isoCurrencyCode,
+                  name: name,
+                  paymentChannel: paymentChannel,
+                  pending: pending,
+                  transactionId: transactionId,
+                  transactionType: transactionType)
         
-        // Add an initializer to handle unknown categories
-        init(from decoder: Decoder) throws {
-            let container = try decoder.singleValueContainer()
-            let rawValue = try container.decode(String.self)
-            
-            // Try to create from exact match first
-            if let category = TransactionCategory(rawValue: rawValue) {
-                self = category
-            } else {
-                // If no exact match, default to "other"
-                self = .other
-            }
-        }
-    }
-
-    struct PersonalFinanceCategory: Codable {
-        let primary: String
-        let detailed: String
-        let confidence_level: String
-    }
-
-    struct Location: Codable {
-        var address: String?
-        var city: String?
-        var country: String?
-        var lat: Double?
-        var lon: Double?
-        var postalCode: String?
-        var region: String?
-        var storeNumber: String?
-        
-        enum CodingKeys: String, CodingKey {
-            case address
-            case city
-            case country
-            case lat
-            case lon
-            case postalCode = "postal_code"
-            case region
-            case storeNumber = "store_number"
-        }
-    }
-
-    struct PaymentMeta: Codable {
-        var byOrderOf: String?
-        var payee: String?
-        var payer: String?
-        var paymentMethod: String?
-        var paymentProcessor: String?
-        var ppdId: String?
-        var reason: String?
-        var referenceNumber: String?
-        
-        enum CodingKeys: String, CodingKey {
-            case byOrderOf = "by_order_of"
-            case payee
-            case payer
-            case paymentMethod = "payment_method"
-            case paymentProcessor = "payment_processor"
-            case ppdId = "ppd_id"
-            case reason
-            case referenceNumber = "reference_number"
-        }
-    }
-
-    struct Counterparty: Codable {
-        var confidenceLevel: String
-        var entityId: String?
-        var logoUrl: String?
-        var name: String
-        var phoneNumber: String?
-        var type: String
-        var website: String?
-        
-        enum CodingKeys: String, CodingKey {
-            case confidenceLevel = "confidence_level"
-            case entityId = "entity_id"
-            case logoUrl = "logo_url"
-            case name
-            case phoneNumber = "phone_number"
-            case type
-            case website
-        }
-    }
-}
-
-extension Transaction.Location {
-    var coordinates: (latitude: Double, longitude: Double)? {
-        #if DEBUG
-        // Always return mock coordinates in debug
-        return (45.5017, -73.5673)
-        #else
-        guard let lat = lat, let lon = lon else { return nil }
-        return (lat, lon)
-        #endif
+        self.accountOwner = accountOwner
+        self.authorizedDate = authorizedDate
+        self.authorizedDatetime = authorizedDatetime
+        self.categoryId = categoryId
+        self.checkNumber = checkNumber
+        self.counterparties = counterparties
+        self.datetime = datetime
+        self.location = location
+        self.logoUrl = logoUrl
+        self.merchantEntityId = merchantEntityId
+        self.merchantName = merchantName
     }
 }
 

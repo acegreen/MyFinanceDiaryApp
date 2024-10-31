@@ -3,16 +3,15 @@ import SwiftData
 import Inject
 
 @MainActor
-class AppState: ObservableObject {
-
+final class AppState: ObservableObject {
+    static let shared = AppState()
+    
     // MARK: - Properties
-    let container: ModelContainer
     let modelContext: ModelContext
     
     // MARK: - Services
     let authenticationService: AuthenticationService
     let plaidService: PlaidService
-    let transactionService: TransactionsService
     
     // MARK: - ViewModels
     @Published var loginViewModel: LoginViewModel
@@ -23,32 +22,38 @@ class AppState: ObservableObject {
     @Published var transactionDetailsViewModel: TransactionDetailsViewModel
     
     @Published var showPlaidLink = false
-    
-    @ObserveInjection var inject
-    
-    init() {
-        (container, modelContext) = Self.setupPersistence()
+
+    private init() {
+        // Create persistence stack first without using self
+        let persistence = Self.createPersistenceStack()
+        self.modelContext = persistence.context
         
         // Initialize services
-        authenticationService = AuthenticationService()
-        plaidService = PlaidService()
-        transactionService = TransactionsService(plaidService: plaidService, modelContext: modelContext)
+        self.authenticationService = AuthenticationService()
+        self.plaidService = PlaidService(modelContext: modelContext)
         
-        // Initialize ViewModels with dependencies
-        loginViewModel = LoginViewModel()
-        dashboardViewModel = DashboardViewModel()
-        budgetViewModel = BudgetViewModel()
-        creditScoreViewModel = CreditScoreViewModel()
-        transactionsViewModel = TransactionsViewModel(
-            transactionsService: transactionService,
-            modelContext: modelContext
-        )
-        transactionDetailsViewModel = TransactionDetailsViewModel()
+        // Initialize ViewModels
+        self.loginViewModel = LoginViewModel()
+        self.dashboardViewModel = DashboardViewModel(plaidService: plaidService)
+        self.budgetViewModel = BudgetViewModel()
+        self.creditScoreViewModel = CreditScoreViewModel()
+        self.transactionsViewModel = TransactionsViewModel(modelContext: modelContext)
+        self.transactionDetailsViewModel = TransactionDetailsViewModel(modelContext: modelContext)
+        
+        self.showPlaidLink = false
     }
-
-    static func setupPersistence() -> (ModelContainer, ModelContext) {
+    
+    // Changed to static method so it can be called before initialization
+    private static func createPersistenceStack() -> (container: ModelContainer, context: ModelContext) {
         do {
-            let schema = Schema([Account.self, Transaction.self])
+            let schema = Schema([
+                Provider.self,
+                Item.self,
+                Account.self,
+                Transaction.self,
+                Location.self,
+                PaymentMeta.self
+            ])
             let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
             let container = try ModelContainer(for: schema, configurations: [modelConfiguration])
             return (container, container.mainContext)

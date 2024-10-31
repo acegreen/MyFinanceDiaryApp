@@ -3,45 +3,59 @@ import SwiftData
 
 @Model
 final class Account: Codable {
-
-    var id: String { accountId }
     var accountId: String
-    var balances: Balances
+    var balances: Balances?
     var mask: String?
     var name: String
     var officialName: String?
+    var persistentAccountId: String?
+    var subtype: AccountSubtype
     var type: AccountType
-    var subtype: String?
-        
-    private enum CodingKeys: String, CodingKey {
-            case accountId = "account_id"
-            case balances
-            case mask
-            case name
-            case officialName = "official_name"
-            case type
-            case subtype
-    }
-
-    init(accountId: String, balances: Balances, mask: String? = nil, name: String, officialName: String? = nil, type: AccountType, subtype: String? = nil) {
+    
+    @Relationship(inverse: \Provider.accounts) var provider: Provider?
+    
+    init(accountId: String = "",
+         balances: Balances? = nil,
+         mask: String? = nil,
+         name: String = "",
+         officialName: String? = nil,
+         persistentAccountId: String? = nil,
+         subtype: AccountSubtype,
+         type: AccountType) {
         self.accountId = accountId
         self.balances = balances
         self.mask = mask
         self.name = name
         self.officialName = officialName
-        self.type = type
+        self.persistentAccountId = persistentAccountId
         self.subtype = subtype
+        self.type = type
     }
-
-    required init(from decoder: Decoder) throws {
+    
+    private enum CodingKeys: String, CodingKey {
+        case accountId
+        case balances
+        case mask
+        case name
+        case officialName
+        case persistentAccountId
+        case subtype
+        case type
+    }
+    
+    convenience init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        accountId = try container.decode(String.self, forKey: .accountId)
-        balances = try container.decode(Balances.self, forKey: .balances)
-        mask = try container.decodeIfPresent(String.self, forKey: .mask)
-        name = try container.decode(String.self, forKey: .name)
-        officialName = try container.decodeIfPresent(String.self, forKey: .officialName)
-        type = try container.decode(AccountType.self, forKey: .type)
-        subtype = try container.decodeIfPresent(String.self, forKey: .subtype)
+        
+        self.init(
+            accountId: try container.decode(String.self, forKey: .accountId),
+            balances: try container.decode(Balances.self, forKey: .balances),
+            mask: try container.decodeIfPresent(String.self, forKey: .mask),
+            name: try container.decode(String.self, forKey: .name),
+            officialName: try container.decodeIfPresent(String.self, forKey: .officialName),
+            persistentAccountId: try container.decodeIfPresent(String.self, forKey: .persistentAccountId),
+            subtype: try container.decode(AccountSubtype.self, forKey: .subtype),
+            type: try container.decode(AccountType.self, forKey: .type)
+        )
     }
     
     func encode(to encoder: Encoder) throws {
@@ -51,32 +65,9 @@ final class Account: Codable {
         try container.encodeIfPresent(mask, forKey: .mask)
         try container.encode(name, forKey: .name)
         try container.encodeIfPresent(officialName, forKey: .officialName)
-        try container.encode(type, forKey: .type)
+        try container.encodeIfPresent(persistentAccountId, forKey: .persistentAccountId)
         try container.encodeIfPresent(subtype, forKey: .subtype)
+        try container.encode(type, forKey: .type)
     }
 }
 
-extension Account {
-    enum AccountType: String, Codable, CaseIterable {
-        case depository
-        case credit
-        case investment
-        case loan
-        case other
-
-        var displayName: String {
-            switch self {
-            case .depository:
-                return "Cash"
-            case .credit:
-                return "Credit Card"
-            case .investment:
-                return "Investments"
-            case .loan:
-                return "Loan"
-            case .other:
-                return "Property"
-            }
-        }
-    }
-}

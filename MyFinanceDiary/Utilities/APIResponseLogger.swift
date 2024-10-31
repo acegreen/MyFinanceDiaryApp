@@ -10,7 +10,7 @@ class APIResponseLogger {
             let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let timestamp = DateFormatter.plaidDate.string(from: Date())
             
-            let filename = "\(prefix)_\(timestamp).json"
+            let filename = "\(prefix).json"
             let fileURL = documentsPath.appendingPathComponent(filename)
             
             try response.write(to: fileURL, atomically: true, encoding: .utf8)

@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		230ED3A62CCEA8E400E2142A /* Charts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 230ED3A52CCEA8E400E2142A /* Charts.framework */; };
+		231D65702CD51F74009B73C2 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 231D656F2CD51F74009B73C2 /* KeychainSwift */; };
 		23E0C0182CD06BFC00D0D126 /* LinkKit in Frameworks */ = {isa = PBXBuildFile; productRef = 23E0C0172CD06BFC00D0D126 /* LinkKit */; };
-		23E0C01F2CD078C200D0D126 /* SwiftKeychainWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 23E0C01E2CD078C200D0D126 /* SwiftKeychainWrapper */; };
 		23F78BF52CCD4E9800202DF5 /* Inject in Frameworks */ = {isa = PBXBuildFile; productRef = 23F78BF42CCD4E9800202DF5 /* Inject */; };
 /* End PBXBuildFile section */
 
@@ -75,7 +75,7 @@
 			files = (
 				23E0C0182CD06BFC00D0D126 /* LinkKit in Frameworks */,
 				23F78BF52CCD4E9800202DF5 /* Inject in Frameworks */,
-				23E0C01F2CD078C200D0D126 /* SwiftKeychainWrapper in Frameworks */,
+				231D65702CD51F74009B73C2 /* KeychainSwift in Frameworks */,
 				230ED3A62CCEA8E400E2142A /* Charts.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -148,7 +148,7 @@
 			packageProductDependencies = (
 				23F78BF42CCD4E9800202DF5 /* Inject */,
 				23E0C0172CD06BFC00D0D126 /* LinkKit */,
-				23E0C01E2CD078C200D0D126 /* SwiftKeychainWrapper */,
+				231D656F2CD51F74009B73C2 /* KeychainSwift */,
 			);
 			productName = MyFinanceDiary;
 			productReference = 23F78B982CCD4CE300202DF5 /* MyFinanceDiary.app */;
@@ -235,7 +235,7 @@
 			packageReferences = (
 				23F78BF32CCD4E9800202DF5 /* XCRemoteSwiftPackageReference "Inject" */,
 				23E0C0162CD06BFC00D0D126 /* XCRemoteSwiftPackageReference "plaid-link-ios" */,
-				23E0C01D2CD078C200D0D126 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */,
+				231D656E2CD51F74009B73C2 /* XCRemoteSwiftPackageReference "keychain-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 23F78B992CCD4CE300202DF5 /* Products */;
@@ -620,20 +620,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		231D656E2CD51F74009B73C2 /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/evgenyneu/keychain-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 24.0.0;
+			};
+		};
 		23E0C0162CD06BFC00D0D126 /* XCRemoteSwiftPackageReference "plaid-link-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/plaid/plaid-link-ios";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 5.6.1;
-			};
-		};
-		23E0C01D2CD078C200D0D126 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/jrendel/SwiftKeychainWrapper";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.1;
 			};
 		};
 		23F78BF32CCD4E9800202DF5 /* XCRemoteSwiftPackageReference "Inject" */ = {
@@ -647,15 +647,15 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		231D656F2CD51F74009B73C2 /* KeychainSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 231D656E2CD51F74009B73C2 /* XCRemoteSwiftPackageReference "keychain-swift" */;
+			productName = KeychainSwift;
+		};
 		23E0C0172CD06BFC00D0D126 /* LinkKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 23E0C0162CD06BFC00D0D126 /* XCRemoteSwiftPackageReference "plaid-link-ios" */;
 			productName = LinkKit;
-		};
-		23E0C01E2CD078C200D0D126 /* SwiftKeychainWrapper */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 23E0C01D2CD078C200D0D126 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */;
-			productName = SwiftKeychainWrapper;
 		};
 		23F78BF42CCD4E9800202DF5 /* Inject */ = {
 			isa = XCSwiftPackageProductDependency;

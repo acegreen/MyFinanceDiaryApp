@@ -23,12 +23,12 @@ class BudgetViewModel: ObservableObject {
         )
     }
     
-    var totalIncome: Int {
-        Int(incomeCategories.reduce(0) { $0 + Double($1.spent) })
+    var totalIncome: Double {
+        incomeCategories.reduce(0) { $0 + $1.spent }
     }
     
-    var totalExpenses: Int {
-        Int(expenseCategories.reduce(0) { $0 + Double($1.spent) })
+    var totalExpenses: Double {
+       expenseCategories.reduce(0) { $0 + $1.spent }
     }
     
     var formattedTotalIncome: String {
@@ -40,22 +40,15 @@ class BudgetViewModel: ObservableObject {
     }
     
     var formattedIncome: String {
-        formatAmount(totalIncome)
+        NumberFormatter.formatAmount(totalIncome)
     }
     
     var formattedExpenses: String {
-        "-\(formatAmount(totalExpenses))"
+        "-\(NumberFormatter.formatAmount(totalExpenses))"
     }
     
     var formattedTotalExpenses: String {
         "-$\(Int(budgetSummary.totalSpent))"
-    }
-    
-    func formatAmount(_ amount: Int) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.maximumFractionDigits = 0
-        return formatter.string(from: NSNumber(value: amount)) ?? "$0"
     }
     
     func getProgress(for category: Budget.BudgetCategory) -> Double {

@@ -7,53 +7,53 @@ class TransactionsViewModel: ObservableObject {
     @Published var groupedTransactions: [Date: [Transaction]] = [:]
     @Published var isLoading = false
     @Published var error: Error?
-    
-    private let transactionsService: TransactionsServiceProtocol
-    
-    init(transactionsService: TransactionsService, modelContext: ModelContext) {
-        self.transactionsService = transactionsService
+    private let modelContext: ModelContext
 
-        // Load transactions immediately upon initialization with default type
-        Task {
-            try? await loadTransactions(for: .depository)
-        }
+    init(modelContext: ModelContext) {
+        self.modelContext = modelContext
     }
     
-    @objc private func handlePlaidConnection() {
-        Task {
-            try? await loadTransactions(for: .depository)
-        }
-    }
-    
-    func loadTransactions(for accountType: Account.AccountType) async throws {
-        isLoading = true
-        defer { isLoading = false }
+    func loadTransactions(for accountTypes: [AccountType]) throws {
+        self.isLoading = true
         
-        do {
-            let allTransactions = try await transactionsService.fetchTransactions()
+        let descriptor = FetchDescriptor<Transaction>()
+        let transactions = try modelContext.fetch(descriptor)
+        
+        if !transactions.isEmpty {
+            let uniqueTransactions = removeDuplicates(from: transactions)
+
+            let filteredTransactions = uniqueTransactions.filter { transaction in
+                guard let provider = transaction.provider else {
+                    return false
+                }
+                let providerAccounts = provider.accounts.filter { accountTypes.contains($0.type) }
+                return providerAccounts.map { $0.accountId }.contains(transaction.accountId)
+            }
             
-            groupTransactions(allTransactions)
-        } catch {
-            self.error = error
-            throw error
+            // Sort filtered transactions by date (newest first)
+            groupTransactions(filteredTransactions)
         }
+        
+        self.isLoading = false
+    }
+    
+    private func removeDuplicates(from transactions: [Transaction]) -> [Transaction] {
+        let uniqueTransactions = Dictionary(grouping: transactions) { $0.transactionId }
+            .compactMapValues { $0.first }
+            .values
+        return Array(uniqueTransactions)
     }
     
     func groupTransactions(_ transactions: [Transaction]) {
         let calendar = Calendar.current
-        let grouped = Dictionary(grouping: transactions) { transaction in
-            calendar.startOfDay(for: transaction.date)
-        }
-        groupedTransactions = grouped
+        groupedTransactions = Dictionary(grouping: transactions) { calendar.startOfDay(for: $0.date) }
     }
     
-    func getFilteredTransactions(for accountType: Account.AccountType) -> [Date: [Transaction]] {
-        groupedTransactions.mapValues { transactions in
-            transactions.filter { $0.accountType == accountType }
-        }.filter { !$0.value.isEmpty }
-    }
-
     func dismissError() {
         error = nil
+    }
+
+    func clearAllTransactions() {
+        groupedTransactions.removeAll()
     }
 }
