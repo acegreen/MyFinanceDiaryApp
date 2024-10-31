@@ -6,7 +6,7 @@ import Inject
 class AppState: ObservableObject {
     // MARK: - Properties
     let container: ModelContainer
-    private let modelContext: ModelContext
+    let modelContext: ModelContext
     
     // MARK: - Services
     let authenticationService: AuthenticationService
@@ -40,26 +40,11 @@ class AppState: ObservableObject {
         creditScoreViewModel = CreditScoreViewModel()
         transactionsViewModel = TransactionsViewModel(
             transactionsService: transactionService,
-            plaidService: plaidService,
             modelContext: modelContext
         )
         transactionDetailsViewModel = TransactionDetailsViewModel()
     }
-    
-    // Add a convenience method to inject all ViewModels into the environment
-    func injectViewModels<Content: View>(into view: Content) -> some View {
-        view
-            .environmentObject(loginViewModel)
-            .environmentObject(dashboardViewModel)
-            .environmentObject(budgetViewModel)
-            .environmentObject(creditScoreViewModel)
-            .environmentObject(transactionsViewModel)
-            .environmentObject(transactionDetailsViewModel)
-    }
-}
 
-// MARK: - Setup Methods
-private extension AppState {
     static func setupPersistence() -> (ModelContainer, ModelContext) {
         do {
             let schema = Schema([Account.self, Transaction.self])
@@ -71,13 +56,3 @@ private extension AppState {
         }
     }
 }
-
-#if DEBUG
-extension AppState {
-    static var preview: AppState {
-        let appState = AppState()
-        // Add any preview-specific setup here
-        return appState
-    }
-}
-#endif

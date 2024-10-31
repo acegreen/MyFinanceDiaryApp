@@ -46,3 +46,8 @@ struct MainTabView: View {
         .tint(.darkGreen)
     }
 }
+
+#Preview {
+    MainView()
+        .withPreviewEnvironment()
+}
