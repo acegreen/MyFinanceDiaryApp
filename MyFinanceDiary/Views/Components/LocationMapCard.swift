@@ -42,23 +42,20 @@ struct LocationMapCard: View {
                             image
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
-                                .frame(width: 40, height: 40)
-                                .cornerRadius(20)
                         case .failure:
                             Image(systemName: "exclamationmark.triangle")
                         @unknown default:
                             EmptyView()
                         }
                     }
-                    .frame(width: 40, height: 40)
-                    .background(Color.gray.opacity(0.1))
-                    .cornerRadius(20)
+                    .frame(width: 24, height: 24)
+                    .cornerRadius(12)
                 } else {
                     Image(systemName: "dollarsign.circle")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .foregroundColor(.gray)
-                        .frame(width: 40, height: 40)
+                        .frame(width: 24, height: 24)
                 }
                 
                 Text(title)

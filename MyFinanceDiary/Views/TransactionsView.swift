@@ -105,8 +105,6 @@ struct TransactionRow: View {
                             image
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
-                                .frame(width: 40, height: 40)
-                                .cornerRadius(20)
                         case .failure:
                             Image(systemName: "exclamationmark.triangle")
                         @unknown default:

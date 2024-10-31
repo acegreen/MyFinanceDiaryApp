@@ -9,7 +9,7 @@ struct TransactionDetailsView: View {
     let transactionId: String
     
     var body: some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             if let transaction = loadedTransaction {
                 VStack(spacing: 16) {
                     headerView(transaction)
