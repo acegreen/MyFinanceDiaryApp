@@ -1,8 +1,11 @@
 import SwiftUI
 import SwiftData
+import Inject
 
 #if DEBUG
 final class PreviewHelper {
+    @ObserveInjection var inject
+
     @MainActor
     static let previewAppState: AppState = {
         let appState = AppState()
@@ -149,6 +152,7 @@ extension View {
     func withPreviewEnvironment() -> some View {
         self
             .environmentObject(PreviewHelper.previewAppState)
+            .enableInjection()
     }
 }
 #endif

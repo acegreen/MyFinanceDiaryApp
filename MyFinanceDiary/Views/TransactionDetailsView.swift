@@ -139,8 +139,6 @@ struct TransactionDetailsView: View {
 }
 
 #Preview {
-    NavigationStack {
-        TransactionDetailsView(transactionId: "preview-id")
-    }
-    .withPreviewEnvironment()
+    TransactionDetailsView(transactionId: "preview-id")
+        .withPreviewEnvironment()
 } 

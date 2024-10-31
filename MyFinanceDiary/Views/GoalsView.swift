@@ -85,4 +85,5 @@ private struct GoalsMainView: View {
 
 #Preview {
     GoalsView()
+        .withPreviewEnvironment()
 }

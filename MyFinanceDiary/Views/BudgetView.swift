@@ -187,3 +187,8 @@ struct BudgetCategoryRow: View {
         }
     }
 }
+
+#Preview {
+    BudgetView()
+        .withPreviewEnvironment()
+}
