@@ -13,7 +13,7 @@ struct ViewBuilderWrapper<Header: View, Main: View, ToolbarContent: View>: View 
     
     // All components
     init(
-        spacing: CGFloat = 24,
+        spacing: CGFloat = 12,
         backgroundColor: Color = .clear,
         ignoreSafeArea: Bool = true,
         @ViewBuilder header: @escaping () -> Header,

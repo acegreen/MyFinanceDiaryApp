@@ -46,10 +46,6 @@ private struct MeHeaderView: View {
                     .font(.title2)
                     .fontWeight(.bold)
                     .foregroundColor(.white)
-
-                Text("john.doe@example.com")
-                    .font(.headline)
-                    .foregroundColor(.white)
             }
         }
         .padding(.top, 48)

@@ -9,7 +9,7 @@ final class Transaction: Codable {
     var merchantName: String?
     var pending: Bool
     var transactionId: String
-    var category: TransactionCategory?
+    var categories: [TransactionCategory]?
     var personalFinanceCategory: PersonalFinanceCategory?
     @Attribute var logoUrl: String?
     @Attribute var categoryIconUrl: String?
@@ -25,10 +25,6 @@ final class Transaction: Codable {
 
     var displayIconUrl: String? {
         logoUrl ?? categoryIconUrl
-    }
-
-    var transactionType: TransactionType {
-        TransactionType(amount: amount)
     }
 
     init(amount: Double, date: Date, name: String, merchantName: String? = nil, pending: Bool, transactionId: String, logoUrl: String? = nil, categoryIconUrl: String? = nil) {
@@ -61,25 +57,7 @@ final class Transaction: Codable {
 
     // Helper to map category to account type
     var accountType: Account.AccountType {
-        switch self.category {
-        case .creditCard:
-            return .credit
-        case .loan:
-            return .loan
-        case .investment:
-            return .investment
-        case .cash, .transfer:
-            // For transfers, we should look at the destination
-            // If it's a transfer to an investment account, it should be .investments
-            // If it's a transfer to a loan/credit card, it should be .loans/.creditCards
-            return .depository  // Maybe this default needs to change
-        case .payment:
-            // Similar to transfers, payments might need more context
-            // A credit card payment should probably be .creditCards
-            return .credit  // Changed from .cash
-        case .other, .none:
-            return .other
-        }
+        return .depository
     }
 
     // Add this required initializer for Decodable conformance
@@ -87,12 +65,17 @@ final class Transaction: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         amount = try container.decode(Double.self, forKey: .amount)
-        date = try container.decode(Date.self, forKey: .date)
+        let dateString = try container.decode(String.self, forKey: .date)
+        if let parsedDate = DateFormatter.plaidDate.date(from: dateString) {
+            date = parsedDate
+        } else {
+            throw DecodingError.dataCorruptedError(forKey: .date, in: container, debugDescription: "Date string does not match expected format")
+        }
         name = try container.decode(String.self, forKey: .name)
         merchantName = try container.decodeIfPresent(String.self, forKey: .merchantName)
         pending = try container.decode(Bool.self, forKey: .pending)
         transactionId = try container.decode(String.self, forKey: .transactionId)
-        category = try container.decodeIfPresent(TransactionCategory.self, forKey: .category)
+        categories = try container.decodeIfPresent([TransactionCategory].self, forKey: .category)
         personalFinanceCategory = try container.decodeIfPresent(PersonalFinanceCategory.self, forKey: .personalFinanceCategory)
         logoUrl = try container.decodeIfPresent(String.self, forKey: .logoUrl)
         categoryIconUrl = try container.decodeIfPresent(String.self, forKey: .categoryIconUrl)
@@ -106,12 +89,12 @@ final class Transaction: Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         
         try container.encode(amount, forKey: .amount)
-        try container.encode(date, forKey: .date)
+        try container.encode(DateFormatter.plaidDate.string(from: date), forKey: .date)
         try container.encode(name, forKey: .name)
         try container.encodeIfPresent(merchantName, forKey: .merchantName)
         try container.encode(pending, forKey: .pending)
         try container.encode(transactionId, forKey: .transactionId)
-        try container.encodeIfPresent(category, forKey: .category)
+        try container.encodeIfPresent(categories, forKey: .category)
         try container.encodeIfPresent(personalFinanceCategory, forKey: .personalFinanceCategory)
         try container.encodeIfPresent(logoUrl, forKey: .logoUrl)
         try container.encodeIfPresent(categoryIconUrl, forKey: .categoryIconUrl)
@@ -122,22 +105,39 @@ final class Transaction: Codable {
 }
 
 extension Transaction {
-    enum TransactionType: String, Codable {
-        case credit
-        case debit
-
-        init(amount: Double) {
-            self = amount >= 0 ? .credit : .debit
-        }
-    }
-    enum TransactionCategory: String, Codable, CaseIterable {
-        case cash = "Cash"
-        case creditCard = "Credit Card"
-        case loan = "Loan"
-        case investment = "Investment"
-        case payment = "Payment"
+    enum TransactionCategory: String, Codable, CaseIterable, Identifiable {
+        case foodAndDrink = "Food and Drink"
+        case restaurants = "Restaurants"
         case transfer = "Transfer"
+        case payment = "Payment"
+        case shopping = "Shopping"
+        case recreation = "Recreation"
+        case travel = "Travel"
+        case healthcare = "Healthcare"
+        case service = "Service"
+        case tax = "Tax"
+        case general = "General"
+        case transportation = "Transportation"
+        case rent = "Rent"
+        case utilities = "Utilities"
+        case entertainment = "Entertainment"
         case other = "Other"
+        
+        var id: String { rawValue }
+        
+        // Add an initializer to handle unknown categories
+        init(from decoder: Decoder) throws {
+            let container = try decoder.singleValueContainer()
+            let rawValue = try container.decode(String.self)
+            
+            // Try to create from exact match first
+            if let category = TransactionCategory(rawValue: rawValue) {
+                self = category
+            } else {
+                // If no exact match, default to "other"
+                self = .other
+            }
+        }
     }
 
     struct PersonalFinanceCategory: Codable {

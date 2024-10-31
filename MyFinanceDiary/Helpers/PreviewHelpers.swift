@@ -4,13 +4,11 @@ import SwiftData
 #if DEBUG
 enum PreviewHelpers {
     static func getMockTransactions() -> [Transaction] {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
         
         return [
             Transaction(
                 amount: -12.99,
-                date: dateFormatter.date(from: "2024-03-20") ?? Date(),
+                date: DateFormatter.plaidDate.date(from: "2024-03-20") ?? Date(),
                 name: "Starbucks Coffee",
                 merchantName: "Starbucks",
                 pending: false,
@@ -18,7 +16,7 @@ enum PreviewHelpers {
             ),
             Transaction(
                 amount: -45.50,
-                date: dateFormatter.date(from: "2024-03-19") ?? Date(),
+                date: DateFormatter.plaidDate.date(from: "2024-03-19") ?? Date(),
                 name: "Amazon.com",
                 merchantName: "Amazon",
                 pending: false,
