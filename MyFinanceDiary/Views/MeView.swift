@@ -30,7 +30,7 @@ struct MeView: View {
 // MARK: - Header Component
 private struct MeHeaderView: View {
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 8) {
             Circle()
                 .fill(Color.white)
                 .frame(width: 100, height: 100)
@@ -48,7 +48,7 @@ private struct MeHeaderView: View {
                     .foregroundColor(.white)
 
                 Text("john.doe@example.com")
-                    .font(.subheadline)
+                    .font(.headline)
                     .foregroundColor(.white)
             }
         }

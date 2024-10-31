@@ -10,27 +10,35 @@ final class Transaction: Codable {
     var pending: Bool
     var transactionId: String
     var category: TransactionCategory?
+    var personalFinanceCategory: PersonalFinanceCategory?
+    @Attribute var logoUrl: String?
     @Attribute var categoryIconUrl: String?
     var accountId: String?
     var location: Location?
     var paymentChannel: String?
     var paymentMeta: PaymentMeta?
+    var counterparties: [Counterparty]?
 
     var displayName: String {
         merchantName ?? name
+    }
+
+    var displayIconUrl: String? {
+        logoUrl ?? categoryIconUrl
     }
 
     var transactionType: TransactionType {
         TransactionType(amount: amount)
     }
 
-    init(amount: Double, date: Date, name: String, merchantName: String? = nil, pending: Bool, transactionId: String, categoryIconUrl: String? = nil) {
+    init(amount: Double, date: Date, name: String, merchantName: String? = nil, pending: Bool, transactionId: String, logoUrl: String? = nil, categoryIconUrl: String? = nil) {
         self.amount = amount
         self.date = date
         self.name = name
         self.merchantName = merchantName
         self.pending = pending
         self.transactionId = transactionId
+        self.logoUrl = logoUrl
         self.categoryIconUrl = categoryIconUrl
     }
 
@@ -43,60 +51,12 @@ final class Transaction: Codable {
         case pending
         case transactionId = "transaction_id"
         case category
-        case categoryIconUrl = "personal_finance_category_icon_url"
         case personalFinanceCategory = "personal_finance_category"
+        case logoUrl = "logo_url"
+        case categoryIconUrl = "personal_finance_category_icon_url"
         case location
         case paymentMeta = "payment_meta"
-    }
-
-    required init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        amount = try container.decode(Double.self, forKey: .amount)
-
-        // Convert string date to Date object
-        let dateString = try container.decode(String.self, forKey: .date)
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        if let parsedDate = dateFormatter.date(from: dateString) {
-            date = parsedDate
-        } else {
-            date = Date()
-        }
-
-        name = try container.decode(String.self, forKey: .name)
-        merchantName = try container.decodeIfPresent(String.self, forKey: .merchantName)
-        pending = try container.decode(Bool.self, forKey: .pending)
-        transactionId = try container.decode(String.self, forKey: .transactionId)
-        categoryIconUrl = try container.decodeIfPresent(String.self, forKey: .categoryIconUrl)
-
-        let categories = try container.decodeIfPresent([String].self, forKey: .category) ?? []
-        let personalFinanceCategory = try container.decodeIfPresent(PersonalFinanceCategory.self, forKey: .personalFinanceCategory)
-
-        self.category = TransactionCategory.from(
-            plaidCategories: categories,
-            personalFinanceCategory: personalFinanceCategory
-        )
-
-        self.location = try container.decodeIfPresent(Location.self, forKey: .location) ?? Location()
-        self.paymentMeta = try container.decodeIfPresent(PaymentMeta.self, forKey: .paymentMeta)
-    }
-
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(amount, forKey: .amount)
-
-        // Convert Date back to string
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        let dateString = dateFormatter.string(from: date)
-        try container.encode(dateString, forKey: .date)
-
-        try container.encode(name, forKey: .name)
-        try container.encodeIfPresent(merchantName, forKey: .merchantName)
-        try container.encode(pending, forKey: .pending)
-        try container.encode(transactionId, forKey: .transactionId)
-        try container.encodeIfPresent(categoryIconUrl, forKey: .categoryIconUrl)
-        try container.encodeIfPresent(paymentMeta, forKey: .paymentMeta)
+        case counterparties
     }
 
     // Helper to map category to account type
@@ -121,6 +81,44 @@ final class Transaction: Codable {
             return .other
         }
     }
+
+    // Add this required initializer for Decodable conformance
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        amount = try container.decode(Double.self, forKey: .amount)
+        date = try container.decode(Date.self, forKey: .date)
+        name = try container.decode(String.self, forKey: .name)
+        merchantName = try container.decodeIfPresent(String.self, forKey: .merchantName)
+        pending = try container.decode(Bool.self, forKey: .pending)
+        transactionId = try container.decode(String.self, forKey: .transactionId)
+        category = try container.decodeIfPresent(TransactionCategory.self, forKey: .category)
+        personalFinanceCategory = try container.decodeIfPresent(PersonalFinanceCategory.self, forKey: .personalFinanceCategory)
+        logoUrl = try container.decodeIfPresent(String.self, forKey: .logoUrl)
+        categoryIconUrl = try container.decodeIfPresent(String.self, forKey: .categoryIconUrl)
+        location = try container.decodeIfPresent(Location.self, forKey: .location)
+        paymentMeta = try container.decodeIfPresent(PaymentMeta.self, forKey: .paymentMeta)
+        counterparties = try container.decodeIfPresent([Counterparty].self, forKey: .counterparties)
+    }
+    
+    // Add encode method for Encodable conformance
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        
+        try container.encode(amount, forKey: .amount)
+        try container.encode(date, forKey: .date)
+        try container.encode(name, forKey: .name)
+        try container.encodeIfPresent(merchantName, forKey: .merchantName)
+        try container.encode(pending, forKey: .pending)
+        try container.encode(transactionId, forKey: .transactionId)
+        try container.encodeIfPresent(category, forKey: .category)
+        try container.encodeIfPresent(personalFinanceCategory, forKey: .personalFinanceCategory)
+        try container.encodeIfPresent(logoUrl, forKey: .logoUrl)
+        try container.encodeIfPresent(categoryIconUrl, forKey: .categoryIconUrl)
+        try container.encodeIfPresent(location, forKey: .location)
+        try container.encodeIfPresent(paymentMeta, forKey: .paymentMeta)
+        try container.encodeIfPresent(counterparties, forKey: .counterparties)
+    }
 }
 
 extension Transaction {
@@ -140,53 +138,6 @@ extension Transaction {
         case payment = "Payment"
         case transfer = "Transfer"
         case other = "Other"
-
-        // Helper to convert from Plaid's category array
-        static func from(plaidCategories: [String], personalFinanceCategory: PersonalFinanceCategory?) -> TransactionCategory {
-            // First try to categorize based on personal finance category
-            if let primary = personalFinanceCategory?.primary.lowercased() {
-                switch primary {
-                case "credit":
-                    return .creditCard
-                case "loan", "mortgage":
-                    return .loan
-                case "investment":
-                    return .investment
-                case "transfer":
-                    return .transfer
-                case "payment":
-                    return .payment
-                default:
-                    break
-                }
-            }
-
-            // Fall back to traditional categories if needed
-            let allCategories = plaidCategories.map { $0.lowercased() }
-
-            if allCategories.contains(where: { $0.contains("credit card") ||
-                $0.contains("credit") ||
-                $0.contains("payment") }) {
-                return .creditCard
-            }
-
-            if allCategories.contains(where: { $0.contains("investment") ||
-                $0.contains("stock") ||
-                $0.contains("securities") }) {
-                return .investment
-            }
-
-            if allCategories.contains(where: { $0.contains("loan") ||
-                $0.contains("mortgage") }) {
-                return .loan
-            }
-
-            if allCategories.contains(where: { $0.contains("transfer") }) {
-                return .transfer
-            }
-
-            return .other
-        }
     }
 
     struct PersonalFinanceCategory: Codable {
@@ -238,6 +189,26 @@ extension Transaction {
             case referenceNumber = "reference_number"
         }
     }
+
+    struct Counterparty: Codable {
+        var confidenceLevel: String
+        var entityId: String?
+        var logoUrl: String?
+        var name: String
+        var phoneNumber: String?
+        var type: String
+        var website: String?
+        
+        enum CodingKeys: String, CodingKey {
+            case confidenceLevel = "confidence_level"
+            case entityId = "entity_id"
+            case logoUrl = "logo_url"
+            case name
+            case phoneNumber = "phone_number"
+            case type
+            case website
+        }
+    }
 }
 
 extension Transaction.Location {
@@ -251,3 +222,4 @@ extension Transaction.Location {
         #endif
     }
 }
+

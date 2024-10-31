@@ -32,10 +32,10 @@ private struct GoalsHeaderView: View {
         VStack(spacing: 8) {
             Circle()
                 .fill(Color.white)
-                .frame(width: 80, height: 80)
+                .frame(width: 100, height: 100)
                 .overlay(
                     Image(systemName: "trophy.fill")
-                        .font(.system(size: 32))
+                        .font(.system(size: 40))
                         .foregroundColor(.darkGreen)
                 )
             

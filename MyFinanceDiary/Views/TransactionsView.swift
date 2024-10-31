@@ -96,8 +96,7 @@ struct TransactionRow: View {
                 }
         } label: {
             HStack(spacing: 12) {
-                
-                if let iconUrl = transaction.categoryIconUrl {
+                if let iconUrl = transaction.displayIconUrl {
                     AsyncImage(url: URL(string: iconUrl)) { phase in
                         switch phase {
                         case .empty:
@@ -105,14 +104,18 @@ struct TransactionRow: View {
                         case .success(let image):
                             image
                                 .resizable()
-                                .aspectRatio(contentMode: .fit)
-                        case .failure(let error):
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: 40, height: 40)
+                                .cornerRadius(20)
+                        case .failure:
                             Image(systemName: "exclamationmark.triangle")
                         @unknown default:
                             EmptyView()
                         }
                     }
                     .frame(width: 40, height: 40)
+                    .background(Color.gray.opacity(0.1))
+                    .cornerRadius(20)
                 } else {
                     Image(systemName: "dollarsign.circle")
                         .resizable()
