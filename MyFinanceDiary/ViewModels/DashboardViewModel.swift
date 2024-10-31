@@ -2,14 +2,18 @@ import Foundation
 
 @MainActor
 class DashboardViewModel: ObservableObject {
-    @Published var accounts: [Account] = []
+    @Published var provider: Provider?
     @Published var selectedSegment: ChartSegment = .netWorth {
         didSet {
             updateChart()
         }
     }
-    @Published var chartData: [FinancialChartView.FinancialDataPoint] = []
-    @Published var creditScore: Int = 821
+    @Published var isLoading: Bool = false
+    @Published var error: Error?
+    var plaidService: PlaidService
+    var accounts: [DashboardAccount] = []
+    var chartData: [FinancialChartView.FinancialDataPoint] = []
+    var creditScore: Int = 821
     
     enum ChartSegment: String, CaseIterable {
         case netWorth = "Net worth"
@@ -18,24 +22,29 @@ class DashboardViewModel: ObservableObject {
         case investments = "Investments"
     }
     
-    init() {
+    init(plaidService: PlaidService) {
+        self.plaidService = plaidService
         setupAccounts()
         updateChart()
+    }
+
+    func fetchProvider() async throws {
+        provider = try await plaidService.fetchProvider()
     }
     
     private func setupAccounts() {
         accounts = [
-            Account(accountId: "1", balances: Balances(current: 5732.0), name: "Checking", type: .depository),
-            Account(accountId: "2", balances: Balances(current: -4388.0), name: "Credit Card", type: .credit),
-            Account(accountId: "3", balances: Balances(current: 82386.0), name: "Investment", type: .investment),
-            Account(accountId: "4", balances: Balances(current: 302225.0), name: "Property", type: .other)
+            DashboardAccount(id: .cash, value: 5732.0),
+            DashboardAccount(id: .creditCards, value: -4388.0),
+            DashboardAccount(id: .investments, value: 82386.0),
+            DashboardAccount(id: .property, value: 302225.0)
         ]
     }
     
     func updateChart() {
         switch selectedSegment {
         case .netWorth:
-            let totalNetWorth = accounts.reduce(0.0) { $0 + $1.balances.current }
+            let totalNetWorth = accounts.reduce(0.0) { $0 + $1.value }
             chartData = createTrendData(startAmount: totalNetWorth * 0.97, endAmount: totalNetWorth)
             
         case .spending:
@@ -43,13 +52,13 @@ class DashboardViewModel: ObservableObject {
             chartData = createTrendData(startAmount: currentSpending * 1.2, endAmount: currentSpending)
             
         case .cash:
-            if let cashAccount = accounts.first(where: { $0.type == .depository }) {
-                chartData = createTrendData(startAmount: cashAccount.balances.current * 1.1, endAmount: cashAccount.balances.current)
+            if let cashAccount = accounts.first(where: { $0.id == .cash }) {
+                chartData = createTrendData(startAmount: cashAccount.value * 1.1, endAmount: cashAccount.value)
             }
             
         case .investments:
-            if let investmentAccount = accounts.first(where: { $0.type == .investment }) {
-                chartData = createTrendData(startAmount: investmentAccount.balances.current * 0.95, endAmount: investmentAccount.balances.current)
+            if let investmentAccount = accounts.first(where: { $0.id == .investments }) {
+                chartData = createTrendData(startAmount: investmentAccount.value * 0.95, endAmount: investmentAccount.value)
             }
         }
         objectWillChange.send()
@@ -76,16 +85,16 @@ class DashboardViewModel: ObservableObject {
     var currentAmount: String {
         switch selectedSegment {
         case .netWorth:
-            let total = accounts.reduce(0.0) { $0 + $1.balances.current }
-            return formatAmount(total)
+            let total = accounts.reduce(0.0) { $0 + $1.value }
+            return NumberFormatter.formatAmount(total)
         case .spending:
-            return formatAmount(2500) // TODO: Get actual monthly spending
+            return NumberFormatter.formatAmount(2500) // TODO: Get actual monthly spending
         case .cash:
-            let cashAmount = accounts.first(where: { $0.type == .depository })?.balances.current ?? 0
-            return formatAmount(cashAmount)
+            let cashAmount = accounts.first(where: { $0.id == .cash })?.value ?? 0
+            return NumberFormatter.formatAmount(cashAmount)
         case .investments:
-            let investmentAmount = accounts.first(where: { $0.type == .investment })?.balances.current ?? 0
-            return formatAmount(investmentAmount)
+            let investmentAmount = accounts.first(where: { $0.id == .investments })?.value ?? 0
+            return NumberFormatter.formatAmount(investmentAmount)
         }
     }
     
@@ -111,13 +120,6 @@ class DashboardViewModel: ObservableObject {
         case .cash:
             return false
         }
-    }
-    
-    func formatAmount(_ amount: Double) -> String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        formatter.maximumFractionDigits = 0
-        return formatter.string(from: NSNumber(value: amount)) ?? "$0"
     }
     
     func updateCreditScore(_ newScore: Int) {

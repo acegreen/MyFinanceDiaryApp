@@ -23,6 +23,22 @@ struct DashboardView: View {
                 MenuView()
             }
         }
+        .task {
+            if appState.plaidService.hasValidPlaidConnection {
+                await fetchProvider()
+            } else {
+                appState.plaidService.setupPlaidLink()
+            }
+        }
+        .enableInjection()
+    }
+
+    private func fetchProvider() async {
+        do {
+            try await appState.dashboardViewModel.fetchProvider()
+        } catch {
+            print("Error fetching provider: \(error)")
+        }
     }
 }
 
@@ -86,7 +102,7 @@ struct DashboardHeaderView: View {
 
 // Separate Accounts Section
 struct DashboardMainView: View {
-    let accounts: [Account]
+    let accounts: [DashboardAccount]
     @ObservedObject var dashboardViewModel: DashboardViewModel
 
     var body: some View {
@@ -99,16 +115,13 @@ struct DashboardMainView: View {
 
 // Separate Accounts List
 struct DashboardAccountsList: View {
-    let accounts: [Account]
+    let accounts: [DashboardAccount]
     @ObservedObject var dashboardViewModel: DashboardViewModel
 
     var body: some View {
         VStack(spacing: 16) {
             ForEach(accounts) { account in
-                DashboardAccountItemRow(
-                    type: account.type,
-                    amount: dashboardViewModel.formatAmount(account.balances.current)
-                )
+                DashboardAccountItemRow(account: account)
             }
         }
         .padding()
@@ -117,19 +130,18 @@ struct DashboardAccountsList: View {
 
 // FinancialItemView for each financial category
 struct DashboardAccountItemRow: View {
-    var type: Account.AccountType
-    var amount: String
-    
+    var account: DashboardAccount
+
     var body: some View {
-        NavigationLink(destination: TransactionsView(accountType: type)) {
+        NavigationLink(destination: TransactionsView(accountTypes: account.toAccountTypes())) {
             HStack {
-                Text(type.displayName)
+                Text(account.id.rawValue)
                     .font(.system(size: 18, weight: .bold))
                     .foregroundColor(.primary)
                 Spacer()
-                Text(amount)
+                Text(String(NumberFormatter.formatAmount(account.value)))
                     .font(.system(size: 20, weight: .heavy))
-                    .foregroundColor(amount.contains("-") ? .alertRed : .primaryGreen)
+                    .foregroundColor(account.isNegative ? .alertRed : .primaryGreen)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 16)

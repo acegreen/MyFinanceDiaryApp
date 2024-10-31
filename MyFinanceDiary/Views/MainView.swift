@@ -15,7 +15,7 @@ struct MainView: View {
                     .transition(.opacity)
             }
         }
-        .animation(.default, value: appState.authenticationService.isAuthenticated)
+        .animation(.smooth, value: appState.authenticationService.isAuthenticated)
         .enableInjection()
     }
 }
@@ -25,7 +25,7 @@ struct MainTabView: View {
         TabView {
             DashboardView()
                 .tabItem {
-                    Label("Dashboard", systemImage: "chart.pie.fill")
+                    Label("Dashboard", systemImage: "bitcoinsign.square.fill")
                 }
             
             BudgetView()
@@ -40,7 +40,7 @@ struct MainTabView: View {
                 
             MeView()
                 .tabItem {
-                    Label("Me", systemImage: "person.fill")
+                    Label("Settings", systemImage: "gearshape")
                 }
         }
         .tint(.darkGreen)

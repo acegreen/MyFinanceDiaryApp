@@ -9,21 +9,24 @@ struct TransactionDetailsView: View {
     let transactionId: String
     
     var body: some View {
-        ScrollView(showsIndicators: false) {
+        Group {
             if let transaction = loadedTransaction {
-                VStack(spacing: 16) {
-                    headerView(transaction)
-                    
-                    statusView(transaction)
-
-                    locationCard(for: transaction)
-                    
-                    additionalDetailsView(transaction)
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 16) {
+                        headerView(transaction)
+                        statusView(transaction)
+                        locationCardView(for: transaction)
+                        additionalDetailsView(transaction)
+                    }
                 }
+                .padding()
+                .background(Color(uiColor: .systemGroupedBackground))
+            } else {
+                Text("Transaction not found")
+                    .font(.headline)
+                    .foregroundColor(.secondary)
             }
         }
-        .padding()
-        .background(Color(uiColor: .systemGroupedBackground))
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
@@ -36,21 +39,29 @@ struct TransactionDetailsView: View {
         .toolbarRole(.editor)
         .toolbarBackground(.hidden, for: .navigationBar)
         .task {
-            loadedTransaction = appState.transactionDetailsViewModel.getTransaction(id: transactionId)
+            getTransaction()
         }
         .enableInjection()
     }
-    
+
+    private func getTransaction() {
+        do {
+            loadedTransaction = try appState.transactionDetailsViewModel.getTransaction(id: transactionId)
+        } catch {
+            print("Error loading transaction: \(error)")
+        }
+    }
+
     private func headerView(_ transaction: Transaction) -> some View {
         VStack(spacing: 4) {
             // Amount Header
-            Text(transaction.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+            Text(NumberFormatter.formatAmount(transaction.amount))
                 .font(.system(size: 64, weight: .medium))
 
             // Merchant and Date
             VStack(spacing: 4) {
-                Text(transaction.merchantName ?? transaction.name)
-                    .font(.title2)
+                Text(transaction.displayName)
+                    .font(.title3)
                     .foregroundColor(.secondary)
                 Text(transaction.date.formatted(date: .long, time: .shortened))
                     .font(.headline)
@@ -70,8 +81,9 @@ struct TransactionDetailsView: View {
                         .foregroundColor(transaction.pending ? .vibrantOrange : .primaryGreen)
                 }
             }
-            if let paymentChannel = transaction.paymentChannel {
-                Text(paymentChannel)
+            if let paymentProcessor = transaction.paymentMeta?.paymentProcessor {
+                Text(paymentProcessor)
+                    .font(.headline)
                     .foregroundColor(.secondary)
             }
         }
@@ -80,30 +92,11 @@ struct TransactionDetailsView: View {
         .cornerRadius(12)
     }
 
-    private func additionalDetailsView(_ transaction: Transaction) -> some View {
-        VStack(spacing: 16) {
-            if let categories = transaction.categories {
-                detailRow(title: "Category", value: categories.map { $0.rawValue }.joined(separator: ", "))
-                divider
-            }
-
-            if let paymentChannel = transaction.paymentChannel {
-                detailRow(title: "Payment Method", value: paymentChannel.capitalized)
-                divider
-            }
-
-            detailRow(title: "Transaction ID", value: transaction.transactionId)
-        }
-        .padding()
-        .background(Color(uiColor: .secondarySystemGroupedBackground))
-        .cornerRadius(12)
-    }
-
-    private func locationCard(for transaction: Transaction) -> some View {
+    private func locationCardView(for transaction: Transaction) -> some View {
         #if DEBUG
         let coordinates = (latitude: 45.5017, longitude: -73.5673)
         return LocationMapCard(
-            title: transaction.merchantName ?? transaction.name,
+            title: transaction.displayName,
             iconUrl: transaction.displayIconUrl,
             coordinates: coordinates
         )
@@ -112,7 +105,7 @@ struct TransactionDetailsView: View {
            let lat = location.lat,
            let lon = location.lon {
             return LocationMapCard(
-                title: transaction.merchantName ?? transaction.name,
+                title: transaction.displayName,
                 coordinates: (latitude: lat, longitude: lon)
             )
         } else {
@@ -120,14 +113,30 @@ struct TransactionDetailsView: View {
         }
         #endif
     }
+
+    private func additionalDetailsView(_ transaction: Transaction) -> some View {
+        VStack(spacing: 16) {
+            detailRow(title: "Category", value: transaction.category.map { $0.rawValue }.joined(separator: "\n"))
+            divider
+
+            detailRow(title: "Payment Method", value: transaction.paymentChannel.rawValue.capitalized)
+            divider
+
+            detailRow(title: "Transaction ID", value: transaction.transactionId)
+        }
+        .padding()
+        .background(Color(uiColor: .secondarySystemGroupedBackground))
+        .cornerRadius(12)
+    }
     
     private func detailRow(title: String, value: String) -> some View {
-        HStack {
+        HStack(spacing: 8) {
             Text(title)
             Spacer()
             Text(value)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.trailing)
+                .frame(maxWidth: .infinity, alignment: .trailing)
         }
     }
     

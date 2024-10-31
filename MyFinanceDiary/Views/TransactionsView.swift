@@ -4,13 +4,24 @@ import Inject
 struct TransactionsView: View {
     @ObserveInjection var inject
     @EnvironmentObject var appState: AppState
-    let accountType: Account.AccountType
-    @Environment(\.scenePhase) private var scenePhase
-
+    let accountTypes: [AccountType]
+    @State private var refreshID = UUID()
+    
     var body: some View {
-        TransactionsList(
-            filteredTransactions: appState.transactionsViewModel.getFilteredTransactions(for: accountType)
-        )
+        Group {
+            if appState.transactionsViewModel.groupedTransactions.isEmpty {
+                ContentUnavailableView(
+                    "No Transactions!",
+                    systemImage: "creditcard.trianglebadge.exclamationmark",
+                    description: Text("Connect your bank account(s) to see your transactions")
+                )
+            } else {
+                TransactionsList(
+                    groupedTransactions: appState.transactionsViewModel.groupedTransactions
+                )
+            }
+        }
+        .id(refreshID)
         .scrollContentBackground(.hidden)
         .navigationBarBackButtonHidden(true)
         .toolbar {
@@ -22,25 +33,6 @@ struct TransactionsView: View {
             }
         }
         .toolbarRole(.editor)
-        .task {
-            if !appState.plaidService.hasValidPlaidConnection {
-                await MainActor.run {
-                    appState.plaidService.setupPlaidLink()
-                }
-            } else {
-                await loadTransactions(for: accountType)
-            }
-        }
-        .onChange(of: appState.plaidService.hasValidPlaidConnection) { oldValue, newValue in
-            if newValue {
-                Task {
-                    await loadTransactions(for: accountType)
-                }
-            }
-        }
-        .refreshable {
-            await loadTransactions(for: accountType)
-        }
         .overlay {
             if appState.transactionsViewModel.isLoading {
                 ProgressView()
@@ -49,32 +41,36 @@ struct TransactionsView: View {
                     .background(.ultraThinMaterial)
             }
         }
+        .refreshable {
+            loadTransactions()
+        }
+        .task {
+            loadTransactions()
+        }
         .enableInjection()
     }
 
-    private func loadTransactions(for accountType: Account.AccountType) async {
+    private func loadTransactions() {
         do {
-            try await appState.transactionsViewModel.loadTransactions(for: accountType)
-        } catch PlaidService.PlaidError.noPlaidConnection {
-            await MainActor.run {
-                appState.plaidService.setupPlaidLink()
-            }
+            try appState.transactionsViewModel.loadTransactions(for: accountTypes)
+            refreshID = UUID()
         } catch {
             print("Error loading transactions: \(error)")
         }
     }
 }
 
-// New component for the list
 struct TransactionsList: View {
-    let filteredTransactions: [Date: [Transaction]]
+    let groupedTransactions: [Date: [Transaction]]
 
     var body: some View {
         List {
-            ForEach(filteredTransactions.keys.sorted(by: >), id: \.self) { date in
-                Section(header: Text(date.formatted(.dateTime.month().day().year()))) {
-                    ForEach(filteredTransactions[date] ?? []) { transaction in
-                        TransactionRow(transaction: transaction)
+            ForEach(groupedTransactions.keys.sorted(by: >), id: \.self) { date in
+                if let transactions = groupedTransactions[date] {
+                    Section(header: Text(date.formatted(.dateTime.month().day().year()))) {
+                        ForEach(transactions) { transaction in
+                            TransactionRow(transaction: transaction)
+                        }
                     }
                 }
             }
@@ -83,20 +79,13 @@ struct TransactionsList: View {
     }
 }
 
-// New component for the transaction row
 struct TransactionRow: View {
     let transaction: Transaction
     @EnvironmentObject var appState: AppState
-
+    
     var body: some View {
         NavigationLink {
             TransactionDetailsView(transactionId: transaction.transactionId)
-                .onAppear {
-                    appState.transactionDetailsViewModel.setTransaction(transaction)
-                }
-                .onDisappear {
-                    appState.transactionDetailsViewModel.clearTransaction()
-                }
         } label: {
             HStack(spacing: 12) {
                 if let iconUrl = transaction.displayIconUrl {
@@ -137,7 +126,8 @@ struct TransactionRow: View {
 
                 Spacer()
 
-                Text(transaction.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))                    .foregroundColor(transaction.amount < 0 ? .alertRed : .primaryGreen)
+                Text(NumberFormatter.formatAmount(transaction.amount))
+                    .foregroundColor(transaction.amount < 0 ? .alertRed : .primaryGreen)
             }
             .padding(.vertical, 4)
         }
@@ -145,6 +135,6 @@ struct TransactionRow: View {
 }
 
 #Preview {
-    TransactionsView(accountType: .depository)
+    TransactionsView(accountTypes: AccountType.allCases)
         .withPreviewEnvironment()
 }

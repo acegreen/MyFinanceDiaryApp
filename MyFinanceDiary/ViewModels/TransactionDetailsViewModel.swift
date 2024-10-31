@@ -1,15 +1,27 @@
 import SwiftUI
+import SwiftData
 
 @MainActor
 class TransactionDetailsViewModel: ObservableObject {
     @Published var transaction: Transaction?
+    @Published var isLoading: Bool = false
+    @Published var error: Error?
+    private let modelContext: ModelContext
 
-    init(transaction: Transaction? = nil) {
+    init(transaction: Transaction? = nil, modelContext: ModelContext) {
         self.transaction = transaction
+        self.modelContext = modelContext
     }
     
-    func getTransaction(id: String) -> Transaction? {
-        return transaction?.transactionId == id ? transaction : nil
+    func getTransaction(id: String) throws -> Transaction? {
+        if let existingTransaction = transaction, existingTransaction.transactionId == id {
+            return existingTransaction
+        }
+        
+        let descriptor = FetchDescriptor<Transaction>()
+        let transactions = try modelContext.fetch(descriptor)
+        return transactions
+            .first { $0.transactionId == id }
     }
 
     func setTransaction(_ transaction: Transaction) {
