@@ -1,5 +1,5 @@
-import SwiftUI
 import Inject
+import SwiftUI
 
 struct GoalsView: View {
     @ObserveInjection var inject
@@ -16,17 +16,17 @@ struct GoalsView: View {
                 showMenu.toggle()
             } label: {
                 Image(systemName: "line.3.horizontal")
-                .foregroundColor(.white)
+                    .foregroundColor(.white)
             }
-            .popoverSheet(isPresented: $showMenu) {
-                MenuView()
+            .popoverSheet(isPresented: $showMenu) { height in
+                MenuView(height: height)
             }
         }
-        .navigationTitle("Goals")
     }
 }
 
 // MARK: - Header Component
+
 private struct GoalsHeaderView: View {
     var body: some View {
         VStack(spacing: 8) {
@@ -38,23 +38,23 @@ private struct GoalsHeaderView: View {
                         .font(.system(size: 40))
                         .foregroundColor(.darkGreen)
                 )
-            
+
             Text("Your goals")
                 .font(.title)
                 .fontWeight(.bold)
                 .foregroundColor(.white)
-            
+
             Text("Stay on top of your financial")
                 .font(.headline)
                 .foregroundColor(.white)
         }
-        .padding(.top, 48)
         .frame(maxWidth: .infinity, minHeight: 300)
         .greenGradientBackground()
     }
 }
 
 // MARK: - Cards Component
+
 private struct GoalsMainView: View {
     var body: some View {
         // Goals Cards
@@ -67,8 +67,8 @@ private struct GoalsMainView: View {
                 currentValue: "$1,000",
                 targetValue: "of $4,300",
                 totalProgress: "Total savings: $1,000 of $60,000"
-                    )
-                    
+            )
+
             // Credit Score Goal Card
             GoalCard(
                 title: "Boost my credit score",

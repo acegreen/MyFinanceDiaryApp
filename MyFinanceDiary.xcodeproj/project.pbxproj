@@ -37,9 +37,22 @@
 		23F78BB62CCD4CE400202DF5 /* MyFinanceDiaryUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyFinanceDiaryUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		2381978C2CD6D70B00BFCE14 /* Exceptions for "MyFinanceDiary" folder in "MyFinanceDiary" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Bundle/Info.plist,
+			);
+			target = 23F78B972CCD4CE300202DF5 /* MyFinanceDiary */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		23F78B9A2CCD4CE300202DF5 /* MyFinanceDiary */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				2381978C2CD6D70B00BFCE14 /* Exceptions for "MyFinanceDiary" folder in "MyFinanceDiary" target */,
+			);
 			path = MyFinanceDiary;
 			sourceTree = "<group>";
 		};
@@ -310,6 +323,7 @@
 				DEVELOPMENT_TEAM = 8T3W9YR268;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MyFinanceDiary/Bundle/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -345,6 +359,7 @@
 				DEVELOPMENT_TEAM = 8T3W9YR268;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MyFinanceDiary/Bundle/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

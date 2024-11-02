@@ -1,5 +1,5 @@
-import SwiftUI
 import Inject
+import SwiftUI
 
 struct SettingsView: View {
     @ObserveInjection var inject
@@ -18,16 +18,16 @@ struct SettingsView: View {
                 Image(systemName: "line.3.horizontal")
                     .foregroundColor(.white)
             }
-            .popoverSheet(isPresented: $showMenu) {
-                MenuView()
+            .popoverSheet(isPresented: $showMenu) {height in 
+                MenuView(height: height)
             }
         }
-        .navigationTitle("Me")
         .enableInjection()
     }
 }
 
 // MARK: - Header Component
+
 private struct SettingsHeaderView: View {
     var body: some View {
         VStack(spacing: 8) {
@@ -48,44 +48,42 @@ private struct SettingsHeaderView: View {
                     .foregroundColor(.white)
             }
         }
-        .padding(.top, 48)
         .frame(maxWidth: .infinity, minHeight: 300)
         .greenGradientBackground()
     }
 }
 
 // MARK: - Main Content Component
+
 private struct SettingsMainView: View {
     var body: some View {
         VStack(spacing: 16) {
             VStack(spacing: 0) {
                 SettingsMenuListRow(title: "Review or Rate the App",
-                            subtitle: "Share the love",
-                            icon: "heart.fill",
-                            iconColor: .alertRed)
-                
+                                    subtitle: "Share the love",
+                                    icon: "heart.fill",
+                                    iconColor: .alertRed)
+
                 Divider()
-                
+
                 SettingsMenuListRow(title: "App Settings",
-                            icon: "gearshape.fill",
-                            iconColor: .darkGray)
-                
+                                    icon: "gearshape.fill",
+                                    iconColor: .darkGray)
+
                 Divider()
-                
+
                 SettingsMenuListRow(title: "Support & FAQs",
-                            icon: "questionmark.circle.fill",
-                            iconColor: .darkGray)
-                
+                                    icon: "questionmark.circle.fill",
+                                    iconColor: .darkGray)
+
                 Divider()
-                
+
                 SettingsMenuListRow(title: "Share MyFinanceDiary App",
-                            subtitle: "Send a link to your friends",
-                            icon: "square.and.arrow.up.fill",
-                        iconColor: .darkGreen)
+                                    subtitle: "Send a link to your friends",
+                                    icon: "square.and.arrow.up.fill",
+                                    iconColor: .darkGreen)
             }
-            .background(Color.white)
-            .cornerRadius(12)
-            .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
+            .makeCard()
         }
         .padding()
     }
@@ -96,7 +94,7 @@ struct SettingsMenuListRow: View {
     var subtitle: String? = nil
     let icon: String
     let iconColor: Color
-    
+
     var body: some View {
         NavigationLink(destination: EmptyView()) {
             HStack(spacing: 20) {
@@ -107,7 +105,7 @@ struct SettingsMenuListRow: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(title)
                         .font(.body)
-                    
+
                     if let subtitle {
                         Text(subtitle)
                             .font(.subheadline)
@@ -120,7 +118,7 @@ struct SettingsMenuListRow: View {
             .padding(16)
         }
     }
-} 
+}
 
 #Preview {
     SettingsView()

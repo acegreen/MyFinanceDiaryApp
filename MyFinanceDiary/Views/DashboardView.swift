@@ -21,8 +21,8 @@ struct DashboardView: View {
                 Image(systemName: "line.3.horizontal")
                     .foregroundColor(.white)
             }
-            .popoverSheet(isPresented: $showMenu) {
-                MenuView()
+            .popoverSheet(isPresented: $showMenu) { height in
+                MenuView(height: height)
             }
         }
         .enableInjection()
@@ -79,6 +79,7 @@ struct DashboardHeaderView: View {
             FinancialChartView(data: dashboardViewModel.chartData)
         }
         .padding(.top, 48)
+        .frame(maxWidth: .infinity, minHeight: 500)
         .greenGradientBackground()
         .sheet(isPresented: $showingCreditScore) {
             CreditScoreView()
@@ -98,7 +99,6 @@ struct DashboardMainView: View {
                                   transactionsViewModel: transactionViewModel,
                                   transactionDetailsViewModel: transactionDetailsViewModel)
         }
-        .background(Color(uiColor: .systemBackground))
     }
 }
 
@@ -142,9 +142,7 @@ struct DashboardAccountItemRow: View {
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 16)
-            .background(Color(uiColor: .systemBackground))
-            .cornerRadius(12)
-            .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
+            .makeCard()
         }
     }
 }

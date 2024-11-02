@@ -23,7 +23,6 @@ struct TransactionsView: View {
                 )
             }
         }
-        .scrollContentBackground(.hidden)
         .navigationTitle("Transactions")
         .navigationBarBackButtonHidden(true)
         .toolbarBackground(Color.darkGreen, for: .navigationBar)
@@ -79,6 +78,7 @@ struct TransactionsList: View {
                     }
                 }
             }
+            .scrollIndicators(.hidden)
             .listStyle(.plain)
         }
     }

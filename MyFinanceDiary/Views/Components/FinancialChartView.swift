@@ -97,7 +97,6 @@ struct FinancialChartView: View {
         }
         .chartXScale(domain: .automatic(includesZero: false))
         .chartYAxis(.hidden)
-        .frame(height: 200)
         .clipped()
         .enableInjection()
     }
