@@ -10,14 +10,15 @@ final class PreviewHelper {
     static let previewAppState: AppState = {
         let appState = AppState.shared
         appState.dashboardViewModel = PreviewHelper.previewdashboardViewModel
-        appState.transactionsViewModel = PreviewHelper.previewTransactionViewModel
+        appState.transactionsViewModel = PreviewHelper.previewTransactionsViewModel
+        appState.transactionDetailsViewModel = PreviewHelper.previewTransactionDetailsViewModel
         return appState
     }()
 
     @MainActor
     static let previewdashboardViewModel: DashboardViewModel = {
         let modelContext = PreviewHelper.previewAppState.modelContext
-        let viewModel = DashboardViewModel(plaidService: PlaidService(modelContext: modelContext))
+        let viewModel = DashboardViewModel()
         viewModel.accounts = [
             DashboardAccount(id: .cash, value: 5732.0),
             DashboardAccount(id: .creditCards, value: -4388.0),
@@ -28,13 +29,22 @@ final class PreviewHelper {
     }()
 
     @MainActor
-    static let previewTransactionViewModel: TransactionsViewModel = {
-
+    static let previewTransactionsViewModel: TransactionsViewModel = {
         let modelContext = PreviewHelper.previewAppState.modelContext
         let viewModel = TransactionsViewModel(modelContext: modelContext)
         viewModel.groupTransactions(getMockTransactions())
         return viewModel
     }()
+
+    @MainActor
+    static let previewTransactionDetailsViewModel: TransactionDetailsViewModel = {
+        let modelContext = PreviewHelper.previewAppState.modelContext
+        let mockTransaction = PreviewHelper.getMockTransactions().first!
+        let viewModel = TransactionDetailsViewModel(modelContext: modelContext)
+        viewModel.setTransaction(mockTransaction)
+        return viewModel
+    }()
+
 
 //    @MainActor
 //    static func addSampleDataIfNeeded(transactions: [Transaction], to context: ModelContext) async {

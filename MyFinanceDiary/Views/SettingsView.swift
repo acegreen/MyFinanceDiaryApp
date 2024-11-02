@@ -1,16 +1,16 @@
 import SwiftUI
 import Inject
 
-struct MeView: View {
+struct SettingsView: View {
     @ObserveInjection var inject
     @EnvironmentObject var appState: AppState
     @State private var showMenu: Bool = false
 
     var body: some View {
         ViewBuilderWrapper {
-            MeHeaderView()
+            SettingsHeaderView()
         } main: {
-            MeMainView()
+            SettingsMainView()
         } toolbarContent: {
             Button {
                 showMenu.toggle()
@@ -28,7 +28,7 @@ struct MeView: View {
 }
 
 // MARK: - Header Component
-private struct MeHeaderView: View {
+private struct SettingsHeaderView: View {
     var body: some View {
         VStack(spacing: 8) {
             Circle()
@@ -55,30 +55,30 @@ private struct MeHeaderView: View {
 }
 
 // MARK: - Main Content Component
-private struct MeMainView: View {
+private struct SettingsMainView: View {
     var body: some View {
         VStack(spacing: 16) {
             VStack(spacing: 0) {
-                MenuListRow(title: "Review or Rate the App",
+                SettingsMenuListRow(title: "Review or Rate the App",
                             subtitle: "Share the love",
                             icon: "heart.fill",
                             iconColor: .alertRed)
                 
                 Divider()
                 
-                MenuListRow(title: "App Settings",
+                SettingsMenuListRow(title: "App Settings",
                             icon: "gearshape.fill",
                             iconColor: .darkGray)
                 
                 Divider()
                 
-                MenuListRow(title: "Support & FAQs",
+                SettingsMenuListRow(title: "Support & FAQs",
                             icon: "questionmark.circle.fill",
                             iconColor: .darkGray)
                 
                 Divider()
                 
-                MenuListRow(title: "Share MyFinanceDiary App",
+                SettingsMenuListRow(title: "Share MyFinanceDiary App",
                             subtitle: "Send a link to your friends",
                             icon: "square.and.arrow.up.fill",
                         iconColor: .darkGreen)
@@ -91,7 +91,7 @@ private struct MeMainView: View {
     }
 }
 
-struct MenuListRow: View {
+struct SettingsMenuListRow: View {
     let title: String
     var subtitle: String? = nil
     let icon: String
@@ -123,6 +123,6 @@ struct MenuListRow: View {
 } 
 
 #Preview {
-    MeView()
+    SettingsView()
         .withPreviewEnvironment()
 }

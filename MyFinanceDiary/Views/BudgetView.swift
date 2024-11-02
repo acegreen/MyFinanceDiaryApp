@@ -4,7 +4,7 @@ import Inject
 struct BudgetView: View {
     @ObserveInjection var inject
     @EnvironmentObject var appState: AppState
-    
+
     @State private var showMenu: Bool = false
 
     var body: some View {
@@ -17,7 +17,7 @@ struct BudgetView: View {
                 showMenu.toggle()
             } label: {
                 Image(systemName: "line.3.horizontal")
-                .foregroundColor(.white)
+                    .foregroundColor(.white)
             }
             .popoverSheet(isPresented: $showMenu) {
                 MenuView()
@@ -85,7 +85,7 @@ struct BudgetHeaderView: View {
 struct BudgetMainView: View {
     @ObserveInjection var inject
     @EnvironmentObject var appState: AppState
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
             BudgetExpandableSection(
@@ -158,7 +158,7 @@ struct BudgetExpandableSection: View {
 struct BudgetCategoryRow: View {
     let category: Budget.BudgetCategory
     @EnvironmentObject var appState: AppState
-
+    
     var body: some View {
         VStack(spacing: 8) {
             HStack {

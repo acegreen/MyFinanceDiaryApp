@@ -1,10 +1,10 @@
-import SwiftUI
 import Inject
+import SwiftUI
 
 struct MainView: View {
     @ObserveInjection var inject
     @EnvironmentObject private var appState: AppState
-    
+
     var body: some View {
         Group {
             if appState.authenticationService.isAuthenticated {
@@ -15,8 +15,23 @@ struct MainView: View {
                     .transition(.opacity)
             }
         }
+        .task {
+            if appState.plaidService.hasValidPlaidConnection {
+                await fetchProvider()
+            } else {
+                appState.plaidService.setupPlaidLink()
+            }
+        }
         .animation(.smooth, value: appState.authenticationService.isAuthenticated)
         .enableInjection()
+    }
+
+    private func fetchProvider() async {
+        do {
+            try await appState.mainViewModel.fetchProvider()
+        } catch {
+            print("Error fetching provider: \(error)")
+        }
     }
 }
 
@@ -27,18 +42,18 @@ struct MainTabView: View {
                 .tabItem {
                     Label("Dashboard", systemImage: "bitcoinsign.square.fill")
                 }
-            
+
             BudgetView()
                 .tabItem {
                     Label("Budget", systemImage: "switch.2")
                 }
-            
+
             GoalsView()
                 .tabItem {
                     Label("Goals", systemImage: "trophy.fill")
                 }
-                
-            MeView()
+
+            SettingsView()
                 .tabItem {
                     Label("Settings", systemImage: "gearshape")
                 }
