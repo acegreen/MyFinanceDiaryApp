@@ -1,16 +1,16 @@
-import SwiftUI
 import Inject
+import SwiftUI
 
 struct ViewBuilderWrapper<Header: View, Main: View, ToolbarContent: View>: View {
     @ObserveInjection var inject
-    
-    private let header: (() -> Header)
-    private let main: (() -> Main)
+
+    private let header: () -> Header
+    private let main: () -> Main
     private let spacing: CGFloat
     private let backgroundColor: Color
     private let toolbarContent: (() -> ToolbarContent)?
     private let ignoreSafeArea: Bool
-    
+
     // All components
     init(
         spacing: CGFloat = 12,
@@ -27,7 +27,7 @@ struct ViewBuilderWrapper<Header: View, Main: View, ToolbarContent: View>: View 
         self.backgroundColor = backgroundColor
         self.ignoreSafeArea = ignoreSafeArea
     }
-    
+
     var body: some View {
         NavigationStack {
             ScrollView {

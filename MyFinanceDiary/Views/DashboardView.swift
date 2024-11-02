@@ -11,7 +11,9 @@ struct DashboardView: View {
         ViewBuilderWrapper {
             DashboardHeaderView(dashboardViewModel: appState.dashboardViewModel)
         } main: {
-            DashboardMainView(accounts: appState.dashboardViewModel.accounts, dashboardViewModel: appState.dashboardViewModel)
+            DashboardMainView(accounts: appState.dashboardViewModel.accounts,
+                              transactionViewModel: appState.transactionsViewModel,
+                              transactionDetailsViewModel: appState.transactionDetailsViewModel)
         } toolbarContent: {
             Button(action: {
                 showMenu.toggle()
@@ -23,27 +25,12 @@ struct DashboardView: View {
                 MenuView()
             }
         }
-        .task {
-            if appState.plaidService.hasValidPlaidConnection {
-                await fetchProvider()
-            } else {
-                appState.plaidService.setupPlaidLink()
-            }
-        }
         .enableInjection()
-    }
-
-    private func fetchProvider() async {
-        do {
-            try await appState.dashboardViewModel.fetchProvider()
-        } catch {
-            print("Error fetching provider: \(error)")
-        }
     }
 }
 
 struct DashboardHeaderView: View {
-    @ObservedObject var dashboardViewModel: DashboardViewModel
+    @StateObject var dashboardViewModel: DashboardViewModel
     @State private var showingCreditScore = false
 
     var body: some View {
@@ -92,7 +79,6 @@ struct DashboardHeaderView: View {
             FinancialChartView(data: dashboardViewModel.chartData)
         }
         .padding(.top, 48)
-        .padding(.bottom, 24)
         .greenGradientBackground()
         .sheet(isPresented: $showingCreditScore) {
             CreditScoreView()
@@ -103,11 +89,14 @@ struct DashboardHeaderView: View {
 // Separate Accounts Section
 struct DashboardMainView: View {
     let accounts: [DashboardAccount]
-    @ObservedObject var dashboardViewModel: DashboardViewModel
+    @StateObject var transactionViewModel: TransactionsViewModel
+    @StateObject var transactionDetailsViewModel: TransactionDetailsViewModel
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            DashboardAccountsList(accounts: accounts, dashboardViewModel: dashboardViewModel)
+            DashboardAccountsList(accounts: accounts,
+                                  transactionsViewModel: transactionViewModel,
+                                  transactionDetailsViewModel: transactionDetailsViewModel)
         }
         .background(Color(uiColor: .systemBackground))
     }
@@ -116,12 +105,16 @@ struct DashboardMainView: View {
 // Separate Accounts List
 struct DashboardAccountsList: View {
     let accounts: [DashboardAccount]
-    @ObservedObject var dashboardViewModel: DashboardViewModel
+    @StateObject var transactionsViewModel: TransactionsViewModel
+    @StateObject var transactionDetailsViewModel: TransactionDetailsViewModel
+
 
     var body: some View {
         VStack(spacing: 16) {
             ForEach(accounts) { account in
-                DashboardAccountItemRow(account: account)
+                DashboardAccountItemRow(account: account,
+                                        transactionsViewModel: transactionsViewModel,
+                                        transactionDetailsViewModel: transactionDetailsViewModel)
             }
         }
         .padding()
@@ -131,9 +124,13 @@ struct DashboardAccountsList: View {
 // FinancialItemView for each financial category
 struct DashboardAccountItemRow: View {
     var account: DashboardAccount
+    @StateObject var transactionsViewModel: TransactionsViewModel
+    @StateObject var transactionDetailsViewModel: TransactionDetailsViewModel
 
     var body: some View {
-        NavigationLink(destination: TransactionsView(accountTypes: account.toAccountTypes())) {
+        NavigationLink(destination: TransactionsView(transactionsViewModel: transactionsViewModel,
+                                                     transactionDetailsViewModel: transactionDetailsViewModel,
+                                                     accountTypes: account.toAccountTypes())) {
             HStack {
                 Text(account.id.rawValue)
                     .font(.system(size: 18, weight: .bold))

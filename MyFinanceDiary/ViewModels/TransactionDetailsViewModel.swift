@@ -8,20 +8,18 @@ class TransactionDetailsViewModel: ObservableObject {
     @Published var error: Error?
     private let modelContext: ModelContext
 
-    init(transaction: Transaction? = nil, modelContext: ModelContext) {
-        self.transaction = transaction
+    init(modelContext: ModelContext) {
         self.modelContext = modelContext
     }
     
-    func getTransaction(id: String) throws -> Transaction? {
-        if let existingTransaction = transaction, existingTransaction.transactionId == id {
-            return existingTransaction
-        }
-        
+    func loadTransaction(id: String) throws {
+        guard transaction?.transactionId != id else { return }
+
         let descriptor = FetchDescriptor<Transaction>()
         let transactions = try modelContext.fetch(descriptor)
-        return transactions
-            .first { $0.transactionId == id }
+        guard let filteredTransaction = transactions
+            .first(where: { $0.transactionId == id }) else { return }
+        setTransaction(filteredTransaction)
     }
 
     func setTransaction(_ transaction: Transaction) {
@@ -33,9 +31,8 @@ class TransactionDetailsViewModel: ObservableObject {
     }
     
     var formattedAddress: String? {
-        guard let transaction = transaction else { return nil }
-        guard let location = transaction.location else { return nil }
-        
+        guard let transaction, let location = transaction.location else { return nil }
+
         var components: [String] = []
         if let address = location.address { components.append(address) }
         if let city = location.city { components.append(city) }

@@ -10,11 +10,12 @@ final class AppState: ObservableObject {
     let modelContext: ModelContext
     
     // MARK: - Services
-    let authenticationService: AuthenticationService
-    let plaidService: PlaidService
+    @Published var authenticationService: AuthenticationService
+    @Published var plaidService: PlaidService
     
     // MARK: - ViewModels
     @Published var loginViewModel: LoginViewModel
+    @Published var mainViewModel: MainViewModel
     @Published var dashboardViewModel: DashboardViewModel
     @Published var budgetViewModel: BudgetViewModel
     @Published var creditScoreViewModel: CreditScoreViewModel
@@ -27,14 +28,16 @@ final class AppState: ObservableObject {
         // Create persistence stack first without using self
         let persistence = Self.createPersistenceStack()
         self.modelContext = persistence.context
-        
+        let plaidService = PlaidService(modelContext: modelContext)
+
         // Initialize services
         self.authenticationService = AuthenticationService()
         self.plaidService = PlaidService(modelContext: modelContext)
         
         // Initialize ViewModels
         self.loginViewModel = LoginViewModel()
-        self.dashboardViewModel = DashboardViewModel(plaidService: plaidService)
+        self.mainViewModel = MainViewModel(plaidService: plaidService)
+        self.dashboardViewModel = DashboardViewModel()
         self.budgetViewModel = BudgetViewModel()
         self.creditScoreViewModel = CreditScoreViewModel()
         self.transactionsViewModel = TransactionsViewModel(modelContext: modelContext)

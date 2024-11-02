@@ -81,7 +81,6 @@ struct FinancialChartView: View {
                 }
             }
         }
-        .frame(height: 200)
         .chartYScale(domain: (minAmount - yAxisPadding)...(maxAmount + yAxisPadding))
         .chartXAxis {
             AxisMarks(preset: .inset, values: data.map { $0.date }) { value in
@@ -90,12 +89,16 @@ struct FinancialChartView: View {
                         Text(date.formatted(.dateTime.month().day()))
                             .font(.subheadline)
                             .foregroundColor(.white)
+                            .padding(.horizontal, 16)
+                            .padding(.bottom, 16)
                     }
                 }
             }
         }
         .chartXScale(domain: .automatic(includesZero: false))
         .chartYAxis(.hidden)
+        .frame(height: 200)
+        .clipped()
         .enableInjection()
     }
 }

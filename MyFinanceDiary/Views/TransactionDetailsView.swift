@@ -5,29 +5,36 @@ import Inject
 struct TransactionDetailsView: View {
     @ObserveInjection var inject
     @EnvironmentObject private var appState: AppState
-    @State private var loadedTransaction: Transaction?
-    let transactionId: String
-    
+    @StateObject var transactionDetailsViewModel: TransactionDetailsViewModel
+    var transactionId: String
+
     var body: some View {
         Group {
-            if let transaction = loadedTransaction {
+            if let transaction = appState.transactionDetailsViewModel.transaction {
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 16) {
                         headerView(transaction)
                         statusView(transaction)
-                        locationCardView(for: transaction)
+                        locationCardView(transaction)
                         additionalDetailsView(transaction)
                     }
                 }
                 .padding()
                 .background(Color(uiColor: .systemGroupedBackground))
             } else {
-                Text("Transaction not found")
-                    .font(.headline)
-                    .foregroundColor(.secondary)
+                ContentUnavailableView(
+                    "No Transaction",
+                    systemImage: "creditcard.trianglebadge.exclamationmark",
+                    description: Text("Transaction was not found")
+                )
             }
         }
+        .scrollContentBackground(.hidden)
+        .navigationTitle("Transaction Details")
         .navigationBarBackButtonHidden(true)
+        .toolbarBackground(Color.darkGreen, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .toolbarColorScheme(.dark, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 BackButton()
@@ -36,17 +43,18 @@ struct TransactionDetailsView: View {
                 EmptyView()
             }
         }
-        .toolbarRole(.editor)
-        .toolbarBackground(.hidden, for: .navigationBar)
         .task {
-            getTransaction()
+            loadTransaction()
+        }
+        .refreshable {
+            loadTransaction()
         }
         .enableInjection()
     }
 
-    private func getTransaction() {
+    private func loadTransaction() {
         do {
-            loadedTransaction = try appState.transactionDetailsViewModel.getTransaction(id: transactionId)
+            try transactionDetailsViewModel.loadTransaction(id: transactionId)
         } catch {
             print("Error loading transaction: \(error)")
         }
@@ -76,10 +84,8 @@ struct TransactionDetailsView: View {
                 Text("Status")
                     .font(.headline)
                 Spacer()
-                if let transaction = loadedTransaction {
-                    Text(transaction.pending ? "Pending" : "Completed")
-                        .foregroundColor(transaction.pending ? .vibrantOrange : .primaryGreen)
-                }
+                Text(transaction.pending ? "Pending" : "Completed")
+                    .foregroundColor(transaction.pending ? .vibrantOrange : .primaryGreen)
             }
             if let paymentProcessor = transaction.paymentMeta?.paymentProcessor {
                 Text(paymentProcessor)
@@ -92,7 +98,7 @@ struct TransactionDetailsView: View {
         .cornerRadius(12)
     }
 
-    private func locationCardView(for transaction: Transaction) -> some View {
+    private func locationCardView(_ transaction: Transaction) -> some View {
         #if DEBUG
         let coordinates = (latitude: 45.5017, longitude: -73.5673)
         return LocationMapCard(
@@ -148,6 +154,8 @@ struct TransactionDetailsView: View {
 }
 
 #Preview {
-    TransactionDetailsView(transactionId: "preview-id")
-        .withPreviewEnvironment()
+    TransactionDetailsView(
+        transactionDetailsViewModel: PreviewHelper.previewTransactionDetailsViewModel,
+        transactionId: "preview-id")
+    .withPreviewEnvironment()
 } 

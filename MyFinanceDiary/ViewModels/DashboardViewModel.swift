@@ -10,7 +10,6 @@ class DashboardViewModel: ObservableObject {
     }
     @Published var isLoading: Bool = false
     @Published var error: Error?
-    var plaidService: PlaidService
     var accounts: [DashboardAccount] = []
     var chartData: [FinancialChartView.FinancialDataPoint] = []
     var creditScore: Int = 821
@@ -22,14 +21,9 @@ class DashboardViewModel: ObservableObject {
         case investments = "Investments"
     }
     
-    init(plaidService: PlaidService) {
-        self.plaidService = plaidService
+    init() {
         setupAccounts()
         updateChart()
-    }
-
-    func fetchProvider() async throws {
-        provider = try await plaidService.fetchProvider()
     }
     
     private func setupAccounts() {

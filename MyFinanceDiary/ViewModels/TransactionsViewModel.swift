@@ -1,10 +1,9 @@
 import SwiftUI
 import SwiftData
-import Combine
 
 @MainActor
 class TransactionsViewModel: ObservableObject {
-    @Published var groupedTransactions: [Date: [Transaction]] = [:]
+    @Published var groupedTransactions: [Date: [Transaction]]?
     @Published var isLoading = false
     @Published var error: Error?
     private let modelContext: ModelContext
@@ -46,14 +45,18 @@ class TransactionsViewModel: ObservableObject {
     
     func groupTransactions(_ transactions: [Transaction]) {
         let calendar = Calendar.current
-        groupedTransactions = Dictionary(grouping: transactions) { calendar.startOfDay(for: $0.date) }
-    }
-    
-    func dismissError() {
-        error = nil
-    }
-
-    func clearAllTransactions() {
-        groupedTransactions.removeAll()
+        var grouped = Dictionary(grouping: transactions) { calendar.startOfDay(for: $0.date) }
+        
+        // Sort transactions within each day group by date first, then by name
+        for (date, transactions) in grouped {
+            grouped[date] = transactions.sorted { t1, t2 in
+                if t1.date == t2.date {
+                    return t1.name < t2.name // alphabetical order when dates are equal
+                }
+                return t1.date > t2.date // newest first
+            }
+        }
+        
+        groupedTransactions = grouped
     }
 }
