@@ -54,7 +54,7 @@ struct LocationMapCard: View {
                     Image(systemName: "dollarsign.circle")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .foregroundColor(.gray)
+                        .foregroundColor(.neutralGray)
                         .frame(width: 24, height: 24)
                 }
                 
@@ -63,9 +63,8 @@ struct LocationMapCard: View {
                 Spacer()
             }
             .padding()
-            .background(Color(uiColor: .secondarySystemGroupedBackground))
         }
-        .cornerRadius(10)
+        .makeCard()
         .enableInjection()
     }
 }

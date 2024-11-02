@@ -11,15 +11,16 @@ struct TransactionDetailsView: View {
     var body: some View {
         Group {
             if let transaction = appState.transactionDetailsViewModel.transaction {
-                ScrollView(showsIndicators: false) {
+                ScrollView {
                     VStack(spacing: 16) {
                         headerView(transaction)
                         statusView(transaction)
                         locationCardView(transaction)
                         additionalDetailsView(transaction)
                     }
+                    .padding()
                 }
-                .padding()
+                .scrollIndicators(.hidden)
                 .background(Color(uiColor: .systemGroupedBackground))
             } else {
                 ContentUnavailableView(
@@ -94,8 +95,7 @@ struct TransactionDetailsView: View {
             }
         }
         .padding()
-        .background(Color(uiColor: .secondarySystemGroupedBackground))
-        .cornerRadius(12)
+        .makeCard()
     }
 
     private func locationCardView(_ transaction: Transaction) -> some View {
@@ -131,8 +131,7 @@ struct TransactionDetailsView: View {
             detailRow(title: "Transaction ID", value: transaction.transactionId)
         }
         .padding()
-        .background(Color(uiColor: .secondarySystemGroupedBackground))
-        .cornerRadius(12)
+        .makeCard()
     }
     
     private func detailRow(title: String, value: String) -> some View {

@@ -4,7 +4,8 @@ import Inject
 struct MenuView: View {
     @ObserveInjection var inject
     @Environment(\.dismiss) var dismiss
-    
+    let height: CGFloat
+
     var body: some View {
         VStack(spacing: 0) {
             MenuRow(title: "Review or Rate the App",
@@ -31,6 +32,7 @@ struct MenuView: View {
                     icon: "square.and.arrow.up.fill",
                     iconColor: .darkGreen)
         }
+        .frame(height: height)
         .enableInjection()
     }
 }

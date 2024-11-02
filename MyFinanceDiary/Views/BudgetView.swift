@@ -1,5 +1,5 @@
-import SwiftUI
 import Inject
+import SwiftUI
 
 struct BudgetView: View {
     @ObserveInjection var inject
@@ -19,12 +19,10 @@ struct BudgetView: View {
                 Image(systemName: "line.3.horizontal")
                     .foregroundColor(.white)
             }
-            .popoverSheet(isPresented: $showMenu) {
-                MenuView()
+            .popoverSheet(isPresented: $showMenu) { height in
+                MenuView(height: height)
             }
         }
-        .navigationTitle("\(appState.budgetViewModel.currentMonth) budgets")
-        .navigationBarTitleDisplayMode(.inline)
         .enableInjection()
     }
 }
@@ -56,7 +54,6 @@ struct BudgetHeaderView: View {
                 total: appState.budgetViewModel.budgetSummary.totalBudget
             )
         }
-        .padding(.top, 48)
         .padding(.horizontal)
         .frame(maxWidth: .infinity, minHeight: 300)
         .greenGradientBackground()
@@ -158,7 +155,7 @@ struct BudgetExpandableSection: View {
 struct BudgetCategoryRow: View {
     let category: Budget.BudgetCategory
     @EnvironmentObject var appState: AppState
-    
+
     var body: some View {
         VStack(spacing: 8) {
             HStack {
