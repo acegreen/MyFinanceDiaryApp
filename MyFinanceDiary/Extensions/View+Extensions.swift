@@ -9,16 +9,7 @@ extension View {
 extension View {
     @ViewBuilder
     func addShadow() -> some View {
-        self.shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
-    }
-}
-
-extension View {
-    @ViewBuilder
-    func makeCard() -> some View {
-        self.background(Color(uiColor: .systemBackground))
-            .cornerRadius(12)
-            .addShadow()
+        shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 5)
     }
 }
 
