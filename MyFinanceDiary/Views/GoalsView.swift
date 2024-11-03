@@ -4,24 +4,15 @@ import SwiftUI
 struct GoalsView: View {
     @ObserveInjection var inject
     @EnvironmentObject var appState: AppState
-    @State private var showMenu: Bool = false
+    @Binding var showMenu: Bool
 
     var body: some View {
         ViewBuilderWrapper {
             GoalsHeaderView()
         } main: {
             GoalsMainView()
-        } toolbarContent: {
-            Button {
-                showMenu.toggle()
-            } label: {
-                Image(systemName: "line.3.horizontal")
-                    .foregroundColor(.white)
-            }
-            .popoverSheet(isPresented: $showMenu) { height in
-                MenuView(height: height)
-            }
         }
+        .enableInjection()
     }
 }
 
@@ -48,7 +39,9 @@ private struct GoalsHeaderView: View {
                 .font(.headline)
                 .foregroundColor(.white)
         }
-        .frame(maxWidth: .infinity, minHeight: 300)
+        .padding(.top, 48)
+        .padding()
+        .frame(maxWidth: .infinity)
         .greenGradientBackground()
     }
 }
@@ -84,6 +77,6 @@ private struct GoalsMainView: View {
 }
 
 #Preview {
-    GoalsView()
+    GoalsView(showMenu: .constant(false))
         .withPreviewEnvironment()
 }

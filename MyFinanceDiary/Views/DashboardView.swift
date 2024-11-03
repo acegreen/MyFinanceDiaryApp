@@ -1,12 +1,12 @@
-import SwiftUI
 import Charts
 import Inject
+import SwiftUI
 
 struct DashboardView: View {
     @ObserveInjection var inject
     @EnvironmentObject var appState: AppState
-    @State private var showMenu: Bool = false
-    
+    @Binding var showMenu: Bool
+
     var body: some View {
         ViewBuilderWrapper {
             DashboardHeaderView(dashboardViewModel: appState.dashboardViewModel)
@@ -14,16 +14,6 @@ struct DashboardView: View {
             DashboardMainView(accounts: appState.dashboardViewModel.accounts,
                               transactionViewModel: appState.transactionsViewModel,
                               transactionDetailsViewModel: appState.transactionDetailsViewModel)
-        } toolbarContent: {
-            Button(action: {
-                showMenu.toggle()
-            }) {
-                Image(systemName: "line.3.horizontal")
-                    .foregroundColor(.white)
-            }
-            .popoverSheet(isPresented: $showMenu) { height in
-                MenuView(height: height)
-            }
         }
         .enableInjection()
     }
@@ -77,9 +67,9 @@ struct DashboardHeaderView: View {
 
             // Chart
             FinancialChartView(data: dashboardViewModel.chartData)
+                .frame(maxWidth: .infinity, minHeight: 200)
         }
         .padding(.top, 48)
-        .frame(maxWidth: .infinity, minHeight: 500)
         .greenGradientBackground()
         .sheet(isPresented: $showingCreditScore) {
             CreditScoreView()
@@ -108,9 +98,8 @@ struct DashboardAccountsList: View {
     @StateObject var transactionsViewModel: TransactionsViewModel
     @StateObject var transactionDetailsViewModel: TransactionDetailsViewModel
 
-
     var body: some View {
-        VStack(spacing: 16) {
+        LazyVStack(spacing: 16) {
             ForEach(accounts) { account in
                 DashboardAccountItemRow(account: account,
                                         transactionsViewModel: transactionsViewModel,
@@ -130,24 +119,26 @@ struct DashboardAccountItemRow: View {
     var body: some View {
         NavigationLink(destination: TransactionsView(transactionsViewModel: transactionsViewModel,
                                                      transactionDetailsViewModel: transactionDetailsViewModel,
-                                                     accountTypes: account.toAccountTypes())) {
-            HStack {
-                Text(account.id.rawValue)
-                    .font(.system(size: 18, weight: .bold))
-                    .foregroundColor(.primary)
-                Spacer()
-                Text(String(NumberFormatter.formatAmount(account.value)))
-                    .font(.system(size: 20, weight: .heavy))
-                    .foregroundColor(account.isNegative ? .alertRed : .primaryGreen)
+                                                     accountTypes: account.toAccountTypes()))
+        {
+            CardView {
+                HStack {
+                    Text(account.id.rawValue)
+                        .font(.system(size: 18, weight: .bold))
+                        .foregroundColor(.primary)
+                    Spacer()
+                    Text(String(NumberFormatter.formatAmount(account.value)))
+                        .font(.system(size: 20, weight: .heavy))
+                        .foregroundColor(account.isNegative ? .alertRed : .primaryGreen)
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 16)
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 16)
-            .makeCard()
         }
     }
 }
 
 #Preview {
-    DashboardView()
+    DashboardView(showMenu: .constant(false))
         .withPreviewEnvironment()
 }

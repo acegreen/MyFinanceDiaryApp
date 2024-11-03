@@ -4,7 +4,7 @@ import SwiftUI
 struct BillsAndPaymentsView: View {
     @ObserveInjection var inject
     @EnvironmentObject var appState: AppState
-    @State private var showMenu: Bool = false
+    @Binding var showMenu: Bool
     @State private var selectedSegment: BillSegment = .bills
 
     // Sample data for bills
@@ -19,16 +19,6 @@ struct BillsAndPaymentsView: View {
             BillsAndPaymentsHeaderView(selectedSegment: $selectedSegment)
         } main: {
             BillsAndPaymentsMainView(bills: bills)
-        } toolbarContent: {
-            Button {
-                showMenu.toggle()
-            } label: {
-                Image(systemName: "line.3.horizontal")
-                    .foregroundColor(.white)
-            }
-            .popoverSheet(isPresented: $showMenu) { height in
-                MenuView(height: height)
-            }
         }
     }
 }
@@ -39,7 +29,10 @@ private struct BillsAndPaymentsHeaderView: View {
     @Binding var selectedSegment: BillSegment
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 24) {
+            Text("Bills and Subscriptions")
+                .font(.title)
+                .foregroundColor(.white)
             Picker("View Selection", selection: $selectedSegment) {
                 ForEach(BillSegment.allCases, id: \.self) { segment in
                     Text(segment.rawValue)
@@ -56,14 +49,12 @@ private struct BillsAndPaymentsHeaderView: View {
                     .foregroundColor(.white)
 
                 Text("You also paid $56 more on subscriptions.")
-                    .font(.subheadline)
-                    .foregroundColor(.white.opacity(0.8))
+                    .font(.headline)
+                    .foregroundColor(.white)
             }
-            .padding(.top, 20)
         }
         .padding(.top, 48)
-        .padding(.horizontal)
-        .frame(maxWidth: .infinity, minHeight: 300)
+        .padding()
         .greenGradientBackground()
     }
 }
@@ -127,6 +118,6 @@ struct BillRow: View {
 }
 
 #Preview {
-    BillsAndPaymentsView()
+    BillsAndPaymentsView(showMenu: .constant(false))
         .withPreviewEnvironment()
 }
