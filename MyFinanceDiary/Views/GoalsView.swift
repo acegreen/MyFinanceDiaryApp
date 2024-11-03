@@ -53,7 +53,7 @@ private struct GoalsHeaderView: View {
     }
 }
 
-// MARK: - Cards Component
+// MARK: - Main Component
 
 private struct GoalsMainView: View {
     var body: some View {

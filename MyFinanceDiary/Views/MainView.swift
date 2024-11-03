@@ -53,6 +53,11 @@ struct MainTabView: View {
                     Label("Goals", systemImage: "trophy.fill")
                 }
 
+            BillsAndPaymentsView()
+                .tabItem {
+                    Label("Bills", systemImage: "creditcard.fill")
+                }
+
             SettingsView()
                 .tabItem {
                     Label("Settings", systemImage: "gearshape")
