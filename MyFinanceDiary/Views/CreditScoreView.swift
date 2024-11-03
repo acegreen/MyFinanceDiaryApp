@@ -1,5 +1,5 @@
-import SwiftUI
 import Inject
+import SwiftUI
 
 struct CreditScoreView: View {
     @ObserveInjection var inject
@@ -26,13 +26,12 @@ struct CreditScoreHeaderView: View {
     let changeDescription: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 24) {
+        VStack(alignment: .leading, spacing: 8) {
             // Credit Score Section
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Credit score")
-                    .font(.title)
-                    .foregroundColor(.white)
-
+            Text("Credit score")
+                .font(.title)
+                .foregroundColor(.white)
+            VStack(alignment: .leading, spacing: 0) {
                 Text("\(creditScore)")
                     .font(.system(size: 48, weight: .bold))
                     .foregroundColor(.white)
@@ -41,12 +40,10 @@ struct CreditScoreHeaderView: View {
                     isPositive: scoreChange > 0,
                     description: changeDescription
                 )
-
-                CreditScoreSlider(creditScore: creditScore)
             }
+            CreditScoreSlider(creditScore: creditScore)
         }
         .padding()
-        .frame(maxWidth: .infinity, minHeight: 300)
         .greenGradientBackground()
     }
 }

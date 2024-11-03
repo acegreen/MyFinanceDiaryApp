@@ -7,7 +7,7 @@ struct PlaidLinkView: View {
     @Binding var isPresented: Bool
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 if appState.plaidService.isLoading {
                     ProgressView()

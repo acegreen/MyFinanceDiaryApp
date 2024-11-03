@@ -1,23 +1,23 @@
-import Foundation
-import SwiftUI
 import Charts
+import Foundation
 import Inject
+import SwiftUI
 
 struct FinancialChartView: View {
-    @ObserveInjection var inject  // Add for hot reloading
+    @ObserveInjection var inject // Add for hot reloading
     let data: [FinancialDataPoint]
-    
+
     private var minAmount: Double {
         data.map(\.amount).min() ?? 0
     }
-    
+
     private var maxAmount: Double {
         data.map(\.amount).max() ?? 0
     }
-    
+
     private var extendedData: [FinancialDataPoint] {
         guard let lastPoint = data.last else { return data }
-        
+
         // Create a new point exactly 1 month after the last point
         let calendar = Calendar.current
         guard let extendedDate = calendar.date(
@@ -25,19 +25,19 @@ struct FinancialChartView: View {
             value: 7,
             to: lastPoint.date
         )?.startOfDay() else { return data }
-        
+
         let extraPoint = FinancialDataPoint(
             date: extendedDate,
             amount: lastPoint.amount
         )
         return data + [extraPoint]
     }
-    
+
     private var yAxisPadding: Double {
         let range = maxAmount - minAmount
         return range * 0.3 // 30% padding
     }
-    
+
     var body: some View {
         Chart {
             // Single area mark
@@ -54,7 +54,7 @@ struct FinancialChartView: View {
                     )
                 )
             }
-            
+
             ForEach(extendedData) { point in
                 LineMark(
                     x: .value("Date", point.date),
@@ -64,7 +64,7 @@ struct FinancialChartView: View {
                 .lineStyle(StrokeStyle(lineWidth: 8))
                 .interpolationMethod(.monotone)
             }
-            
+
             if let todayPoint = data.first(where: { Calendar.current.isDateInToday($0.date) }) {
                 PointMark(
                     x: .value("Date", todayPoint.date),
@@ -81,7 +81,7 @@ struct FinancialChartView: View {
                 }
             }
         }
-        .chartYScale(domain: (minAmount - yAxisPadding)...(maxAmount + yAxisPadding))
+        .chartYScale(domain: (minAmount - yAxisPadding) ... (maxAmount + yAxisPadding))
         .chartXAxis {
             AxisMarks(preset: .inset, values: data.map { $0.date }) { value in
                 if let date = value.as(Date.self) {
@@ -116,14 +116,14 @@ struct FinancialChartView_Previews: PreviewProvider {
         FinancialChartView(data: sampleData)
             .greenGradientBackground()
     }
-    
+
     static var sampleData: [FinancialChartView.FinancialDataPoint] = [
         .init(date: Calendar.current.date(byAdding: .month, value: -5, to: Date())!, amount: 72000),
         .init(date: Calendar.current.date(byAdding: .month, value: -4, to: Date())!, amount: 74000),
         .init(date: Calendar.current.date(byAdding: .month, value: -3, to: Date())!, amount: 73500),
         .init(date: Calendar.current.date(byAdding: .month, value: -2, to: Date())!, amount: 76000),
         .init(date: Calendar.current.date(byAdding: .month, value: -1, to: Date())!, amount: 77500),
-        .init(date: Date(), amount: 78839)
+        .init(date: Date(), amount: 78839),
     ]
 }
 

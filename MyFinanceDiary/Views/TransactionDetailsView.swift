@@ -1,6 +1,6 @@
-import SwiftUI
-import MapKit
 import Inject
+import MapKit
+import SwiftUI
 
 struct TransactionDetailsView: View {
     @ObserveInjection var inject
@@ -21,6 +21,7 @@ struct TransactionDetailsView: View {
                     .padding()
                 }
                 .scrollIndicators(.hidden)
+                .scrollContentBackground(.hidden)
                 .background(Color(uiColor: .systemGroupedBackground))
             } else {
                 ContentUnavailableView(
@@ -30,7 +31,6 @@ struct TransactionDetailsView: View {
                 )
             }
         }
-        .scrollContentBackground(.hidden)
         .navigationTitle("Transaction Details")
         .navigationBarBackButtonHidden(true)
         .toolbarBackground(Color.darkGreen, for: .navigationBar)
@@ -80,60 +80,63 @@ struct TransactionDetailsView: View {
     }
 
     private func statusView(_ transaction: Transaction) -> some View {
-        VStack(spacing: 16) {
-            HStack {
-                Text("Status")
-                    .font(.headline)
-                Spacer()
-                Text(transaction.pending ? "Pending" : "Completed")
-                    .foregroundColor(transaction.pending ? .vibrantOrange : .primaryGreen)
+        CardView {
+            VStack(spacing: 16) {
+                HStack {
+                    Text("Status")
+                        .font(.headline)
+                    Spacer()
+                    Text(transaction.pending ? "Pending" : "Completed")
+                        .foregroundColor(transaction.pending ? .vibrantOrange : .primaryGreen)
+                }
+                if let paymentProcessor = transaction.paymentMeta?.paymentProcessor {
+                    Text(paymentProcessor)
+                        .font(.headline)
+                        .foregroundColor(.secondary)
+                }
             }
-            if let paymentProcessor = transaction.paymentMeta?.paymentProcessor {
-                Text(paymentProcessor)
-                    .font(.headline)
-                    .foregroundColor(.secondary)
-            }
+            .padding()
         }
-        .padding()
-        .makeCard()
     }
 
     private func locationCardView(_ transaction: Transaction) -> some View {
         #if DEBUG
-        let coordinates = (latitude: 45.5017, longitude: -73.5673)
-        return LocationMapCard(
-            title: transaction.displayName,
-            iconUrl: transaction.displayIconUrl,
-            coordinates: coordinates
-        )
-        #else
-        if let location = transaction.location,
-           let lat = location.lat,
-           let lon = location.lon {
+            let coordinates = (latitude: 45.5017, longitude: -73.5673)
             return LocationMapCard(
                 title: transaction.displayName,
-                coordinates: (latitude: lat, longitude: lon)
+                iconUrl: transaction.displayIconUrl,
+                coordinates: coordinates
             )
-        } else {
-            return EmptyView()
-        }
+        #else
+            if let location = transaction.location,
+               let lat = location.lat,
+               let lon = location.lon
+            {
+                return LocationMapCard(
+                    title: transaction.displayName,
+                    coordinates: (latitude: lat, longitude: lon)
+                )
+            } else {
+                return EmptyView()
+            }
         #endif
     }
 
     private func additionalDetailsView(_ transaction: Transaction) -> some View {
-        VStack(spacing: 16) {
-            detailRow(title: "Category", value: transaction.category.map { $0.rawValue }.joined(separator: "\n"))
-            divider
+        CardView {
+            VStack(spacing: 16) {
+                detailRow(title: "Category", value: transaction.category.map { $0.rawValue }.joined(separator: "\n"))
+                divider
 
-            detailRow(title: "Payment Method", value: transaction.paymentChannel.rawValue.capitalized)
-            divider
+                detailRow(title: "Payment Method", value: transaction.paymentChannel.rawValue.capitalized)
+                divider
 
-            detailRow(title: "Transaction ID", value: transaction.transactionId)
+                detailRow(title: "Transaction ID", value: transaction.transactionId)
+            }
+            .padding()
         }
-        .padding()
-        .makeCard()
     }
-    
+
     private func detailRow(title: String, value: String) -> some View {
         HStack(spacing: 8) {
             Text(title)
@@ -144,7 +147,7 @@ struct TransactionDetailsView: View {
                 .frame(maxWidth: .infinity, alignment: .trailing)
         }
     }
-    
+
     private var divider: some View {
         Rectangle()
             .fill(Color(uiColor: .separator))
@@ -155,6 +158,7 @@ struct TransactionDetailsView: View {
 #Preview {
     TransactionDetailsView(
         transactionDetailsViewModel: PreviewHelper.previewTransactionDetailsViewModel,
-        transactionId: "preview-id")
+        transactionId: "preview-id"
+    )
     .withPreviewEnvironment()
-} 
+}

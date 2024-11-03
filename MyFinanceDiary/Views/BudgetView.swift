@@ -4,24 +4,13 @@ import SwiftUI
 struct BudgetView: View {
     @ObserveInjection var inject
     @EnvironmentObject var appState: AppState
-
-    @State private var showMenu: Bool = false
+    @Binding var showMenu: Bool
 
     var body: some View {
         ViewBuilderWrapper {
             BudgetHeaderView(amount: appState.budgetViewModel.formattedRemaining)
         } main: {
             BudgetMainView()
-        } toolbarContent: {
-            Button {
-                showMenu.toggle()
-            } label: {
-                Image(systemName: "line.3.horizontal")
-                    .foregroundColor(.white)
-            }
-            .popoverSheet(isPresented: $showMenu) { height in
-                MenuView(height: height)
-            }
         }
         .enableInjection()
     }
@@ -33,20 +22,26 @@ struct BudgetHeaderView: View {
     @EnvironmentObject var appState: AppState
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(alignment: .center) {
-                Text(amount)
-                    .font(.system(size: 48, weight: .bold))
+        VStack(alignment: .leading, spacing: 24) {
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Budget for June")
+                    .font(.title)
                     .foregroundColor(.white)
 
-                Text("Left")
-                    .font(.subheadline.bold())
-                    .foregroundColor(.white)
-                    .padding(8)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(.white, lineWidth: 2)
-                    )
+                HStack(alignment: .center) {
+                    Text(amount)
+                        .font(.system(size: 48, weight: .bold))
+                        .foregroundColor(.white)
+
+                    Text("Left")
+                        .font(.subheadline.bold())
+                        .foregroundColor(.white)
+                        .padding(8)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(.white, lineWidth: 2)
+                        )
+                }
             }
             // Progress Bar
             ProgressSection(
@@ -54,8 +49,8 @@ struct BudgetHeaderView: View {
                 total: appState.budgetViewModel.budgetSummary.totalBudget
             )
         }
-        .padding(.horizontal)
-        .frame(maxWidth: .infinity, minHeight: 300)
+        .padding(.top, 48)
+        .padding()
         .greenGradientBackground()
     }
 
@@ -65,7 +60,7 @@ struct BudgetHeaderView: View {
 
         var body: some View {
             VStack(alignment: .leading, spacing: 8) {
-                ProgressBar(progress: spent / total, height: 16)
+                ProgressBar(value: spent / total, height: 16)
                 HStack(spacing: 4) {
                     Text("$\(Int(spent))")
                         .font(.headline.bold())
@@ -171,7 +166,7 @@ struct BudgetCategoryRow: View {
                 }
             }
 
-            ProgressBar(progress: appState.budgetViewModel.getProgress(for: category), color: category.color)
+            ProgressBar(value: appState.budgetViewModel.getProgress(for: category), color: category.color)
 
             HStack(spacing: 4) {
                 Text("$\(Int(category.spent))")
@@ -186,6 +181,6 @@ struct BudgetCategoryRow: View {
 }
 
 #Preview {
-    BudgetView()
+    BudgetView(showMenu: .constant(false))
         .withPreviewEnvironment()
 }

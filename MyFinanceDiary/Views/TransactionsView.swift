@@ -1,5 +1,5 @@
-import SwiftUI
 import Inject
+import SwiftUI
 
 struct TransactionsView: View {
     @ObserveInjection var inject
@@ -7,7 +7,7 @@ struct TransactionsView: View {
     @StateObject var transactionsViewModel: TransactionsViewModel
     @StateObject var transactionDetailsViewModel: TransactionDetailsViewModel
     let accountTypes: [AccountType]
-    
+
     var body: some View {
         Group {
             if transactionsViewModel.groupedTransactions != nil {
@@ -99,7 +99,7 @@ struct TransactionRow: View {
                         switch phase {
                         case .empty:
                             ProgressView()
-                        case .success(let image):
+                        case let .success(image):
                             image
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)

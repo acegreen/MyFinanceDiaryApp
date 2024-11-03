@@ -7,116 +7,95 @@ struct SettingsView: View {
     @State private var showMenu: Bool = false
 
     var body: some View {
-        ViewBuilderWrapper {
-            SettingsHeaderView()
-        } main: {
-            SettingsMainView()
-        } toolbarContent: {
-            Button {
-                showMenu.toggle()
-            } label: {
-                Image(systemName: "line.3.horizontal")
-                    .foregroundColor(.white)
+        SettingsMainView()
+            .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
+            .toolbarBackground(Color.darkGreen, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    BackButton()
+                }
+                ToolbarItem(placement: .principal) {
+                    EmptyView()
+                }
             }
-            .popoverSheet(isPresented: $showMenu) {height in 
-                MenuView(height: height)
-            }
-        }
-        .enableInjection()
+            .enableInjection()
     }
 }
 
-// MARK: - Header Component
-
-private struct SettingsHeaderView: View {
-    var body: some View {
-        VStack(spacing: 8) {
-            Circle()
-                .fill(Color.white)
-                .frame(width: 100, height: 100)
-                .overlay(
-                    Image(systemName: "person.circle.fill")
-                        .font(.system(size: 80))
-                        .foregroundColor(.darkGreen)
-                )
-                .shadow(radius: 2)
-
-            VStack(spacing: 8) {
-                Text("John Doe")
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .foregroundColor(.white)
-            }
-        }
-        .frame(maxWidth: .infinity, minHeight: 300)
-        .greenGradientBackground()
-    }
-}
-
-// MARK: - Main Content Component
+// MARK: - Settings Main Component
 
 private struct SettingsMainView: View {
     var body: some View {
-        VStack(spacing: 16) {
+        ScrollView {
             VStack(spacing: 0) {
-                SettingsMenuListRow(title: "Review or Rate the App",
-                                    subtitle: "Share the love",
-                                    icon: "heart.fill",
-                                    iconColor: .alertRed)
+                CardView {
+                    VStack(spacing: 0) {
+                        NavigationLink(destination: EmptyView()) {
+                            SettingsMenuRow(title: "Support & FAQs",
+                                            icon: "questionmark.circle.fill",
+                                            iconColor: .darkGray)
+                        }
 
-                Divider()
+                        Divider()
 
-                SettingsMenuListRow(title: "App Settings",
-                                    icon: "gearshape.fill",
-                                    iconColor: .darkGray)
+                        NavigationLink(destination: EmptyView()) {
+                            SettingsMenuRow(title: "Review or Rate the App",
+                                            subtitle: "Share the love",
+                                            icon: "heart.fill",
+                                            iconColor: .alertRed)
+                        }
 
-                Divider()
+                        Divider()
 
-                SettingsMenuListRow(title: "Support & FAQs",
-                                    icon: "questionmark.circle.fill",
-                                    iconColor: .darkGray)
-
-                Divider()
-
-                SettingsMenuListRow(title: "Share MyFinanceDiary App",
-                                    subtitle: "Send a link to your friends",
-                                    icon: "square.and.arrow.up.fill",
-                                    iconColor: .darkGreen)
+                        NavigationLink(destination: EmptyView()) {
+                            SettingsMenuRow(title: "Share MyFinanceDiary App",
+                                            subtitle: "Send a link to your friends",
+                                            icon: "square.and.arrow.up.fill",
+                                            iconColor: .darkGreen)
+                        }
+                    }
+                }
             }
-            .makeCard()
+            .padding()
         }
-        .padding()
+        .scrollIndicators(.hidden)
     }
 }
 
-struct SettingsMenuListRow: View {
+struct SettingsMenuRow: View {
     let title: String
     var subtitle: String? = nil
     let icon: String
     let iconColor: Color
 
     var body: some View {
-        NavigationLink(destination: EmptyView()) {
-            HStack(spacing: 20) {
-                Image(systemName: icon)
-                    .foregroundColor(iconColor)
-                    .font(.system(size: 30))
+        HStack(spacing: 20) {
+            Image(systemName: icon)
+                .foregroundColor(iconColor)
+                .font(.system(size: 32))
 
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(title)
-                        .font(.body)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.body)
 
-                    if let subtitle {
-                        Text(subtitle)
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
-                    }
+                if let subtitle {
+                    Text(subtitle)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
                 }
-
-                Spacer()
             }
-            .padding(16)
+
+            Spacer()
+
+            Image(systemName: "chevron.right")
+                .foregroundColor(.gray)
+                .font(.system(size: 14))
         }
+        .padding()
     }
 }
 

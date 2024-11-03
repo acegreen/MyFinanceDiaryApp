@@ -1,5 +1,5 @@
-import SwiftUI
 import Inject
+import SwiftUI
 
 struct GoalCard: View {
     let title: String
@@ -8,35 +8,35 @@ struct GoalCard: View {
     let currentValue: String
     let targetValue: String
     let totalProgress: String
-    
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(title)
-                .font(.headline)
+        CardView {
+            VStack(alignment: .leading, spacing: 12) {
+                Text(title)
+                    .font(.headline)
 
-            Text(subtitle)
+                Text(subtitle)
+                    .font(.subheadline)
+                    .foregroundColor(.darkGreen)
+
+                ProgressBar(value: progress)
+
+                HStack {
+                    Text(currentValue)
+                        .fontWeight(.semibold)
+
+                    Spacer()
+
+                    Text(targetValue)
+                        .foregroundColor(.secondary)
+                }
                 .font(.subheadline)
-                .foregroundColor(.darkGreen)
 
-            ProgressView(value: progress)
-                .tint(.darkGreen)
-
-            HStack {
-                Text(currentValue)
-                    .fontWeight(.semibold)
-
-                Spacer()
-
-                Text(targetValue)
+                Text(totalProgress)
+                    .font(.footnote)
                     .foregroundColor(.secondary)
             }
-            .font(.subheadline)
-
-            Text(totalProgress)
-                .font(.footnote)
-                .foregroundColor(.secondary)
+            .padding()
         }
-        .padding()
-        .makeCard()
     }
 }

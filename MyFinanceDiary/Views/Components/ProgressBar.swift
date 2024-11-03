@@ -1,28 +1,53 @@
 import SwiftUI
 
-struct ProgressBar: View {
-    let progress: Double
+struct ProgressBar<Shape: SwiftUI.Shape>: View {
+    let value: Double
+    let shape: Shape
     let height: CGFloat
     let color: Color
-    
-    init(progress: Double, height: CGFloat = 6, color: Color = .primaryGreen) {
-        self.progress = progress
+
+    init(
+        value: Double,
+        shape: Shape,
+        height: CGFloat = 8,
+        color: Color = .darkGreen
+    ) {
+        self.value = min(max(value, 0), 1) // Clamp value between 0 and 1
+        self.shape = shape
         self.height = height
         self.color = color
     }
 
     var body: some View {
-        GeometryReader { geometry in
-            ZStack(alignment: .leading) {
-                Rectangle()
-                    .foregroundColor(.neutralGray.opacity(0.3))
-
-                Rectangle()
-                    .frame(width: geometry.size.width * progress)
-                    .foregroundColor(color)
+        shape
+            .fill(Color.neutralGray)
+            .overlay(alignment: .leading) {
+                GeometryReader { proxy in
+                    shape
+                        .fill(color)
+                        .frame(width: proxy.size.width * value)
+                }
             }
-        }
-        .frame(height: height)
-        .cornerRadius(height / 2)
+            .frame(height: height)
+            .clipShape(shape)
     }
+}
+
+extension ProgressBar where Shape == RoundedRectangle {
+    init(
+        value: Double,
+        height: CGFloat = 8,
+        color: Color = .darkGreen
+    ) {
+        self.init(
+            value: value,
+            shape: RoundedRectangle(cornerRadius: height / 2),
+            height: height,
+            color: color
+        )
+    }
+}
+
+#Preview {
+    ProgressBar(value: 0.7)
 }
