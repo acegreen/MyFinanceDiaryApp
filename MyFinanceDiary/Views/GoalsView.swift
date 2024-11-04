@@ -4,13 +4,15 @@ import SwiftUI
 struct GoalsView: View {
     @ObserveInjection var inject
     @EnvironmentObject var appState: AppState
-    @Binding var showMenu: Bool
 
     var body: some View {
-        ViewBuilderWrapper {
-            GoalsHeaderView()
-        } main: {
-            GoalsMainView()
+        NavigationStack {
+            ViewBuilderWrapper {
+                GoalsHeaderView()
+            } main: {
+                GoalsMainView()
+            }
+            .navigationBarStyle()
         }
         .enableInjection()
     }
@@ -77,6 +79,6 @@ private struct GoalsMainView: View {
 }
 
 #Preview {
-    GoalsView(showMenu: .constant(false))
+    GoalsView()
         .withPreviewEnvironment()
 }

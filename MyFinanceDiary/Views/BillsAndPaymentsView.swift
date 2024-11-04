@@ -4,7 +4,6 @@ import SwiftUI
 struct BillsAndPaymentsView: View {
     @ObserveInjection var inject
     @EnvironmentObject var appState: AppState
-    @Binding var showMenu: Bool
     @State private var selectedSegment: BillSegment = .bills
 
     // Sample data for bills
@@ -15,11 +14,15 @@ struct BillsAndPaymentsView: View {
     ]
 
     var body: some View {
-        ViewBuilderWrapper {
-            BillsAndPaymentsHeaderView(selectedSegment: $selectedSegment)
-        } main: {
-            BillsAndPaymentsMainView(bills: bills)
+        NavigationStack {
+            ViewBuilderWrapper {
+                BillsAndPaymentsHeaderView(selectedSegment: $selectedSegment)
+            } main: {
+                BillsAndPaymentsMainView(bills: bills)
+            }
+            .navigationBarStyle()
         }
+        .enableInjection()
     }
 }
 
@@ -118,6 +121,6 @@ struct BillRow: View {
 }
 
 #Preview {
-    BillsAndPaymentsView(showMenu: .constant(false))
+    BillsAndPaymentsView()
         .withPreviewEnvironment()
 }

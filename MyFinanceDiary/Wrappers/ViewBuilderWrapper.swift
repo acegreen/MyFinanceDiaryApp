@@ -35,18 +35,7 @@ struct ViewBuilderWrapper<Header: View, Main: View>: View {
             }
             .background(backgroundColor)
         }
-        .navigationBarBackButtonHidden(true)
-        .toolbarBackground(Color.clear, for: .navigationBar)
-        .toolbarBackground(.hidden, for: .navigationBar)
-        .toolbarColorScheme(.dark, for: .navigationBar)
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                BackButton()
-            }
-            ToolbarItem(placement: .principal) {
-                EmptyView()
-            }
-        }
+        .background(backgroundColor)
         .scrollIndicators(scrollIndicatorVisibility)
         .ignoresSafeArea(edges: ignoreSafeArea ? .top : [])
         .enableInjection()

@@ -4,13 +4,15 @@ import SwiftUI
 struct InsightsView: View {
     @ObserveInjection var inject
     @EnvironmentObject var appState: AppState
-    @Binding var showMenu: Bool
 
     var body: some View {
-        ViewBuilderWrapper {
-            InsightsHeaderView()
-        } main: {
-            InsightsMainView()
+        NavigationStack {
+            ViewBuilderWrapper {
+                InsightsHeaderView()
+            } main: {
+                InsightsMainView()
+            }
+            .navigationBarStyle()
         }
         .enableInjection()
     }
@@ -20,9 +22,9 @@ struct InsightsHeaderView: View {
     var body: some View {
         // Monthly Spending Donut Chart
         EmptyView()
-        .padding(.top, 48)
-        .padding()
-        .greenGradientBackground()
+            .padding(.top, 48)
+            .padding()
+            .greenGradientBackground()
     }
 }
 
@@ -327,6 +329,6 @@ struct CryptoValue {
 }
 
 #Preview {
-    InsightsView(showMenu: .constant(false))
+    InsightsView()
         .withPreviewEnvironment()
 }
