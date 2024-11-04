@@ -15,6 +15,7 @@ enum TransactionCategory: String, Codable, CaseIterable, Identifiable {
     case transportation = "Transportation"
     case rent = "Rent"
     case utilities = "Utilities"
+    case insurance = "Insurance"
     case entertainment = "Entertainment"
     case creditCard = "Credit Card"
     case deposit = "Deposit"

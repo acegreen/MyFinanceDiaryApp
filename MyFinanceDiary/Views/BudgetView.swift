@@ -8,9 +8,9 @@ struct BudgetView: View {
 
     var body: some View {
         ViewBuilderWrapper {
-            BudgetHeaderView(amount: appState.budgetViewModel.formattedRemaining)
+            BudgetHeaderView(budget: appState.budgetViewModel.budget)
         } main: {
-            BudgetMainView()
+            BudgetMainView(budget: appState.budgetViewModel.budget)
         }
         .enableInjection()
     }
@@ -18,146 +18,132 @@ struct BudgetView: View {
 
 // Supporting Views
 struct BudgetHeaderView: View {
-    let amount: String
-    @EnvironmentObject var appState: AppState
+    let budget: Budget
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 24) {
+        VStack(alignment: .leading, spacing: 36) {
             VStack(alignment: .leading, spacing: 12) {
                 Text("Budget for June")
                     .font(.title)
                     .foregroundColor(.white)
-
-                HStack(alignment: .center) {
-                    Text(amount)
-                        .font(.system(size: 48, weight: .bold))
-                        .foregroundColor(.white)
-
-                    Text("Left")
-                        .font(.subheadline.bold())
-                        .foregroundColor(.white)
-                        .padding(8)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(.white, lineWidth: 2)
-                        )
-                }
             }
-            // Progress Bar
-            ProgressSection(
-                spent: appState.budgetViewModel.budgetSummary.totalSpent,
-                total: appState.budgetViewModel.budgetSummary.totalBudget
-            )
+            // Donut View
+            BudgetDonutView(budget: budget)
         }
         .padding(.top, 48)
         .padding()
         .greenGradientBackground()
     }
+}
 
-    struct ProgressSection: View {
-        let spent: Double
-        let total: Double
+struct BudgetDonutView: View {
+    let budget: Budget
+    @State private var animateDonut: Bool = false
 
-        var body: some View {
-            VStack(alignment: .leading, spacing: 8) {
-                ProgressBar(value: spent / total, height: 16)
-                HStack(spacing: 4) {
-                    Text("$\(Int(spent))")
-                        .font(.headline.bold())
-                    Text("of $\(Int(total))")
-                        .font(.headline)
-                    Spacer()
+    var body: some View {
+        VStack(alignment: .center, spacing: 24) {
+            // Donut Chart
+            DonutChart(budget: budget, animate: animateDonut)
+
+            // Legend Card
+            CardView {
+                DisclosureGroup("Legend") {
+                    ForEach(budget.expenseCategories, id: \.category) { category in
+                        HStack(spacing: 8) {
+                            Circle()
+                                .fill(category.color)
+                                .frame(width: 8, height: 8)
+
+                            Text(category.category.rawValue)
+                                .foregroundColor(category.color)
+
+                            Spacer()
+
+                            Text("$\(Int(category.spent))/$\(Int(category.total))")
+                                .font(.subheadline)
+                                .foregroundColor(category.color)
+                        }
+                    }
                 }
-                .foregroundColor(.white)
+                .padding()
+            }
+        }
+        .onAppear {
+            withAnimation {
+                animateDonut = true
             }
         }
     }
 }
 
 struct BudgetMainView: View {
-    @ObserveInjection var inject
-    @EnvironmentObject var appState: AppState
+    let budget: Budget
+    @State private var isIncomeExpanded: Bool = false
+    @State private var isExpensesExpanded: Bool = true
 
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
-            BudgetExpandableSection(
-                title: "Income",
-                amount: appState.budgetViewModel.formattedTotalIncome,
-                amountColor: .primaryGreen,
-                categories: appState.budgetViewModel.incomeCategories
+            // Income DisclosureGroup
+            DisclosureGroup(
+                isExpanded: $isIncomeExpanded,
+                content: {
+                    LazyVStack(spacing: 16) {
+                        ForEach(budget.incomeCategories) { category in
+                            BudgetCategoryRow(category: category)
+                        }
+                    }
+                },
+                label: {
+                    HStack {
+                        Text("Income")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                        Spacer()
+                        Text(budget.formattedTotalIncome)
+                            .font(.headline)
+                            .foregroundColor(.primaryGreen)
+                    }
+                }
             )
-            BudgetExpandableSection(
-                title: "Expenses",
-                amount: appState.budgetViewModel.formattedTotalExpenses,
-                amountColor: .alertRed,
-                categories: appState.budgetViewModel.expenseCategories,
-                expandedByDefault: true
+
+            // Expenses DisclosureGroup with default expanded state
+            DisclosureGroup(
+                isExpanded: $isExpensesExpanded,
+                content: {
+                    LazyVStack(spacing: 16) {
+                        ForEach(budget.expenseCategories) { category in
+                            BudgetCategoryRow(category: category)
+                        }
+                    }
+                },
+                label: {
+                    HStack {
+                        Text("Expenses")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+                        Spacer()
+                        Text(budget.formattedTotalExpenses)
+                            .font(.headline)
+                            .foregroundColor(.alertRed)
+                    }
+                }
             )
         }
         .padding()
     }
 }
 
-struct BudgetExpandableSection: View {
-    let title: String
-    let amount: String
-    let amountColor: Color
-    let categories: [Budget.BudgetCategory]
-    @State private var isExpanded: Bool
-
-    // Add initializer to set default state
-    init(title: String, amount: String, amountColor: Color, categories: [Budget.BudgetCategory], expandedByDefault: Bool = false) {
-        self.title = title
-        self.amount = amount
-        self.amountColor = amountColor
-        self.categories = categories
-        _isExpanded = State(initialValue: expandedByDefault)
-    }
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            // Header
-            Button(action: {
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    isExpanded.toggle()
-                }
-            }) {
-                HStack {
-                    Text(title)
-                        .font(.headline)
-                        .foregroundColor(.primary)
-                    Spacer()
-                    Text(amount)
-                        .font(.headline)
-                        .foregroundColor(amountColor)
-                    Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
-                        .foregroundColor(.secondary)
-                        .animation(nil) // Prevent chevron animation glitch
-                }
-            }
-
-            if isExpanded {
-                LazyVStack(spacing: 16) {
-                    ForEach(categories) { category in
-                        BudgetCategoryRow(category: category)
-                    }
-                }
-            }
-        }
-    }
-}
-
 struct BudgetCategoryRow: View {
     let category: Budget.BudgetCategory
-    @EnvironmentObject var appState: AppState
+    @State private var animateProgress: Bool = false
 
     var body: some View {
         VStack(spacing: 8) {
             HStack {
-                Text(category.name)
+                Text(category.category.rawValue)
                     .font(.subheadline)
                 Spacer()
-                Text(appState.budgetViewModel.getRemainingAmount(for: category))
+                Text(category.getRemaining())
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                 Button(action: {}) {
@@ -166,7 +152,11 @@ struct BudgetCategoryRow: View {
                 }
             }
 
-            ProgressBar(value: appState.budgetViewModel.getProgress(for: category), color: category.color)
+            ProgressBar(
+                value: category.getProgress(),
+                color: category.color,
+                animate: animateProgress
+            )
 
             HStack(spacing: 4) {
                 Text("$\(Int(category.spent))")
@@ -175,6 +165,11 @@ struct BudgetCategoryRow: View {
                     .font(.subheadline.bold())
                     .foregroundColor(.secondary)
                 Spacer()
+            }
+        }
+        .onAppear {
+            withAnimation {
+                animateProgress = true
             }
         }
     }
