@@ -5,17 +5,20 @@ struct ProgressBar<Shape: SwiftUI.Shape>: View {
     let shape: Shape
     let height: CGFloat
     let color: Color
+    let animate: Bool
 
     init(
         value: Double,
         shape: Shape,
         height: CGFloat = 8,
-        color: Color = .darkGreen
+        color: Color = .darkGreen,
+        animate: Bool = false
     ) {
-        self.value = min(max(value, 0), 1) // Clamp value between 0 and 1
+        self.value = min(max(value, 0), 1)
         self.shape = shape
         self.height = height
         self.color = color
+        self.animate = animate
     }
 
     var body: some View {
@@ -25,7 +28,8 @@ struct ProgressBar<Shape: SwiftUI.Shape>: View {
                 GeometryReader { proxy in
                     shape
                         .fill(color)
-                        .frame(width: proxy.size.width * value)
+                        .frame(width: proxy.size.width * (animate ? value : 0))
+                        .animation(.easeInOut(duration: 1.0), value: animate)
                 }
             }
             .frame(height: height)
@@ -37,13 +41,15 @@ extension ProgressBar where Shape == RoundedRectangle {
     init(
         value: Double,
         height: CGFloat = 8,
-        color: Color = .darkGreen
+        color: Color = .darkGreen,
+        animate: Bool = false
     ) {
         self.init(
             value: value,
             shape: RoundedRectangle(cornerRadius: height / 2),
             height: height,
-            color: color
+            color: color,
+            animate: animate
         )
     }
 }

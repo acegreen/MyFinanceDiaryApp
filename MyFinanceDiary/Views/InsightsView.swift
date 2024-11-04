@@ -19,21 +19,7 @@ struct InsightsView: View {
 struct InsightsHeaderView: View {
     var body: some View {
         // Monthly Spending Donut Chart
-        SpendingOverviewCard(
-            totalBudget: 5400,
-            spent: 4200,
-            segments: [
-                (.foodAndDrink, 1200),
-                (.shopping, 800),
-                (.entertainment, 600),
-                (.rent, 1600),
-                (.utilities, 500),
-                (.transportation, 400),
-                (.healthcare, 300),
-                (.tax, 200),
-                (.general, 100),
-            ]
-        )
+        EmptyView()
         .padding(.top, 48)
         .padding()
         .greenGradientBackground()
@@ -97,77 +83,6 @@ struct InsightsMainView: View {
                 }
             }
             .padding()
-        }
-    }
-}
-
-struct SpendingOverviewCard: View {
-    let totalBudget: Double
-    let spent: Double
-    let segments: [(category: TransactionCategory, amount: Double)]
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 24) {
-            HStack {
-                Text("My Spending for June")
-                    .font(.title)
-                    .foregroundColor(.white)
-
-                Image(systemName: "face.smiling.fill")
-                    .foregroundColor(.yellow)
-            }
-
-            VStack(alignment: .center) {
-                DonutChart(segments: segments, totalBudget: totalBudget, spent: spent)
-
-                // Legend
-                DisclosureGroup("Legend") {
-                    VStack(alignment: .leading, spacing: 16) {
-                        ForEach(segments, id: \.category.id) { segment in
-                            HStack(spacing: 8) {
-                                Circle()
-                                    .fill(color(for: segment.category))
-                                    .frame(width: 8, height: 8)
-
-                                Text(segment.category.rawValue)
-                                    .foregroundColor(.white)
-
-                                Spacer()
-
-                                Text("$\(Int(segment.amount))/$\(Int(totalBudget))")
-                                    .font(.subheadline)
-                                    .foregroundColor(.white)
-                            }
-                        }
-                    }
-                    .padding()
-                }
-                .foregroundColor(.white)
-            }
-        }
-    }
-
-    // Same color mapping function as in DonutChart
-    private func color(for category: TransactionCategory) -> Color {
-        switch category {
-        case .foodAndDrink, .restaurants, .fastFood, .coffeeShop:
-            return .orange
-        case .shopping, .shops, .sportingGoods:
-            return .blue
-        case .travel, .transportation, .taxi, .airlinesAndAviation:
-            return .green
-        case .entertainment, .recreation:
-            return .purple
-        case .rent, .utilities:
-            return .red
-        case .healthcare, .service:
-            return .pink
-        case .deposit, .payroll:
-            return .mint
-        case .creditCard, .payment, .transfer:
-            return .indigo
-        default:
-            return .gray
         }
     }
 }
