@@ -1,24 +1,31 @@
-import SwiftUI
 import Inject
+import SwiftUI
 
 struct LoginView: View {
     @ObserveInjection var inject
     @EnvironmentObject private var appState: AppState
     @State private var isLoading = false
     @FocusState private var focusedField: Field?
-    
+
     private enum Field {
         case username
         case password
     }
-    
+
     var body: some View {
-        VStack(spacing: 20) {            
-            Text("Reminted")
-                .font(.system(size: 32, weight: .bold))
-                .foregroundColor(.white)
-            
-            VStack(spacing: 16) {
+        VStack(spacing: 24) {
+            VStack(spacing: 0) {
+                Image(.appIcon)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 150, height: 150)
+
+                Text("Reminted")
+                    .font(.system(size: 32, weight: .bold))
+                    .foregroundColor(.white)
+            }
+
+            VStack(spacing: 24) {
                 TextField("Username", text: $appState.loginViewModel.username)
                     .textFieldStyle(.plain)
                     .padding()
@@ -64,20 +71,28 @@ struct LoginView: View {
                 }
                 .buttonStyle(.plain)
                 .disabled(isLoading)
+
+                Spacer()
+
+                Text("By logging in, you agree to our Privacy Policy and Terms of Service. \nAll content is protected by copyright © 2024")
+                    .font(.subheadline)
+                    .foregroundColor(.white)
+                    .multilineTextAlignment(.center)
             }
-            .padding(.horizontal, 20)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(24)
+        // .offset(y: -60)
         .greenGradientBackground()
         .enableInjection()
         .onTapGesture {
             focusedField = nil
         }
     }
-    
+
     private func performLogin() async {
         guard appState.loginViewModel.validateInput() else { return }
-        
+
         isLoading = true
         do {
             try await appState.authenticationService.login(
