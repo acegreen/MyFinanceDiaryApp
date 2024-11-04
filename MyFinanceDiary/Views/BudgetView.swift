@@ -30,8 +30,9 @@ struct BudgetHeaderView: View {
             // Donut View
             BudgetDonutView(budget: budget)
         }
-        .padding(.top, 48)
+        .padding([.top, .bottom], 48)
         .padding()
+        .frame(maxWidth: .infinity)
         .greenGradientBackground()
     }
 }
@@ -44,29 +45,6 @@ struct BudgetDonutView: View {
         VStack(alignment: .center, spacing: 24) {
             // Donut Chart
             DonutChart(budget: budget, animate: animateDonut)
-
-            // Legend Card
-            CardView {
-                DisclosureGroup("Legend") {
-                    ForEach(budget.expenseCategories, id: \.category) { category in
-                        HStack(spacing: 8) {
-                            Circle()
-                                .fill(category.color)
-                                .frame(width: 8, height: 8)
-
-                            Text(category.category.rawValue)
-                                .foregroundColor(category.color)
-
-                            Spacer()
-
-                            Text("$\(Int(category.spent))/$\(Int(category.total))")
-                                .font(.subheadline)
-                                .foregroundColor(category.color)
-                        }
-                    }
-                }
-                .padding()
-            }
         }
         .onAppear {
             withAnimation {
