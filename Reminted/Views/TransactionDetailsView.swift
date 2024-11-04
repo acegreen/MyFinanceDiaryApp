@@ -11,7 +11,7 @@ struct TransactionDetailsView: View {
     var body: some View {
         Group {
             if let transaction = appState.transactionDetailsViewModel.transaction {
-                ScrollView {
+                ScrollView(showsIndicators: false) {
                     VStack(spacing: 16) {
                         headerView(transaction)
                         statusView(transaction)
@@ -20,7 +20,6 @@ struct TransactionDetailsView: View {
                     }
                     .padding()
                 }
-                .scrollIndicators(.hidden)
                 .scrollContentBackground(.hidden)
                 .background(Color(uiColor: .systemGroupedBackground))
             } else {
@@ -32,10 +31,8 @@ struct TransactionDetailsView: View {
             }
         }
         .navigationTitle("Transaction Details")
-        .navigationBarBackButtonHidden(true)
-        .toolbarBackground(Color.darkGreen, for: .navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
-        .toolbarColorScheme(.dark, for: .navigationBar)
+        .navigationBarStyle()
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 BackButton()

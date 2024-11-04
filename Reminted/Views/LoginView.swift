@@ -81,8 +81,8 @@ struct LoginView: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .padding(24)
-        // .offset(y: -60)
+        .padding(.horizontal, 24)
+        .padding(.vertical, 48)
         .greenGradientBackground()
         .enableInjection()
         .onTapGesture {

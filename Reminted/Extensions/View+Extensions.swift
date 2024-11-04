@@ -32,8 +32,8 @@ extension View {
 extension View {
     func navigationBarStyle() -> some View {
         navigationBarBackButtonHidden(true)
-            .toolbarBackground(.clear, for: .navigationBar)
-            .toolbarBackground(.hidden, for: .navigationBar)
+            .toolbarBackground(Color.darkGreen, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .toolbarColorScheme(.dark, for: .navigationBar)
     }
 }

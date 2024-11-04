@@ -7,16 +7,14 @@ struct InsightsView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
                     InsightsHeaderView()
                     InsightsMainView()
                 }
             }
             .navigationTitle("Insights")
-            .toolbarBackground(Color.darkGreen, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
+            .navigationBarStyle()
         }
         .enableInjection()
     }
@@ -26,7 +24,6 @@ struct InsightsHeaderView: View {
     var body: some View {
         // Monthly Spending Donut Chart
         EmptyView()
-            .padding(.top, 48)
             .padding()
             .greenGradientBackground()
     }
@@ -34,7 +31,7 @@ struct InsightsHeaderView: View {
 
 struct InsightsMainView: View {
     var body: some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 16) {
                 // Cashflow Overview Cards
                 VStack(spacing: 16) {

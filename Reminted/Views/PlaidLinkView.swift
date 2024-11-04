@@ -23,6 +23,7 @@ struct PlaidLinkView: View {
                 }
             }
             .navigationTitle("Connect Bank")
+            .navigationBarStyle()
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") {

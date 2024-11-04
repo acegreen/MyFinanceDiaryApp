@@ -42,7 +42,7 @@ struct MainTabView: View {
         TabView {
             DashboardView()
                 .tabItem {
-                    Label("Dashboard", systemImage: "bitcoinsign.square.fill")
+                    Label("Dashboard", systemImage: "switch.2")
                 }
 
             InsightsView()
@@ -52,12 +52,12 @@ struct MainTabView: View {
 
             BudgetView()
                 .tabItem {
-                    Label("Budget", systemImage: "switch.2")
+                    Label("Budget", systemImage: "chart.pie.fill")
                 }
 
             GoalsView()
                 .tabItem {
-                    Label("Goals", systemImage: "trophy.fill")
+                    Label("Goals", systemImage: "target")
                 }
 
             BillsAndPaymentsView()

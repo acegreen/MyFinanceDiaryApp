@@ -9,11 +9,7 @@ struct SettingsView: View {
     var body: some View {
         SettingsMainView()
             .navigationTitle("Settings")
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden(true)
-            .toolbarBackground(Color.darkGreen, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
+            .navigationBarStyle()
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     BackButton()
@@ -30,7 +26,7 @@ struct SettingsView: View {
 
 private struct SettingsMainView: View {
     var body: some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             VStack(spacing: 0) {
                 CardView {
                     VStack(spacing: 0) {
@@ -62,7 +58,6 @@ private struct SettingsMainView: View {
             }
             .padding()
         }
-        .scrollIndicators(.hidden)
     }
 }
 
