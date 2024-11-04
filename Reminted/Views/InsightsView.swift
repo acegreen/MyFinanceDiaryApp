@@ -7,12 +7,16 @@ struct InsightsView: View {
 
     var body: some View {
         NavigationStack {
-            ViewBuilderWrapper {
-                InsightsHeaderView()
-            } main: {
-                InsightsMainView()
+            ScrollView {
+                VStack(spacing: 0) {
+                    InsightsHeaderView()
+                    InsightsMainView()
+                }
             }
-            .navigationBarStyle()
+            .navigationTitle("Insights")
+            .toolbarBackground(Color.darkGreen, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .navigationBar)
         }
         .enableInjection()
     }

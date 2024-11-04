@@ -7,12 +7,16 @@ struct GoalsView: View {
 
     var body: some View {
         NavigationStack {
-            ViewBuilderWrapper {
-                GoalsHeaderView()
-            } main: {
-                GoalsMainView()
+            ScrollView {
+                VStack(spacing: 0) {
+                    GoalsHeaderView()
+                    GoalsMainView()
+                }
             }
-            .navigationBarStyle()
+            .navigationTitle("Goals")
+            .toolbarBackground(Color.darkGreen, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .navigationBar)
         }
         .enableInjection()
     }
@@ -41,8 +45,7 @@ private struct GoalsHeaderView: View {
                 .font(.headline)
                 .foregroundColor(.white)
         }
-        .padding(.top, 48)
-        .padding()
+        .padding(24)
         .frame(maxWidth: .infinity)
         .greenGradientBackground()
     }
