@@ -73,4 +73,24 @@ class BudgetViewModel: ObservableObject {
             expenseCategories: budget.expenseCategories
         )
     }
+
+    func updateCategory(_ oldCategory: Budget.BudgetCategory, with newCategory: Budget.BudgetCategory) {
+        switch oldCategory.type {
+        case .income:
+            if let index = budget.incomeCategories.firstIndex(where: { $0.id == oldCategory.id }) {
+                budget.incomeCategories[index] = newCategory
+            }
+        case .expense:
+            if let index = budget.expenseCategories.firstIndex(where: { $0.id == oldCategory.id }) {
+                budget.expenseCategories[index] = newCategory
+            }
+        }
+
+        // Recreate budget to recalculate summary
+        budget = .init(
+            month: budget.month,
+            incomeCategories: budget.incomeCategories,
+            expenseCategories: budget.expenseCategories
+        )
+    }
 }
