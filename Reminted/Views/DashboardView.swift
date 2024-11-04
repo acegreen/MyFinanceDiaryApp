@@ -8,32 +8,49 @@ struct DashboardView: View {
     @State private var navigationPath = NavigationPath()
     @State var showMenu: Bool = false
     @State var showNotifications: Bool = false
+    @State var showCreditScore: Bool = false
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
-            ViewBuilderWrapper {
+            ViewBuilderWrapper(
+                background: Color.darkGreen,
+                ignoreSafeArea: true
+            ) {
                 DashboardHeaderView(dashboardViewModel: appState.dashboardViewModel)
             } main: {
                 DashboardMainView(accounts: appState.dashboardViewModel.accounts,
                                   transactionViewModel: appState.transactionsViewModel,
                                   transactionDetailsViewModel: appState.transactionDetailsViewModel)
             }
-            .navigationBarStyle()
             .toolbar {
-                Button {
-                    navigationPath.append(NotificationsView.NotificationDestination.notifications)
-                } label: {
-                    Image(systemName: "bell")
-                        .foregroundColor(.white)
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(action: { showCreditScore.toggle() }) {
+                        VStack(alignment: .leading, spacing: 0) {
+                            Text("Credit score")
+                                .font(.headline)
+                                .foregroundColor(.white.opacity(0.9))
+                            Text("\(appState.dashboardViewModel.creditScore)")
+                                .font(.title2.bold())
+                                .foregroundColor(.white)
+                        }
+                    }
                 }
-                Button {
-                    showMenu.toggle()
-                } label: {
-                    Image(systemName: "line.3.horizontal")
-                        .foregroundColor(.white)
+
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: { showNotifications.toggle() }) {
+                        Image(systemName: "bell")
+                            .foregroundColor(.white)
+                    }
                 }
-                .popoverSheet(isPresented: $showMenu) { height in
-                    MenuView(height: height, navigationPath: $navigationPath)
+
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: { showMenu.toggle() }) {
+                        Image(systemName: "line.3.horizontal")
+                            .foregroundColor(.white)
+                    }
+                    .popoverSheet(isPresented: $showMenu) { height in
+                        MenuView(height: height, navigationPath: $navigationPath)
+                    }
                 }
             }
             .navigationDestination(for: MenuView.MenuDestination.self) { destination in
@@ -48,6 +65,9 @@ struct DashboardView: View {
                     EmptyView()
                 }
             }
+            .sheet(isPresented: $showCreditScore) {
+                CreditScoreView()
+            }
             .sheet(isPresented: $showNotifications) {
                 NotificationsView()
             }
@@ -58,26 +78,9 @@ struct DashboardView: View {
 
 struct DashboardHeaderView: View {
     @StateObject var dashboardViewModel: DashboardViewModel
-    @State private var showingCreditScore = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            // Credit Score Section
-            Button(action: {
-                showingCreditScore = true
-            }) {
-                VStack(alignment: .leading, spacing: 0) {
-                    Text("Credit score")
-                        .font(.headline)
-                        .foregroundColor(.white.opacity(0.9))
-                    Text("\(dashboardViewModel.creditScore)")
-                        .font(.title2.bold())
-                        .foregroundColor(.white)
-                }
-            }
-            .padding(.horizontal)
-            .buttonStyle(PlainButtonStyle())
-
             // Tab Selection
             Picker("View Selection", selection: $dashboardViewModel.selectedSegment) {
                 ForEach(DashboardViewModel.ChartSegment.allCases, id: \.self) { tab in
@@ -85,6 +88,7 @@ struct DashboardHeaderView: View {
                         .tag(tab)
                 }
             }
+            .padding(.top, 16)
             .padding(.horizontal)
             .pickerStyle(.segmented)
             .colorScheme(.dark) // Force dark mode for white text
@@ -106,11 +110,7 @@ struct DashboardHeaderView: View {
             FinancialChartView(data: dashboardViewModel.chartData)
                 .frame(maxWidth: .infinity, minHeight: 200)
         }
-        .padding(.top, 48)
         .greenGradientBackground()
-        .sheet(isPresented: $showingCreditScore) {
-            CreditScoreView()
-        }
     }
 }
 
@@ -126,6 +126,7 @@ struct DashboardMainView: View {
                                   transactionsViewModel: transactionViewModel,
                                   transactionDetailsViewModel: transactionDetailsViewModel)
         }
+        .background(Color(uiColor: .systemBackground))
     }
 }
 

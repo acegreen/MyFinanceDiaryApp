@@ -41,6 +41,7 @@ struct AddBudgetCategoryView: View {
                     .keyboardType(.decimalPad)
             }
             .navigationTitle(editingCategory != nil ? "Edit Budget Category" : "New Budget Category")
+            .navigationBarStyle()
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

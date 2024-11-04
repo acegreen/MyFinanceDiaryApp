@@ -8,16 +8,14 @@ struct BudgetView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
                     BudgetHeaderView(budgetViewModel: appState.budgetViewModel)
                     BudgetMainView(budgetViewModel: appState.budgetViewModel)
                 }
             }
             .navigationTitle("Budget")
-            .toolbarBackground(Color.darkGreen, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
+            .navigationBarStyle()
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {

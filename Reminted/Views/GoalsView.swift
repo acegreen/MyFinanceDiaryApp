@@ -7,16 +7,14 @@ struct GoalsView: View {
 
     var body: some View {
         NavigationStack {
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
                     GoalsHeaderView()
                     GoalsMainView()
                 }
             }
             .navigationTitle("Goals")
-            .toolbarBackground(Color.darkGreen, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarColorScheme(.dark, for: .navigationBar)
+            .navigationBarStyle()
         }
         .enableInjection()
     }
@@ -31,8 +29,10 @@ private struct GoalsHeaderView: View {
                 .fill(Color.white)
                 .frame(width: 100, height: 100)
                 .overlay(
-                    Image(systemName: "trophy.fill")
-                        .font(.system(size: 40))
+                    Image(systemName: "target")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 96, height: 96)
                         .foregroundColor(.darkGreen)
                 )
 

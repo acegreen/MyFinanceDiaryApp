@@ -37,10 +37,7 @@ struct NotificationsView: View {
             }
         }
         .navigationTitle("Notifications")
-        .navigationBarBackButtonHidden(true)
-        .toolbarBackground(Color.darkGreen, for: .navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
-        .toolbarColorScheme(.dark, for: .navigationBar)
+        .navigationBarStyle()
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 BackButton()

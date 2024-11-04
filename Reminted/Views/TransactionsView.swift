@@ -24,10 +24,7 @@ struct TransactionsView: View {
             }
         }
         .navigationTitle("Transactions")
-        .navigationBarBackButtonHidden(true)
-        .toolbarBackground(Color.darkGreen, for: .navigationBar)
-        .toolbarBackground(.visible, for: .navigationBar)
-        .toolbarColorScheme(.dark, for: .navigationBar)
+        .navigationBarStyle()
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 BackButton()
@@ -78,7 +75,6 @@ struct TransactionsList: View {
                     }
                 }
             }
-            .scrollIndicators(.hidden)
             .listStyle(.plain)
         }
     }

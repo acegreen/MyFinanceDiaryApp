@@ -1,44 +1,49 @@
 import Inject
 import SwiftUI
 
-struct ViewBuilderWrapper<Header: View, Main: View>: View {
+struct ViewBuilderWrapper<Header: View, Main: View, Background: ShapeStyle>: View {
     @ObserveInjection var inject
 
     let header: () -> Header
     let main: () -> Main
     let spacing: CGFloat
-    let backgroundColor: Color
+    let background: Background
     let scrollIndicatorVisibility: ScrollIndicatorVisibility
     let ignoreSafeArea: Bool
 
     init(
         spacing: CGFloat = 0,
-        backgroundColor: Color = .clear,
+        background: Background = Color(uiColor: .systemBackground),
         scrollIndicatorVisibility: ScrollIndicatorVisibility = .hidden,
-        ignoreSafeArea: Bool = true,
+        ignoreSafeArea: Bool = false,
         @ViewBuilder header: @escaping () -> Header,
         @ViewBuilder main: @escaping () -> Main
     ) {
         self.header = header
         self.main = main
         self.spacing = spacing
-        self.backgroundColor = backgroundColor
+        self.background = background
         self.scrollIndicatorVisibility = scrollIndicatorVisibility
         self.ignoreSafeArea = ignoreSafeArea
     }
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: spacing) {
-                header()
-                main()
+        GeometryReader { geometry in
+            ScrollView {
+                VStack(spacing: spacing) {
+                    header()
+                    main()
+                }
+                .padding(.top, ignoreSafeArea ? geometry.safeAreaInsets.top : 0)
             }
-            .background(backgroundColor)
+            .background(background)
+            .clipped()
+            .navigationBarBackButtonHidden(true)
+            .toolbarBackground(ignoreSafeArea ? .hidden : .automatic, for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .navigationBar)
+            .scrollIndicators(scrollIndicatorVisibility)
+            .ignoresSafeArea(edges: ignoreSafeArea ? .top : Edge.Set())
         }
-        .background(backgroundColor)
-        .scrollIndicators(scrollIndicatorVisibility)
-        .ignoresSafeArea(edges: ignoreSafeArea ? .top : [])
-        .enableInjection()
     }
 }
 
