@@ -2,14 +2,20 @@ import Foundation
 import SwiftUI
 
 struct Budget: Identifiable {
+    enum BudgetType: String {
+        case income = "Income"
+        case expense = "Expense"
+    }
+
     struct BudgetCategory: Identifiable {
         let id = UUID()
-        let category: TransactionCategory
+        let subCategory: TransactionCategory
+        let type: BudgetType
         let spent: Double
         let total: Double
 
         var color: Color {
-            switch category {
+            switch subCategory {
             case .foodAndDrink, .restaurants, .fastFood, .coffeeShop:
                 return .orange
             case .shopping, .shops, .sportingGoods:
@@ -40,32 +46,34 @@ struct Budget: Identifiable {
             return String(format: "$%.0f", remaining)
         }
     }
-    
+
     struct BudgetSummary {
         let totalIncome: Double
         let totalBudget: Double
         let totalSpent: Double
-        
+
         var remaining: Double { totalBudget - totalSpent }
     }
+
     let id = UUID()
     var summary: BudgetSummary
     var incomeCategories: [BudgetCategory]
     var expenseCategories: [BudgetCategory]
     var month: String
-    
-    init(month: String, 
-         incomeCategories: [BudgetCategory], 
-         expenseCategories: [BudgetCategory]) {
+
+    init(month: String,
+         incomeCategories: [BudgetCategory],
+         expenseCategories: [BudgetCategory])
+    {
         self.month = month
         self.incomeCategories = incomeCategories
         self.expenseCategories = expenseCategories
-        
+
         let totalIncome = incomeCategories.reduce(0) { $0 + $1.spent }
         let totalBudget = expenseCategories.reduce(0) { $0 + $1.total }
         let totalSpent = expenseCategories.reduce(0) { $0 + $1.spent }
-        
-        self.summary = BudgetSummary(
+
+        summary = BudgetSummary(
             totalIncome: totalIncome,
             totalBudget: totalBudget,
             totalSpent: totalSpent
@@ -74,7 +82,6 @@ struct Budget: Identifiable {
 }
 
 extension Budget {
-
     var totalIncome: Double {
         incomeCategories.reduce(0) { $0 + $1.spent }
     }

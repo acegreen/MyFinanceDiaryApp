@@ -5,15 +5,42 @@ import SwiftUI
 struct DashboardView: View {
     @ObserveInjection var inject
     @EnvironmentObject var appState: AppState
-    @Binding var showMenu: Bool
+    @State private var navigationPath = NavigationPath()
+    @State var showMenu: Bool = false
 
     var body: some View {
-        ViewBuilderWrapper {
-            DashboardHeaderView(dashboardViewModel: appState.dashboardViewModel)
-        } main: {
-            DashboardMainView(accounts: appState.dashboardViewModel.accounts,
-                              transactionViewModel: appState.transactionsViewModel,
-                              transactionDetailsViewModel: appState.transactionDetailsViewModel)
+        NavigationStack(path: $navigationPath) {
+            ViewBuilderWrapper {
+                DashboardHeaderView(dashboardViewModel: appState.dashboardViewModel)
+            } main: {
+                DashboardMainView(accounts: appState.dashboardViewModel.accounts,
+                                  transactionViewModel: appState.transactionsViewModel,
+                                  transactionDetailsViewModel: appState.transactionDetailsViewModel)
+            }
+            .navigationBarStyle()
+            .toolbar {
+                Button {
+                    showMenu.toggle()
+                } label: {
+                    Image(systemName: "line.3.horizontal")
+                        .foregroundColor(.white)
+                }
+                .popoverSheet(isPresented: $showMenu) { height in
+                    MenuView(height: height, navigationPath: $navigationPath)
+                }
+            }
+            .navigationDestination(for: MenuView.MenuDestination.self) { destination in
+                switch destination {
+                case .settings:
+                    SettingsView()
+                case .support:
+                    EmptyView()
+                case .review:
+                    EmptyView()
+                case .share:
+                    EmptyView()
+                }
+            }
         }
         .enableInjection()
     }
@@ -139,6 +166,6 @@ struct DashboardAccountItemRow: View {
 }
 
 #Preview {
-    DashboardView(showMenu: .constant(false))
+    DashboardView()
         .withPreviewEnvironment()
 }

@@ -4,13 +4,29 @@ import SwiftUI
 struct BudgetView: View {
     @ObserveInjection var inject
     @EnvironmentObject var appState: AppState
-    @Binding var showMenu: Bool
+    @State private var showingNewCategorySheet = false
 
     var body: some View {
-        ViewBuilderWrapper {
-            BudgetHeaderView(budget: appState.budgetViewModel.budget)
-        } main: {
-            BudgetMainView(budget: appState.budgetViewModel.budget)
+        NavigationStack {
+            ViewBuilderWrapper {
+                BudgetHeaderView(budgetViewModel: appState.budgetViewModel)
+            } main: {
+                BudgetMainView(budgetViewModel: appState.budgetViewModel)
+            }
+            .navigationBarStyle()
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        showingNewCategorySheet = true
+                    } label: {
+                        Image(systemName: "plus")
+                            .foregroundColor(.white)
+                    }
+                }
+            }
+        }
+        .sheet(isPresented: $showingNewCategorySheet) {
+            AddBudgetCategoryView(viewModel: appState.budgetViewModel)
         }
         .enableInjection()
     }
@@ -18,7 +34,7 @@ struct BudgetView: View {
 
 // Supporting Views
 struct BudgetHeaderView: View {
-    let budget: Budget
+    @StateObject var budgetViewModel: BudgetViewModel
 
     var body: some View {
         VStack(alignment: .leading, spacing: 36) {
@@ -28,7 +44,7 @@ struct BudgetHeaderView: View {
                     .foregroundColor(.white)
             }
             // Donut View
-            BudgetDonutView(budget: budget)
+            BudgetDonutView(budgetViewModel: budgetViewModel)
         }
         .padding([.top, .bottom], 48)
         .padding()
@@ -38,13 +54,13 @@ struct BudgetHeaderView: View {
 }
 
 struct BudgetDonutView: View {
-    let budget: Budget
+    @ObservedObject var budgetViewModel: BudgetViewModel
     @State private var animateDonut: Bool = false
 
     var body: some View {
         VStack(alignment: .center, spacing: 24) {
             // Donut Chart
-            DonutChart(budget: budget, animate: animateDonut)
+            DonutChart(budget: budgetViewModel.budget, animate: animateDonut)
         }
         .onAppear {
             withAnimation {
@@ -55,7 +71,7 @@ struct BudgetDonutView: View {
 }
 
 struct BudgetMainView: View {
-    let budget: Budget
+    @StateObject var budgetViewModel: BudgetViewModel
     @State private var isIncomeExpanded: Bool = false
     @State private var isExpensesExpanded: Bool = true
 
@@ -66,18 +82,18 @@ struct BudgetMainView: View {
                 isExpanded: $isIncomeExpanded,
                 content: {
                     LazyVStack(spacing: 16) {
-                        ForEach(budget.incomeCategories) { category in
+                        ForEach(budgetViewModel.budget.incomeCategories) { category in
                             BudgetCategoryRow(category: category)
                         }
                     }
                 },
                 label: {
                     HStack {
-                        Text("Income")
+                        Text(Budget.BudgetType.income.rawValue)
                             .font(.headline)
                             .foregroundColor(.primary)
                         Spacer()
-                        Text(budget.formattedTotalIncome)
+                        Text(budgetViewModel.budget.formattedTotalIncome)
                             .font(.headline)
                             .foregroundColor(.primaryGreen)
                     }
@@ -89,18 +105,18 @@ struct BudgetMainView: View {
                 isExpanded: $isExpensesExpanded,
                 content: {
                     LazyVStack(spacing: 16) {
-                        ForEach(budget.expenseCategories) { category in
+                        ForEach(budgetViewModel.budget.expenseCategories) { category in
                             BudgetCategoryRow(category: category)
                         }
                     }
                 },
                 label: {
                     HStack {
-                        Text("Expenses")
+                        Text(Budget.BudgetType.expense.rawValue)
                             .font(.headline)
                             .foregroundColor(.primary)
                         Spacer()
-                        Text(budget.formattedTotalExpenses)
+                        Text(budgetViewModel.budget.formattedTotalExpenses)
                             .font(.headline)
                             .foregroundColor(.alertRed)
                     }
@@ -118,7 +134,7 @@ struct BudgetCategoryRow: View {
     var body: some View {
         VStack(spacing: 8) {
             HStack {
-                Text(category.category.rawValue)
+                Text(category.subCategory.rawValue)
                     .font(.subheadline)
                 Spacer()
                 Text(category.getRemaining())
@@ -154,6 +170,6 @@ struct BudgetCategoryRow: View {
 }
 
 #Preview {
-    BudgetView(showMenu: .constant(false))
+    BudgetView()
         .withPreviewEnvironment()
 }

@@ -37,61 +37,33 @@ struct MainView: View {
 
 struct MainTabView: View {
     @State private var navigationPath = NavigationPath()
-    @State private var showMenu: Bool = false
 
     var body: some View {
-        NavigationStack(path: $navigationPath) {
-            TabView {
-                DashboardView(showMenu: $showMenu)
-                    .tabItem {
-                        Label("Dashboard", systemImage: "bitcoinsign.square.fill")
-                    }
-
-                InsightsView(showMenu: $showMenu)
-                    .tabItem {
-                        Label("Insights", systemImage: "chart.line.uptrend.xyaxis")
-                    }
-
-                BudgetView(showMenu: $showMenu)
-                    .tabItem {
-                        Label("Budget", systemImage: "switch.2")
-                    }
-
-                GoalsView(showMenu: $showMenu)
-                    .tabItem {
-                        Label("Goals", systemImage: "trophy.fill")
-                    }
-
-                BillsAndPaymentsView(showMenu: $showMenu)
-                    .tabItem {
-                        Label("Bills", systemImage: "creditcard.fill")
-                    }
-            }
-            .toolbar {
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    Button {
-                        showMenu.toggle()
-                    } label: {
-                        Image(systemName: "line.3.horizontal")
-                            .foregroundColor(.white)
-                    }
-                    .popoverSheet(isPresented: $showMenu) { height in
-                        MenuView(height: height, navigationPath: $navigationPath)
-                    }
+        TabView {
+            DashboardView()
+                .tabItem {
+                    Label("Dashboard", systemImage: "bitcoinsign.square.fill")
                 }
-            }
-            .navigationDestination(for: MenuView.MenuDestination.self) { destination in
-                switch destination {
-                case .settings:
-                    SettingsView()
-                case .support:
-                    EmptyView()
-                case .review:
-                    EmptyView()
-                case .share:
-                    EmptyView()
+
+            InsightsView()
+                .tabItem {
+                    Label("Insights", systemImage: "chart.line.uptrend.xyaxis")
                 }
-            }
+
+            BudgetView()
+                .tabItem {
+                    Label("Budget", systemImage: "switch.2")
+                }
+
+            GoalsView()
+                .tabItem {
+                    Label("Goals", systemImage: "trophy.fill")
+                }
+
+            BillsAndPaymentsView()
+                .tabItem {
+                    Label("Bills", systemImage: "creditcard.fill")
+                }
         }
         .tint(.darkGreen)
     }
