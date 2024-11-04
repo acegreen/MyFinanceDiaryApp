@@ -14,7 +14,7 @@ struct LoginView: View {
     
     var body: some View {
         VStack(spacing: 20) {            
-            Text("MyFinanceDiary")
+            Text("Reminted")
                 .font(.system(size: 32, weight: .bold))
                 .foregroundColor(.white)
             

@@ -1,15 +1,8 @@
-//
-//  MyFinanceDiaryApp.swift
-//  MyFinanceDiaryApp
-//
-//  Created by Ace Green on 2024-10-25.
-//
-
 import Inject
 import SwiftUI
 
 @main
-struct MyFinanceDiaryApp: App {
+struct RemintedApp: App {
     @ObserveInjection var inject
     @StateObject private var appState = AppState.shared
 

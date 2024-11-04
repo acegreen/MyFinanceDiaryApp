@@ -51,7 +51,7 @@ struct MenuView: View {
                 dismiss()
                 navigationPath.append(MenuDestination.share)
             } label: {
-                MenuRow(title: "Share MyFinanceDiary App",
+                MenuRow(title: "Share Reminted App",
                         subtitle: "Send a link to your friends",
                         icon: "square.and.arrow.up.fill",
                         iconColor: .darkGreen)

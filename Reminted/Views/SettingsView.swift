@@ -52,7 +52,7 @@ private struct SettingsMainView: View {
                         Divider()
 
                         NavigationLink(destination: EmptyView()) {
-                            SettingsMenuRow(title: "Share MyFinanceDiary App",
+                            SettingsMenuRow(title: "Share Reminted App",
                                             subtitle: "Send a link to your friends",
                                             icon: "square.and.arrow.up.fill",
                                             iconColor: .darkGreen)

@@ -19,51 +19,51 @@
 			containerPortal = 23F78B902CCD4CE300202DF5 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 23F78B972CCD4CE300202DF5;
-			remoteInfo = MyFinanceDiary;
+			remoteInfo = Reminted;
 		};
 		23F78BB72CCD4CE400202DF5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 23F78B902CCD4CE300202DF5 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 23F78B972CCD4CE300202DF5;
-			remoteInfo = MyFinanceDiary;
+			remoteInfo = Reminted;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		230ED3A52CCEA8E400E2142A /* Charts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Charts.framework; path = System/Library/Frameworks/Charts.framework; sourceTree = SDKROOT; };
-		23F78B982CCD4CE300202DF5 /* MyFinanceDiary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyFinanceDiary.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		23F78BAC2CCD4CE400202DF5 /* MyFinanceDiaryTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyFinanceDiaryTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		23F78BB62CCD4CE400202DF5 /* MyFinanceDiaryUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyFinanceDiaryUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		23F78B982CCD4CE300202DF5 /* Reminted.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Reminted.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		23F78BAC2CCD4CE400202DF5 /* RemintedTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RemintedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		23F78BB62CCD4CE400202DF5 /* RemintedUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RemintedUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		2381978C2CD6D70B00BFCE14 /* Exceptions for "MyFinanceDiary" folder in "MyFinanceDiary" target */ = {
+		2381978C2CD6D70B00BFCE14 /* Exceptions for "Reminted" folder in "Reminted" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Bundle/Info.plist,
 			);
-			target = 23F78B972CCD4CE300202DF5 /* MyFinanceDiary */;
+			target = 23F78B972CCD4CE300202DF5 /* Reminted */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		23F78B9A2CCD4CE300202DF5 /* MyFinanceDiary */ = {
+		23F78B9A2CCD4CE300202DF5 /* Reminted */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				2381978C2CD6D70B00BFCE14 /* Exceptions for "MyFinanceDiary" folder in "MyFinanceDiary" target */,
+				2381978C2CD6D70B00BFCE14 /* Exceptions for "Reminted" folder in "Reminted" target */,
 			);
-			path = MyFinanceDiary;
+			path = Reminted;
 			sourceTree = "<group>";
 		};
-		23F78BAF2CCD4CE400202DF5 /* MyFinanceDiaryTests */ = {
+		23F78BAF2CCD4CE400202DF5 /* RemintedTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = MyFinanceDiaryTests;
+			path = RemintedTests;
 			sourceTree = "<group>";
 		};
-		23F78BB92CCD4CE400202DF5 /* MyFinanceDiaryUITests */ = {
+		23F78BB92CCD4CE400202DF5 /* RemintedDiaryUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = MyFinanceDiaryUITests;
+			path = RemintedDiaryUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -108,9 +108,9 @@
 		23F78B8F2CCD4CE300202DF5 = {
 			isa = PBXGroup;
 			children = (
-				23F78B9A2CCD4CE300202DF5 /* MyFinanceDiary */,
-				23F78BAF2CCD4CE400202DF5 /* MyFinanceDiaryTests */,
-				23F78BB92CCD4CE400202DF5 /* MyFinanceDiaryUITests */,
+				23F78B9A2CCD4CE300202DF5 /* Reminted */,
+				23F78BAF2CCD4CE400202DF5 /* RemintedTests */,
+				23F78BB92CCD4CE400202DF5 /* RemintedDiaryUITests */,
 				230ED3A42CCEA8E300E2142A /* Frameworks */,
 				23F78B992CCD4CE300202DF5 /* Products */,
 			);
@@ -119,9 +119,9 @@
 		23F78B992CCD4CE300202DF5 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				23F78B982CCD4CE300202DF5 /* MyFinanceDiary.app */,
-				23F78BAC2CCD4CE400202DF5 /* MyFinanceDiaryTests.xctest */,
-				23F78BB62CCD4CE400202DF5 /* MyFinanceDiaryUITests.xctest */,
+				23F78B982CCD4CE300202DF5 /* Reminted.app */,
+				23F78BAC2CCD4CE400202DF5 /* RemintedTests.xctest */,
+				23F78BB62CCD4CE400202DF5 /* RemintedUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -129,9 +129,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		23F78B972CCD4CE300202DF5 /* MyFinanceDiary */ = {
+		23F78B972CCD4CE300202DF5 /* Reminted */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 23F78BBF2CCD4CE400202DF5 /* Build configuration list for PBXNativeTarget "MyFinanceDiary" */;
+			buildConfigurationList = 23F78BBF2CCD4CE400202DF5 /* Build configuration list for PBXNativeTarget "Reminted" */;
 			buildPhases = (
 				23F78B942CCD4CE300202DF5 /* Sources */,
 				23F78B952CCD4CE300202DF5 /* Frameworks */,
@@ -142,21 +142,21 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				23F78B9A2CCD4CE300202DF5 /* MyFinanceDiary */,
+				23F78B9A2CCD4CE300202DF5 /* Reminted */,
 			);
-			name = MyFinanceDiary;
+			name = Reminted;
 			packageProductDependencies = (
 				23F78BF42CCD4E9800202DF5 /* Inject */,
 				23E0C0172CD06BFC00D0D126 /* LinkKit */,
 				231D656F2CD51F74009B73C2 /* KeychainSwift */,
 			);
-			productName = MyFinanceDiary;
-			productReference = 23F78B982CCD4CE300202DF5 /* MyFinanceDiary.app */;
+			productName = Reminted;
+			productReference = 23F78B982CCD4CE300202DF5 /* Reminted.app */;
 			productType = "com.apple.product-type.application";
 		};
-		23F78BAB2CCD4CE400202DF5 /* MyFinanceDiaryTests */ = {
+		23F78BAB2CCD4CE400202DF5 /* RemintedTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 23F78BC42CCD4CE400202DF5 /* Build configuration list for PBXNativeTarget "MyFinanceDiaryTests" */;
+			buildConfigurationList = 23F78BC42CCD4CE400202DF5 /* Build configuration list for PBXNativeTarget "RemintedTests" */;
 			buildPhases = (
 				23F78BA82CCD4CE400202DF5 /* Sources */,
 				23F78BA92CCD4CE400202DF5 /* Frameworks */,
@@ -168,18 +168,18 @@
 				23F78BAE2CCD4CE400202DF5 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				23F78BAF2CCD4CE400202DF5 /* MyFinanceDiaryTests */,
+				23F78BAF2CCD4CE400202DF5 /* RemintedTests */,
 			);
-			name = MyFinanceDiaryTests;
+			name = RemintedTests;
 			packageProductDependencies = (
 			);
-			productName = MyFinanceDiaryTests;
-			productReference = 23F78BAC2CCD4CE400202DF5 /* MyFinanceDiaryTests.xctest */;
+			productName = RemintedTests;
+			productReference = 23F78BAC2CCD4CE400202DF5 /* RemintedTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		23F78BB52CCD4CE400202DF5 /* MyFinanceDiaryUITests */ = {
+		23F78BB52CCD4CE400202DF5 /* RemintedUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 23F78BC72CCD4CE400202DF5 /* Build configuration list for PBXNativeTarget "MyFinanceDiaryUITests" */;
+			buildConfigurationList = 23F78BC72CCD4CE400202DF5 /* Build configuration list for PBXNativeTarget "RemintedUITests" */;
 			buildPhases = (
 				23F78BB22CCD4CE400202DF5 /* Sources */,
 				23F78BB32CCD4CE400202DF5 /* Frameworks */,
@@ -191,13 +191,13 @@
 				23F78BB82CCD4CE400202DF5 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				23F78BB92CCD4CE400202DF5 /* MyFinanceDiaryUITests */,
+				23F78BB92CCD4CE400202DF5 /* RemintedDiaryUITests */,
 			);
-			name = MyFinanceDiaryUITests;
+			name = RemintedUITests;
 			packageProductDependencies = (
 			);
-			productName = MyFinanceDiaryUITests;
-			productReference = 23F78BB62CCD4CE400202DF5 /* MyFinanceDiaryUITests.xctest */;
+			productName = RemintedUITests;
+			productReference = 23F78BB62CCD4CE400202DF5 /* RemintedUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -223,7 +223,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 23F78B932CCD4CE300202DF5 /* Build configuration list for PBXProject "MyFinanceDiary" */;
+			buildConfigurationList = 23F78B932CCD4CE300202DF5 /* Build configuration list for PBXProject "Reminted" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -242,9 +242,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				23F78B972CCD4CE300202DF5 /* MyFinanceDiary */,
-				23F78BAB2CCD4CE400202DF5 /* MyFinanceDiaryTests */,
-				23F78BB52CCD4CE400202DF5 /* MyFinanceDiaryUITests */,
+				23F78B972CCD4CE300202DF5 /* Reminted */,
+				23F78BAB2CCD4CE400202DF5 /* RemintedTests */,
+				23F78BB52CCD4CE400202DF5 /* RemintedUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -300,12 +300,12 @@
 /* Begin PBXTargetDependency section */
 		23F78BAE2CCD4CE400202DF5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 23F78B972CCD4CE300202DF5 /* MyFinanceDiary */;
+			target = 23F78B972CCD4CE300202DF5 /* Reminted */;
 			targetProxy = 23F78BAD2CCD4CE400202DF5 /* PBXContainerItemProxy */;
 		};
 		23F78BB82CCD4CE400202DF5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 23F78B972CCD4CE300202DF5 /* MyFinanceDiary */;
+			target = 23F78B972CCD4CE300202DF5 /* Reminted */;
 			targetProxy = 23F78BB72CCD4CE400202DF5 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -316,14 +316,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = MyFinanceDiary/Bundle/MyFinanceDiary.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Reminted/Bundle/Reminted.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"MyFinanceDiary/Bundle/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Reminted/Bundle/Preview Content\"";
 				DEVELOPMENT_TEAM = 8T3W9YR268;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = MyFinanceDiary/Bundle/Info.plist;
+				INFOPLIST_FILE = Reminted/Bundle/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -339,7 +339,7 @@
 					"-Xlinker",
 					"-interposable",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.greenace.MyFinanceDiary;
+				PRODUCT_BUNDLE_IDENTIFIER = com.greenace.Reminted;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -352,14 +352,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = MyFinanceDiary/Bundle/MyFinanceDiary.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Reminted/Bundle/Reminted.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"MyFinanceDiary/Bundle/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Reminted/Bundle/Preview Content\"";
 				DEVELOPMENT_TEAM = 8T3W9YR268;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = MyFinanceDiary/Bundle/Info.plist;
+				INFOPLIST_FILE = Reminted/Bundle/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -371,7 +371,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.greenace.MyFinanceDiary;
+				PRODUCT_BUNDLE_IDENTIFIER = com.greenace.Reminted;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -518,12 +518,12 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.greenace.MyFinanceDiaryTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.greenace.RemintedTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MyFinanceDiary.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MyFinanceDiary";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Reminted.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Reminted";
 			};
 			name = Debug;
 		};
@@ -537,12 +537,12 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.greenace.MyFinanceDiaryTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.greenace.RemintedTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MyFinanceDiary.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MyFinanceDiary";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Reminted.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Reminted";
 			};
 			name = Release;
 		};
@@ -554,12 +554,12 @@
 				DEVELOPMENT_TEAM = 8T3W9YR268;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.greenace.MyFinanceDiaryUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.greenace.RemintedUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = MyFinanceDiary;
+				TEST_TARGET_NAME = Reminted;
 			};
 			name = Debug;
 		};
@@ -571,19 +571,19 @@
 				DEVELOPMENT_TEAM = 8T3W9YR268;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.greenace.MyFinanceDiaryUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.greenace.RemintedUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = MyFinanceDiary;
+				TEST_TARGET_NAME = Reminted;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		23F78B932CCD4CE300202DF5 /* Build configuration list for PBXProject "MyFinanceDiary" */ = {
+		23F78B932CCD4CE300202DF5 /* Build configuration list for PBXProject "Reminted" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				23F78BC22CCD4CE400202DF5 /* Debug */,
@@ -592,7 +592,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		23F78BBF2CCD4CE400202DF5 /* Build configuration list for PBXNativeTarget "MyFinanceDiary" */ = {
+		23F78BBF2CCD4CE400202DF5 /* Build configuration list for PBXNativeTarget "Reminted" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				23F78BC02CCD4CE400202DF5 /* Debug */,
@@ -601,7 +601,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		23F78BC42CCD4CE400202DF5 /* Build configuration list for PBXNativeTarget "MyFinanceDiaryTests" */ = {
+		23F78BC42CCD4CE400202DF5 /* Build configuration list for PBXNativeTarget "RemintedTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				23F78BC52CCD4CE400202DF5 /* Debug */,
@@ -610,7 +610,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		23F78BC72CCD4CE400202DF5 /* Build configuration list for PBXNativeTarget "MyFinanceDiaryUITests" */ = {
+		23F78BC72CCD4CE400202DF5 /* Build configuration list for PBXNativeTarget "RemintedUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				23F78BC82CCD4CE400202DF5 /* Debug */,

@@ -1,10 +1,3 @@
-//
-//  MainViewModel.swift
-//  MyFinanceDiary
-//
-//  Created by Ace Green on 2024-11-02.
-//
-
 import Foundation
 
 @MainActor

@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "23F78B972CCD4CE300202DF5"
-               BuildableName = "MyFinanceDiary.app"
-               BlueprintName = "MyFinanceDiary"
-               ReferencedContainer = "container:MyFinanceDiary.xcodeproj">
+               BuildableName = "Reminted.app"
+               BlueprintName = "Reminted"
+               ReferencedContainer = "container:Reminted.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -37,9 +37,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "23F78BAB2CCD4CE400202DF5"
-               BuildableName = "MyFinanceDiaryTests.xctest"
-               BlueprintName = "MyFinanceDiaryTests"
-               ReferencedContainer = "container:MyFinanceDiary.xcodeproj">
+               BuildableName = "RemintedTests.xctest"
+               BlueprintName = "RemintedTests"
+               ReferencedContainer = "container:Reminted.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -48,9 +48,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "23F78BB52CCD4CE400202DF5"
-               BuildableName = "MyFinanceDiaryUITests.xctest"
-               BlueprintName = "MyFinanceDiaryUITests"
-               ReferencedContainer = "container:MyFinanceDiary.xcodeproj">
+               BuildableName = "RemintedUITests.xctest"
+               BlueprintName = "RemintedUITests"
+               ReferencedContainer = "container:Reminted.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -71,9 +71,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "23F78B972CCD4CE300202DF5"
-            BuildableName = "MyFinanceDiary.app"
-            BlueprintName = "MyFinanceDiary"
-            ReferencedContainer = "container:MyFinanceDiary.xcodeproj">
+            BuildableName = "Reminted.app"
+            BlueprintName = "Reminted"
+            ReferencedContainer = "container:Reminted.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -88,9 +88,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "23F78B972CCD4CE300202DF5"
-            BuildableName = "MyFinanceDiary.app"
-            BlueprintName = "MyFinanceDiary"
-            ReferencedContainer = "container:MyFinanceDiary.xcodeproj">
+            BuildableName = "Reminted.app"
+            BlueprintName = "Reminted"
+            ReferencedContainer = "container:Reminted.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
