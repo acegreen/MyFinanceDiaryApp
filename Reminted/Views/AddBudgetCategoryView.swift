@@ -5,9 +5,20 @@ struct AddBudgetCategoryView: View {
     @Environment(\.dismiss) private var dismiss
     @ObserveInjection var inject
     @ObservedObject var viewModel: BudgetViewModel
-    @State private var selectedType: Budget.BudgetType = .expense
-    @State private var selectedCategory: TransactionCategory = .general
-    @State private var total: String = ""
+    let editingCategory: Budget.BudgetCategory?
+
+    @State private var selectedType: Budget.BudgetType
+    @State private var selectedCategory: TransactionCategory
+    @State private var total: String
+
+    init(viewModel: BudgetViewModel, editingCategory: Budget.BudgetCategory? = nil) {
+        self.viewModel = viewModel
+        self.editingCategory = editingCategory
+
+        _selectedType = State(initialValue: editingCategory?.type ?? .expense)
+        _selectedCategory = State(initialValue: editingCategory?.subCategory ?? .general)
+        _total = State(initialValue: editingCategory != nil ? String(editingCategory!.total) : "")
+    }
 
     var body: some View {
         NavigationView {
@@ -29,7 +40,7 @@ struct AddBudgetCategoryView: View {
                 TextField("Budget Amount", text: $total)
                     .keyboardType(.decimalPad)
             }
-            .navigationTitle("New Budget Category")
+            .navigationTitle(editingCategory != nil ? "Edit Budget Category" : "New Budget Category")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -38,8 +49,8 @@ struct AddBudgetCategoryView: View {
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Add") {
-                        addCategory()
+                    Button(editingCategory != nil ? "Save" : "Add") {
+                        saveCategory()
                     }
                     .disabled(total.isEmpty)
                 }
@@ -48,17 +59,21 @@ struct AddBudgetCategoryView: View {
         .enableInjection()
     }
 
-    private func addCategory() {
+    private func saveCategory() {
         guard let totalAmount = Double(total) else { return }
 
-        let newCategory = Budget.BudgetCategory(
+        let category = Budget.BudgetCategory(
             subCategory: selectedCategory,
             type: selectedType,
-            spent: 0,
+            spent: editingCategory?.spent ?? 0,
             total: totalAmount
         )
 
-        viewModel.addCategory(newCategory)
+        if let editingCategory = editingCategory {
+            viewModel.updateCategory(editingCategory, with: category)
+        } else {
+            viewModel.addCategory(category)
+        }
         dismiss()
     }
 }

@@ -7,6 +7,7 @@ struct DashboardView: View {
     @EnvironmentObject var appState: AppState
     @State private var navigationPath = NavigationPath()
     @State var showMenu: Bool = false
+    @State var showNotifications: Bool = false
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
@@ -19,6 +20,12 @@ struct DashboardView: View {
             }
             .navigationBarStyle()
             .toolbar {
+                Button {
+                    navigationPath.append(NotificationsView.NotificationDestination.notifications)
+                } label: {
+                    Image(systemName: "bell")
+                        .foregroundColor(.white)
+                }
                 Button {
                     showMenu.toggle()
                 } label: {
@@ -40,6 +47,9 @@ struct DashboardView: View {
                 case .share:
                     EmptyView()
                 }
+            }
+            .sheet(isPresented: $showNotifications) {
+                NotificationsView()
             }
         }
         .enableInjection()

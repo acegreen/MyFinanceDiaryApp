@@ -81,7 +81,8 @@ struct BudgetMainView: View {
                 content: {
                     LazyVStack(spacing: 16) {
                         ForEach(budgetViewModel.budget.incomeCategories) { category in
-                            BudgetCategoryRow(category: category)
+                            BudgetCategoryRow(budgetViewModel: budgetViewModel,
+                                              category: category)
                         }
                     }
                 },
@@ -104,7 +105,8 @@ struct BudgetMainView: View {
                 content: {
                     LazyVStack(spacing: 16) {
                         ForEach(budgetViewModel.budget.expenseCategories) { category in
-                            BudgetCategoryRow(category: category)
+                            BudgetCategoryRow(budgetViewModel: budgetViewModel,
+                                              category: category)
                         }
                     }
                 },
@@ -126,7 +128,9 @@ struct BudgetMainView: View {
 }
 
 struct BudgetCategoryRow: View {
+    @ObservedObject var budgetViewModel: BudgetViewModel
     let category: Budget.BudgetCategory
+    @State private var showingEditSheet = false
     @State private var animateProgress: Bool = false
 
     var body: some View {
@@ -138,7 +142,9 @@ struct BudgetCategoryRow: View {
                 Text(category.getRemaining())
                     .font(.subheadline)
                     .foregroundColor(.secondary)
-                Button(action: {}) {
+                Button {
+                    showingEditSheet = true
+                } label: {
                     Image(systemName: "pencil")
                         .foregroundColor(.secondary)
                 }
@@ -158,6 +164,9 @@ struct BudgetCategoryRow: View {
                     .foregroundColor(.secondary)
                 Spacer()
             }
+        }
+        .sheet(isPresented: $showingEditSheet) {
+            AddBudgetCategoryView(viewModel: budgetViewModel, editingCategory: category)
         }
         .onAppear {
             withAnimation {
