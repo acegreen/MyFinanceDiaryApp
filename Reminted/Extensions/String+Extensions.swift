@@ -1,10 +1,3 @@
-//
-//  String+Extensions.swift
-//  MyFinanceDiary
-//
-//  Created by Ace Green on 2024-10-29.
-//
-
 import Foundation
 
 // Helper extension for date conversion

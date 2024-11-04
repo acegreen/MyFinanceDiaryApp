@@ -12,8 +12,8 @@
 	"argv": [
 		"/usr/local/bin/xcode-build-server"
 	],
-	"workspace": "/Users/AceGreen/Dev/Projects/iOS/MyFinanceDiaryApp/MyFinanceDiary.xcodeproj/project.xcworkspace",
-	"build_root": "/Users/AceGreen/Library/Developer/Xcode/DerivedData/MyFinanceDiary-dfdaoxfbeekapqdyhmzvxgwuzsgv",
-	"scheme": "MyFinanceDiaryApp",
+	"workspace": "/Users/AceGreen/Dev/Projects/iOS/RemintedApp/Reminted.xcodeproj/project.xcworkspace",
+	"build_root": "/Users/AceGreen/Library/Developer/Xcode/DerivedData/Reminted-dfdaoxfbeekapqdyhmzvxgwuzsgv",
+	"scheme": "RemintedApp",
 	"kind": "xcode"
 }
