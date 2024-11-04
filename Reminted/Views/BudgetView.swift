@@ -8,12 +8,16 @@ struct BudgetView: View {
 
     var body: some View {
         NavigationStack {
-            ViewBuilderWrapper {
-                BudgetHeaderView(budgetViewModel: appState.budgetViewModel)
-            } main: {
-                BudgetMainView(budgetViewModel: appState.budgetViewModel)
+            ScrollView {
+                VStack(spacing: 0) {
+                    BudgetHeaderView(budgetViewModel: appState.budgetViewModel)
+                    BudgetMainView(budgetViewModel: appState.budgetViewModel)
+                }
             }
-            .navigationBarStyle()
+            .navigationTitle("Budget")
+            .toolbarBackground(Color.darkGreen, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
@@ -37,19 +41,13 @@ struct BudgetHeaderView: View {
     @StateObject var budgetViewModel: BudgetViewModel
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 36) {
-            VStack(alignment: .leading, spacing: 12) {
-                Text("Budget for June")
-                    .font(.title)
-                    .foregroundColor(.white)
-            }
+        VStack(alignment: .leading) {
             // Donut View
             BudgetDonutView(budgetViewModel: budgetViewModel)
         }
-        .padding([.top, .bottom], 48)
-        .padding()
+        .padding(48)
         .frame(maxWidth: .infinity)
-        .greenGradientBackground()
+        // .greenGradientBackground()
     }
 }
 
@@ -58,7 +56,7 @@ struct BudgetDonutView: View {
     @State private var animateDonut: Bool = false
 
     var body: some View {
-        VStack(alignment: .center, spacing: 24) {
+        VStack(alignment: .center) {
             // Donut Chart
             DonutChart(budget: budgetViewModel.budget, animate: animateDonut)
         }

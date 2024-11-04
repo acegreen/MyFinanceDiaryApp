@@ -28,13 +28,13 @@ struct DonutChart: View {
             // Center content
             VStack(spacing: 4) {
                 Text("$\(Int(animate ? budget.summary.totalSpent : 0))")
-                    .font(.system(size: 32, weight: .bold))
-                    .foregroundColor(.white)
+                    .font(.system(size: 32, weight: .heavy))
+                    .foregroundColor(budget.isNegative ? .alertRed : .primaryGreen)
                     .animation(.easeInOut(duration: 0.5), value: animate)
 
                 Text("of $\(Int(budget.summary.totalBudget))")
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundColor(.secondary)
             }
         }
         .frame(height: 200)

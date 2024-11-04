@@ -15,12 +15,16 @@ struct BillsAndPaymentsView: View {
 
     var body: some View {
         NavigationStack {
-            ViewBuilderWrapper {
-                BillsAndPaymentsHeaderView(selectedSegment: $selectedSegment)
-            } main: {
-                BillsAndPaymentsMainView(bills: bills)
+            ScrollView {
+                VStack(spacing: 0) {
+                    BillsAndPaymentsHeaderView(selectedSegment: $selectedSegment)
+                    BillsAndPaymentsMainView(bills: bills)
+                }
             }
-            .navigationBarStyle()
+            .navigationTitle("Bills & Subscriptions")
+            .toolbarBackground(Color.darkGreen, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarColorScheme(.dark, for: .navigationBar)
         }
         .enableInjection()
     }
@@ -33,9 +37,6 @@ private struct BillsAndPaymentsHeaderView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
-            Text("Bills and Subscriptions")
-                .font(.title)
-                .foregroundColor(.white)
             Picker("View Selection", selection: $selectedSegment) {
                 ForEach(BillSegment.allCases, id: \.self) { segment in
                     Text(segment.rawValue)
@@ -56,8 +57,7 @@ private struct BillsAndPaymentsHeaderView: View {
                     .foregroundColor(.white)
             }
         }
-        .padding(.top, 48)
-        .padding()
+        .padding(24)
         .greenGradientBackground()
     }
 }

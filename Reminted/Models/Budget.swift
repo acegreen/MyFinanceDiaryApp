@@ -101,4 +101,12 @@ extension Budget {
     var formattedRemaining: String {
         String(format: "$%.0f", summary.remaining)
     }
+
+    var formattedTotalBudget: String {
+        NumberFormatter.formatAmount(summary.totalBudget)
+    }
+
+    var isNegative: Bool {
+        summary.remaining < 0
+    }
 }
