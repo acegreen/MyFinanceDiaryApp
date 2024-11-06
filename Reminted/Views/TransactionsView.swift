@@ -69,8 +69,7 @@ struct TransactionsList: View {
                 ForEach(groupedTransactions.sorted(by: { $0.key > $1.key }), id: \.key) { date, transactions in
                     Section(header: Text(date.formatted(.dateTime.month().day().year()))) {
                         ForEach(transactions) { transaction in
-                            TransactionRow(transactionDetailsViewModel: transactionDetailsViewModel,
-                                           transaction: transaction)
+                            TransactionRow(transaction: transaction)
                         }
                     }
                 }
@@ -81,14 +80,16 @@ struct TransactionsList: View {
 }
 
 struct TransactionRow: View {
-    @StateObject var transactionDetailsViewModel: TransactionDetailsViewModel
-    let transaction: Transaction
+    @EnvironmentObject var appState: AppState
+    var transaction: Transaction
 
     var body: some View {
-        NavigationLink {
-            TransactionDetailsView(transactionDetailsViewModel: transactionDetailsViewModel,
-                                   transactionId: transaction.transactionId)
-        } label: {
+        NavigationLink(destination: {
+            TransactionDetailsView(transactionDetailsViewModel: appState.transactionDetailsViewModel)
+                .onAppear {
+                    appState.transactionDetailsViewModel.setTransaction(transaction)
+                }
+        }) {
             HStack(spacing: 12) {
                 if let iconUrl = transaction.displayIconUrl {
                     AsyncImage(url: URL(string: iconUrl)) { phase in

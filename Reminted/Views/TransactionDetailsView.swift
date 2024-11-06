@@ -6,7 +6,6 @@ struct TransactionDetailsView: View {
     @ObserveInjection var inject
     @EnvironmentObject private var appState: AppState
     @StateObject var transactionDetailsViewModel: TransactionDetailsViewModel
-    var transactionId: String
 
     var body: some View {
         Group {
@@ -41,21 +40,7 @@ struct TransactionDetailsView: View {
                 EmptyView()
             }
         }
-        .task {
-            loadTransaction()
-        }
-        .refreshable {
-            loadTransaction()
-        }
         .enableInjection()
-    }
-
-    private func loadTransaction() {
-        do {
-            try transactionDetailsViewModel.loadTransaction(id: transactionId)
-        } catch {
-            print("Error loading transaction: \(error)")
-        }
     }
 
     private func headerView(_ transaction: Transaction) -> some View {
@@ -154,8 +139,7 @@ struct TransactionDetailsView: View {
 
 #Preview {
     TransactionDetailsView(
-        transactionDetailsViewModel: PreviewHelper.previewTransactionDetailsViewModel,
-        transactionId: "preview-id"
+        transactionDetailsViewModel: PreviewHelper.previewTransactionDetailsViewModel
     )
     .withPreviewEnvironment()
 }
