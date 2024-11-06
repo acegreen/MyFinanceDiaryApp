@@ -4,8 +4,10 @@ import Inject
 import SwiftUI
 
 struct FinancialChartView: View {
-    @ObserveInjection var inject // Add for hot reloading
+    @ObserveInjection var inject
+    @State private var selectedTimeframe: TimeframeSelector.Timeframe = .all
     let data: [FinancialDataPoint]
+    var showTimeframe: Bool = false
 
     private var minAmount: Double {
         data.map(\.amount).min() ?? 0
@@ -39,65 +41,72 @@ struct FinancialChartView: View {
     }
 
     var body: some View {
-        Chart {
-            // Single area mark
-            ForEach(extendedData) { point in
-                AreaMark(
-                    x: .value("Date", point.date),
-                    y: .value("Amount", point.amount)
-                )
-                .foregroundStyle(
-                    .linearGradient(
-                        colors: [.white.opacity(0.3), .white.opacity(0.01)],
-                        startPoint: .top,
-                        endPoint: .bottom
+        VStack(spacing: 0) {
+            Chart {
+                // Single area mark
+                ForEach(extendedData) { point in
+                    AreaMark(
+                        x: .value("Date", point.date),
+                        y: .value("Amount", point.amount)
                     )
-                )
-            }
-
-            ForEach(extendedData) { point in
-                LineMark(
-                    x: .value("Date", point.date),
-                    y: .value("Amount", point.amount)
-                )
-                .foregroundStyle(.white)
-                .lineStyle(StrokeStyle(lineWidth: 8))
-                .interpolationMethod(.monotone)
-            }
-
-            if let todayPoint = data.first(where: { Calendar.current.isDateInToday($0.date) }) {
-                PointMark(
-                    x: .value("Date", todayPoint.date),
-                    y: .value("Amount", todayPoint.amount)
-                )
-                .foregroundStyle(.white)
-                .symbolSize(300)
-                .annotation(position: .top) {
-                    Text("Today")
-                        .foregroundColor(.white)
-                        .font(.subheadline.bold())
-                        .padding(.vertical, 4)
-                        .padding(.horizontal, 8)
+                    .foregroundStyle(
+                        .linearGradient(
+                            colors: [.white.opacity(0.3), .white.opacity(0.01)],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
                 }
-            }
-        }
-        .chartYScale(domain: (minAmount - yAxisPadding) ... (maxAmount + yAxisPadding))
-        .chartXAxis {
-            AxisMarks(preset: .inset, values: data.map { $0.date }) { value in
-                if let date = value.as(Date.self) {
-                    AxisValueLabel {
-                        Text(date.formatted(.dateTime.month().day()))
-                            .font(.subheadline)
+
+                ForEach(extendedData) { point in
+                    LineMark(
+                        x: .value("Date", point.date),
+                        y: .value("Amount", point.amount)
+                    )
+                    .foregroundStyle(.white)
+                    .lineStyle(StrokeStyle(lineWidth: 8))
+                    .interpolationMethod(.monotone)
+                }
+
+                if let todayPoint = data.first(where: { Calendar.current.isDateInToday($0.date) }) {
+                    PointMark(
+                        x: .value("Date", todayPoint.date),
+                        y: .value("Amount", todayPoint.amount)
+                    )
+                    .foregroundStyle(.white)
+                    .symbolSize(300)
+                    .annotation(position: .top) {
+                        Text("Today")
                             .foregroundColor(.white)
-                            .padding(.horizontal, 16)
-                            .padding(.bottom, 16)
+                            .font(.subheadline.bold())
+                            .padding(.vertical, 4)
+                            .padding(.horizontal, 8)
                     }
                 }
             }
+            .chartYScale(domain: (minAmount - yAxisPadding) ... (maxAmount + yAxisPadding))
+            .chartXAxis {
+                AxisMarks(preset: .inset, values: data.map { $0.date }) { value in
+                    if let date = value.as(Date.self) {
+                        AxisValueLabel {
+                            Text(date.formatted(.dateTime.month().day()))
+                                .font(.subheadline)
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 16)
+                                .padding(.bottom, 16)
+                        }
+                    }
+                }
+            }
+            .chartXScale(domain: .automatic(includesZero: false))
+            .chartYAxis(.hidden)
+
+            if showTimeframe {
+                TimeframeSelector(selectedTimeframe: $selectedTimeframe)
+                    .padding(.top, 24)
+                    .padding(.vertical, 48)
+            }
         }
-        .chartXScale(domain: .automatic(includesZero: false))
-        .chartYAxis(.hidden)
-        .clipped()
         .enableInjection()
     }
 }

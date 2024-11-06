@@ -16,13 +16,13 @@ struct ChangeIndicatorView: View {
     }
     
     var body: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: 8) {
             Image(systemName: isPositive ? "arrow.up" : "arrow.down")
-                .foregroundColor(.white)
+                .foregroundColor(.darkGreen)
                 .padding(4)
                 .background(
                     Circle()
-                        .fill(isPositive ? Color.primaryGreen : .alertRed)
+                        .fill(.white)
                 )
                 .frame(width: 24, height: 24)
             Text(description)

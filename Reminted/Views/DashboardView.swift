@@ -78,6 +78,7 @@ struct DashboardView: View {
 
 struct DashboardHeaderView: View {
     @StateObject var dashboardViewModel: DashboardViewModel
+    @State private var showFullScreenChart = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -108,8 +109,56 @@ struct DashboardHeaderView: View {
 
             // Chart
             FinancialChartView(data: dashboardViewModel.chartData)
-                .frame(maxWidth: .infinity, minHeight: 200)
+                .frame(maxWidth: .infinity, minHeight: 250)
+                .onTapGesture {
+                    showFullScreenChart = true
+                }
         }
+        .greenGradientBackground()
+        .sheet(isPresented: $showFullScreenChart) {
+            DashboardHeaderFullScreenView(dashboardViewModel: dashboardViewModel)
+        }
+    }
+}
+
+struct DashboardHeaderFullScreenView: View {
+    @ObserveInjection var inject
+    @Environment(\.dismiss) private var dismiss
+    @StateObject var dashboardViewModel: DashboardViewModel
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            // Tab Selection
+            Picker("View Selection", selection: $dashboardViewModel.selectedSegment) {
+                ForEach(DashboardViewModel.ChartSegment.allCases, id: \.self) { tab in
+                    Text(tab.rawValue)
+                        .tag(tab)
+                }
+            }
+            .padding(.top, 16)
+            .padding(.horizontal)
+            .pickerStyle(.segmented)
+            .colorScheme(.dark)
+
+            // Amount Display
+            VStack(alignment: .leading, spacing: 8) {
+                Text(dashboardViewModel.currentAmount)
+                    .font(.system(size: 48, weight: .bold))
+                    .foregroundColor(.white)
+
+                ChangeIndicatorView(
+                    isPositive: dashboardViewModel.changeIsPositive,
+                    description: dashboardViewModel.changeDescription
+                )
+            }
+            .padding(.horizontal)
+
+            // Chart
+            FinancialChartView(data: dashboardViewModel.chartData, showTimeframe: true)
+                .frame(maxWidth: .infinity)
+                .frame(maxHeight: .infinity)
+        }
+        .ignoresSafeArea()
         .greenGradientBackground()
     }
 }
